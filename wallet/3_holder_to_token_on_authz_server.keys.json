@@ -8,17 +8,5 @@
 		"ethereum": "bbcf12b582ec688474e765e63b45040981e1cebb657c17d2925298dfe6f75d40",
 		"reflow": "hd74Aegfq8nRDWCqs5vOA0lHOzHQzjzIByBLtgwfLYU="
 	},
-	"client_id": "did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67",
-	"request": {
-		"headers": {
-			"content-length": 42,
-			"Content-Type": "application/x-www-form-urlencoded"
-		}
-	},
-	"jwt-body-params": {
-		"redirectUris": [
-			"https://didroom.com/"
-		],
-		"grant_type": "authorization_code"
-	}
+	"client_id": "did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67"
 }

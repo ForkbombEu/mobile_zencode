@@ -1,0 +1,31 @@
+{
+   "authCode_jwt": {
+      "authorizationCode": "eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiI3OWM3Zjg5ZTRkYWI5MWVkNGNjZGU2NzU0YzRlNmViM2YyZDU2N2RiIiwiaWF0IjoxNzA5Mjk0MDQ0LCJpc3MiOiJodHRwczovL2F1dGh6LXNlcnZlcjEuemVuc3dhcm0uZm9ya2JvbWIuZXU6MzEwMCIsImF1ZCI6ImRpZDpkeW5lOnNhbmRib3guc2lnbnJvb206UFREdnZRbjFpV1FpVnhrZnNEblVpZDhGYmllS2JIcTQ2UXM4YzlDWng2NyIsImV4cCI6MTcwOTI5NzY0M30.sqQezLeqyS9Qgwu2UiDnEItmsF4qPam91fknuzxl3_yXFzAIf_FoKF9-dvCyXCC1MLoPhQA3ed95tA0HSVx5Xw",
+      "client": {
+         "clientSecret": "eyJhbGciOiJFUzI1NiJ9.eyJjb2RlX2NoYWxsZW5nZSI6IlUyWldXREV5WWpWcFoyZzBRbUo2WkRGeFFWbDNjVVJGZGpCVlozWkJkbWxwY2taQldYTjJiRjlVT0EifQ.8qbP2IaFif4f-PWPEdr7r6f7rTyK8ZvCF_evgqT9jZuupOjQZqCFAM1jSqNIS2A-icbkbsC3wbitiZxEyzUwXA",
+         "grants": [
+            "authorization_code"
+         ],
+         "id": "did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67",
+         "redirectUris": [
+            "https://didroom.com/"
+         ]
+      },
+      "codeChallenge": "SfVX12b5igh4Bbzd1qAYwqDEv0UgvAviirFAYsvl_T8",
+      "codeChallengeMethod": "S256",
+      "expiresAt": 1709294343,
+      "redirectUri": "https://didroom.com/",
+      "scope": [
+         "Auth1"
+      ],
+      "user": "did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67"
+   },
+   "request": {
+      "body": "grant_type=authorization_code&client_id=did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67&code_verifier=XEhn97_RVvat8q4hHEMgFMUohCFR8U78wEM23gtdcZg&redirect_uri=https%3A%2F%2Fdidroom.com%2F&code=eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiI3OWM3Zjg5ZTRkYWI5MWVkNGNjZGU2NzU0YzRlNmViM2YyZDU2N2RiIiwiaWF0IjoxNzA5Mjk0MDQ0LCJpc3MiOiJodHRwczovL2F1dGh6LXNlcnZlcjEuemVuc3dhcm0uZm9ya2JvbWIuZXU6MzEwMCIsImF1ZCI6ImRpZDpkeW5lOnNhbmRib3guc2lnbnJvb206UFREdnZRbjFpV1FpVnhrZnNEblVpZDhGYmllS2JIcTQ2UXM4YzlDWng2NyIsImV4cCI6MTcwOTI5NzY0M30.sqQezLeqyS9Qgwu2UiDnEItmsF4qPam91fknuzxl3_yXFzAIf_FoKF9-dvCyXCC1MLoPhQA3ed95tA0HSVx5Xw",
+      "headers": {
+         "Content-Type": "application/x-www-form-urlencoded",
+         "DPoP": "eyJhbGciOiJFUzI1NiIsImp3ayI6eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6IlR3aUVOU09aTHdKM2hhQXlpa3JkejRGVWZ3VEtxQndlRlZSLUxsdzFfQUEiLCJ5IjoiNlZRNW9wekE5aVVmbFFVSVZJcFFqcFIyY2JfVHdHZnNiZTNlaFE5TUE5cyJ9LCJ0eXAiOiJkcG9wK2p3dCJ9.eyJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cDovL2F1dGh6LXNlcnZlcjEuemVuc3dhcm0uZm9ya2JvbWIuZXUvIiwiaWF0IjoxNzA5Mjk0MzQzLCJqdGkiOiJjZFMzT2RTZ0pDRE83aDYtTFRpU213dEc4YmVDYkxsSXktZk5LLWVqbS1JIn0.EbCFz0iBLleQXSDHW_z-GJYilmeq6Z7ueoGd0QwgDo375ey-ogPgblOCBWIofgdzWI9Y58x_9CmtBYFEyRyF0w",
+         "content-length": 42
+      }
+   }
+}

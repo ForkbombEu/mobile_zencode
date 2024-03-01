@@ -38,55 +38,10 @@
     },
     "client_id": {
       "type": "string"
-    },
-    "request": {
-      "type": "object",
-      "properties": {
-        "headers": {
-          "type": "object",
-          "properties": {
-            "content-length": {
-              "type": "integer"
-            },
-            "Content-Type": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "content-length",
-            "Content-Type"
-          ]
-        }
-      },
-      "required": [
-        "headers"
-      ]
-    },
-    "jwt-body-params": {
-      "type": "object",
-      "properties": {
-        "redirectUris": {
-          "type": "array",
-          "items": [
-            {
-              "type": "string"
-            }
-          ]
-        },
-        "grant_type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "redirectUris",
-        "grant_type"
-      ]
     }
   },
   "required": [
     "keyring",
-    "client_id",
-    "request",
-    "jwt-body-params"
+    "client_id"
   ]
 }

@@ -2,30 +2,32 @@ Scenario 'http' : create GET
 Scenario 'w3c' : DPOP
 
 Rule unknown ignore
-
 Given I fetch the local timestamp in seconds and output into 'timestamp'
+
+
 Given I have a 'time' named 'timestamp'
 
 Given I have the 'keyring'
 
 # Given I have a 'string dictionary' named 'authorization_request_body'
-Given I have a 'string' named 'grant_type' inside 'jwt-body-params'
 
-Given I have a 'string array' named 'redirectUris' inside 'jwt-body-params'
+Given I have a 'string dictionary' named 'token_request_specific_data'
+
+
 
 Given I have a 'string' named 'client_id'
 
 Given I have a 'string' named 'code_verifier'
 
-Given I have a 'string dictionary' named 'request'
+
 
 Given I have a 'string dictionary' named 'authCode_jwt'
 Given I have a 'string' named 'authorizationCode' inside 'authCode_jwt'
-Given I have a 'string' named 'authorization_server' inside 'qr-code-content'
+Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
 
-
-
-
+When I pickup from path 'token_request_specific_data.request'
+When I pickup from path 'token_request_specific_data.jwt-auth-body-params.grant_type'
+When I pickup from path 'token_request_specific_data.jwt-auth-body-params.redirectUris'
 
 When I rename the 'authorizationCode' to 'code'
 

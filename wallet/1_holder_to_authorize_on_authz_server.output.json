@@ -1,0 +1,19 @@
+{
+   "client": {
+      "clientSecret": "eyJhbGciOiJFUzI1NiJ9.eyJjb2RlX2NoYWxsZW5nZSI6ImFHRlZZelpJTUhOUE1YSjNXbkpKTWpVd1psUTNZM2haUmtGQ2VsTTJiMkV6UmpCT2JYSTRlWFZLY3cifQ.qhBQRUEb_Dh7wtQOJBNIkmZMWfzhrQeKXTdyK5IjADPAdFjwIduCZLFa1RAoeZ4I1lEfThyKsVNFR81G1EJPGw",
+      "grants": [
+         "authorization_code"
+      ],
+      "id": "did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67",
+      "redirectUris": [
+         "https://didroom.com/"
+      ]
+   },
+   "code_verifier": "zjxqdj1YcrDLnsPzEOYk5xwgLJpzR50sdl5GpUyYHcQ",
+   "request": {
+      "body": "response_type=code&client_id=did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67&state=xyz&code_challenge=haUc6H0sO1rwZrI250fT7cxYFABzS6oa3F0Nmr8yuJs&code_challenge_method=S256&scope=Auth1&redirect_uri=https%3A%2F%2Fdidroom.com%2F&resource=http%3A%2F%2Fissuer1.zenswarm.forkbomb.eu%3A3100%2F",
+      "headers": {
+         "Authorization": "basic"
+      }
+   }
+}
