@@ -1,9 +1,9 @@
 {
 	"!external-qr-code-content": {
 		"scope": "Auth1",
-		"relying_party": "http://relying-party1.zenswarm.forkbomb.eu:3100",
-		"resource": "http://issuer1.zenswarm.forkbomb.eu:3100/",
-		"authorization_server": "http://authz-server1.zenswarm.forkbomb.eu:3100"
+		"relying_party": "http://relying-party1.zenswarm.forkbomb.eu/",
+		"resource": "http://issuer1.zenswarm.forkbomb.eu/",
+		"authorization_server": "http://authz-server1.zenswarm.forkbomb.eu/"
 	},
 	"credential_request_specific_data": {
 		"jwt-body-params": {
