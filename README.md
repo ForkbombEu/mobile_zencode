@@ -10,11 +10,11 @@
    <img src="https://github.com/ForkbombEu/DIDroom/raw/main/images/DIDroom_logo.png" width="370">
 </p>
 
-DIDroom microservices is a comprehensive open-source implementation of the OpenID4VC
-"OpenID for Verifiable Credential" protocols, designed to easily deploy
-the entire credential issuance process.This project is built using the
-Zenroom ecosystem, incorporating Zencode natural language smart contracts
-for secure, flexible, and human-readable protocol implementation.
+Mobile Zencode is a comprehensive open-source implementation of the OpenID4VC
+"OpenID for Verifiable Credential" and OpenID4VP "OpenID for Verifiable Presentation" protocols, designed to easily be plugged into an existing mobile application.
+This project is built using the Zenroom ecosystem (uses Zenroom and Slangroom), incorporating Zencode natural language smart contracts for secure, flexible, and human-readable protocol implementation.
+
+Can be used in connetion with [DIDroom_microservices](https://github.com/ForkbombEu/didroom_microservices)
 
 ---
 <br><br>
