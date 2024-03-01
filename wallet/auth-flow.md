@@ -27,3 +27,21 @@ autonumber
 Glossary: 
 
 Script 1: [Script 1](https://github.com/ForkbombEu/mobile_zencode/blob/main/wallet/1_holder_to_authorize_on_authz_server.zen)
+
+# Auth Flow Chart
+
+## Script 1
+```mermaid
+flowchart TD
+    A[CI url QR] -->|!external-qr-code-content| B
+    D[Holder DID] -->|client_id| B
+    K[Keyring] --> B
+    R[Cred Req] -->|cred_req_spec_data| B
+    B{Holder wallet}
+    B -->|script 1| code_ver[code verifier]
+    B -->|script 1| client -->|http| par{API /par\nauthz server}
+    B -->|script 1| request -->|http| par
+    par --> exp[expires_in] -->|http| B
+    par --> requr[request_uri] -->|http| B
+
+```
