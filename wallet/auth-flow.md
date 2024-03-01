@@ -32,7 +32,7 @@ Script 1: [Script 1](https://github.com/ForkbombEu/mobile_zencode/blob/main/wall
 
 ## Script 1
 ```mermaid
-flowchart TD
+flowchart LR
     A[CI url QR] -->|!external-qr-code-content| B
     D[Holder DID] -->|client_id| B
     K[Keyring] --> B
@@ -47,7 +47,7 @@ flowchart TD
 
 ## Script 3
 ```mermaid
-flowchart TD
+flowchart LR
     requri -->|http| requri
     requri[request uri] -->|authCode_jwt| W
     W{Holder Wallet}
