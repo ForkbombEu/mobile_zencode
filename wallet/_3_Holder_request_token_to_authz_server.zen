@@ -1,0 +1,98 @@
+Scenario 'http' : create GET
+Scenario 'w3c' : DPOP
+
+Rule unknown ignore
+
+Given I fetch the local timestamp in seconds and output into 'timestamp'
+Given I have a 'time' named 'timestamp'
+
+
+Given I have the 'keyring'
+
+# Given I have a 'string dictionary' named 'authorization_request_body'
+Given I have a 'string' named 'grant_type' inside 'jwt-body-params'
+
+Given I have a 'string array' named 'redirectUris' inside 'jwt-body-params'
+
+Given I have a 'string' named 'client_id'
+
+Given I have a 'string' named 'code_verifier'
+
+Given I have a 'string dictionary' named 'request'
+
+Given I have a 'string dictionary' named 'authCode_jwt'
+Given I have a 'string' named 'authorizationCode' inside 'authCode_jwt'
+Given I have a 'string' named 'authorization_server' inside 'qr-code-content'
+
+
+
+
+When I rename the 'authorizationCode' to 'code'
+
+When I create the copy of element '1' from array 'redirectUris'
+When I rename the 'redirectUris' to 'throw-away'
+When I rename the 'copy' to 'redirectUris'
+
+
+When I set 'base-url' to 'http://' as 'string'
+
+When I create the url from 'base-url'
+When I append 'grant_type'  as http request to 'url'
+When I append 'client_id'     as http request to 'url'
+When I append 'code_verifier'  as http request to 'url'
+When I append the percent encoding of 'redirectUris'  as http request to 'url'
+When I append 'code'  as http request to 'url'
+When I split the leftmost '8' bytes of 'url'
+When I rename the 'url' to 'body'
+
+When I move 'body' in 'request'
+
+
+############# DPOP
+When I set 'typ' to 'dpop+jwt' as 'string'
+When I set 'htm' to 'POST' as 'string'
+when I create the 'string dictionary'
+When I rename the 'string dictionary' to 'payload'
+
+When I rename the 'authorization_server' to 'htu'
+When I move 'htu' in 'payload'
+When I move 'htm' in 'payload'
+
+When I create jws header for p256 signature with public key
+When I move 'typ' in 'jws header'
+
+When I create the random object of '256' bits
+
+When I write the string '' in 'jti'
+When I append the 'url64' of 'random object' to 'jti'
+
+# Debug timestamp
+# When I copy 'timestamp' to 'temp-timestamp'
+When I rename the 'timestamp' to 'iat'
+
+When I move 'jti' in 'payload'
+When I move 'iat' in 'payload'
+
+When I create jws signature of header 'jws header' and payload 'payload'
+When I rename the 'jws signature' to 'DPoP'
+
+When I pickup from path 'request.headers'
+When I remove the 'headers' from 'request'
+When I move 'DPoP' in 'headers'
+When I move 'headers' in 'request'
+
+
+### Manca DPoP da aggiungere a request.headers
+
+Then print the 'request'
+
+Then print the 'authCode_jwt'
+
+# Debug timestamp
+# Then print the 'temp-timestamp'
+
+
+# Then print the 'jws header'
+# Then print the 'payload'
+
+

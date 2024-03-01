@@ -34,10 +34,10 @@ ifeq (,$(wildcard ncr))
 endif
 
 up:setup ## 🚀 Up & run the project
-	./ncr -p 3000 --hostname $(hn) --public-directory public
+	./ncr -p 3001 --hostname $(hn) 
 
 test: ## 🧪 Run e2e tests on the APIs
-	@./ncr -p 3000 & echo $$! > .test.ncr.pid
+	@./ncr -p 3001 & echo $$! > .test.ncr.pid
 	npx stepci run tests/credential_issuer.yml
 	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
 

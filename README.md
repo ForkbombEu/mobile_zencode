@@ -22,7 +22,36 @@ Can be used in connetion with [DIDroom_microservices](https://github.com/Forkbom
 
 ## 🧱 Building blocks
 
-### 🎫 Verifiable Credential issuer 
+### 🚦 Request to Authorization Server (OAuth 2.0)
+
+[REFERENCE RFC6749](https://www.rfc-editor.org/rfc/rfc6749.txt)
+
+Credential Issuers use OAuth 2.0 RFC6749 Authorization Server for access.
+A single server can protect multiple Issuers, identified via metadata (/.well-known/openid-credential-issuer).
+All OAuth 2.0 Grant Types and extensions work with the credential issuance API. Unspecified aspects follow [@!RFC6749].
+Some tweaks and enhancements are needed although, this extensions include:
+
+- **New Authorization Details Type - `openid_credential`:**
+  - Conveys Credential details Wallet aims to obtain (see [#authorization-details](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html#authorization-details)).
+
+- **New Token Response Error Codes:**
+  - `authorization_pending` and `slow_down` support deferred authorization for Pre-Authorized Code grant type.
+
+- **Client Metadata:**
+  - Uses client metadata, introducing `credential_offer_endpoint` for Wallet to publish its Credential Offer Endpoint (see [#client-metadata](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html#client-metadata)).
+
+- **Authorization Endpoint Enhancements:**
+  - Adds `issuer_state` for issuer-initiated Credential Offer processing (see [#credential-authz-request](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html#credential-authz-request)).
+  - Introduces `wallet_issuer` and `user_hint` for Credential Issuers to request Verifiable Presentations during Authorization Request.
+
+- **Token Endpoint Enhancements:**
+  - Adds optional response parameters - `c_nonce` and `c_nonce_expires_in` - for nonce-based proof of possession of key material (see [#token-response](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html#token-response)).
+
+For details, refer to the full specification.
+
+
+
+### 🎫 Request to Verifiable Credential issuer  
 
 [OIDC4VCI REFERENCE](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html)
 
@@ -61,33 +90,7 @@ Core concepts of the issuer:
    using the Credential Issuer's metadata
 
 
-### 🚦 Authorization Server OAuth 2.0 
-
-[REFERENCE RFC6749](https://www.rfc-editor.org/rfc/rfc6749.txt)
-
-Credential Issuers use OAuth 2.0 RFC6749 Authorization Server for access.
-A single server can protect multiple Issuers, identified via metadata (/.well-known/openid-credential-issuer).
-All OAuth 2.0 Grant Types and extensions work with the credential issuance API. Unspecified aspects follow [@!RFC6749].
-Some tweaks and enhancements are needed although, this extensions include:
-
-- **New Authorization Details Type - `openid_credential`:**
-  - Conveys Credential details Wallet aims to obtain (see [#authorization-details](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html#authorization-details)).
-
-- **New Token Response Error Codes:**
-  - `authorization_pending` and `slow_down` support deferred authorization for Pre-Authorized Code grant type.
-
-- **Client Metadata:**
-  - Uses client metadata, introducing `credential_offer_endpoint` for Wallet to publish its Credential Offer Endpoint (see [#client-metadata](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html#client-metadata)).
-
-- **Authorization Endpoint Enhancements:**
-  - Adds `issuer_state` for issuer-initiated Credential Offer processing (see [#credential-authz-request](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html#credential-authz-request)).
-  - Introduces `wallet_issuer` and `user_hint` for Credential Issuers to request Verifiable Presentations during Authorization Request.
-
-- **Token Endpoint Enhancements:**
-  - Adds optional response parameters - `c_nonce` and `c_nonce_expires_in` - for nonce-based proof of possession of key material (see [#token-response](https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-wg-draft.html#token-response)).
-
-For details, refer to the full specification.
-
+### 👍 Request to Relying Party  
 
 
 
@@ -227,7 +230,8 @@ Please first take a look at the our [Contributor License Agreement](CONTRIBUTING
 
 ***
 ## 💼 License
-    Didroom standalone microservices
+    Mobile Zencode 
+	
     Copyleft 🄯 2023 Forkbomb BV, Amsterdam
 
     This program is free software: you can redistribute it and/or modify

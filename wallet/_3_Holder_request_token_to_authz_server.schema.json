@@ -1,0 +1,92 @@
+{
+  "type": "object",
+  "properties": {
+    "keyring": {
+      "type": "object",
+      "properties": {
+        "bitcoin": {
+          "type": "string"
+        },
+        "credential": {
+          "type": "string"
+        },
+        "ecdh": {
+          "type": "string"
+        },
+        "eddsa": {
+          "type": "string"
+        },
+        "es256": {
+          "type": "string"
+        },
+        "ethereum": {
+          "type": "string"
+        },
+        "reflow": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bitcoin",
+        "credential",
+        "ecdh",
+        "eddsa",
+        "es256",
+        "ethereum",
+        "reflow"
+      ]
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "request": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "content-length": {
+              "type": "integer"
+            },
+            "Content-Type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "content-length",
+            "Content-Type"
+          ]
+        }
+      },
+      "required": [
+        "headers"
+      ]
+    },
+    "jwt-body-params": {
+      "type": "object",
+      "properties": {
+        "redirectUris": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "grant_type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "redirectUris",
+        "grant_type"
+      ]
+    }
+  },
+  "required": [
+    "keyring",
+    "client_id",
+    "request",
+    "jwt-body-params"
+  ]
+}

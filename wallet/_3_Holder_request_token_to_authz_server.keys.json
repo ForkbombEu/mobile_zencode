@@ -1,0 +1,24 @@
+{
+	"keyring": {
+		"bitcoin": "L532fW63yrm6Jgd36NXYFDEz5HsmgTz67mGYsKkCtt26rAg7qg8y",
+		"credential": "hd74Aegfq8nRDWCqs5vOA0lHOzHQzjzIByBLtgwfLYU=",
+		"ecdh": "oTiBxSDE71k5PFaXTxnTb9zsTTdZ701XMWKbdnhN5Jg=",
+		"eddsa": "ErCHR7PMWiCHNZnRwK2oAHLnrydMCKVzP84JZS8ZAuGd",
+		"es256": "i3XWJbqjkLvST16BSvNO1owZG56RcU590Kp/SvWgHy4=",
+		"ethereum": "bbcf12b582ec688474e765e63b45040981e1cebb657c17d2925298dfe6f75d40",
+		"reflow": "hd74Aegfq8nRDWCqs5vOA0lHOzHQzjzIByBLtgwfLYU="
+	},
+	"client_id": "did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67",
+	"request": {
+		"headers": {
+			"content-length": 42,
+			"Content-Type": "application/x-www-form-urlencoded"
+		}
+	},
+	"jwt-body-params": {
+		"redirectUris": [
+			"https://Wallet.didroom.com/cb"
+		],
+		"grant_type": "authorization_code"
+	}
+}
