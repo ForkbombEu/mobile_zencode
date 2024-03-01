@@ -38,11 +38,11 @@ flowchart TD
     K[Keyring] --> B
     R[Cred Req] -->|cred_req_spec_data| B
     B{Holder wallet}
-    B -->|script 1| code_ver[code verifier]
+    B ==>|script 1| code_ver>code verifier]
     B -->|script 1| client -->|http| par{API /par\nauthz server}
     B -->|script 1| request -->|http| par
-    par --> exp[expires_in] -->|http| B
-    par --> requr[request_uri] -->|http| B
+    par --> exp[expires_in] .->|http| B
+    par --> requr>request_uri] ==>|http| B
 ```
 
 ## Script 3
@@ -54,7 +54,7 @@ flowchart TD
     codever[code verifier] --> W
     D[holder DID] -->|client_id| W
     K[keyring] --> W
-    trsd[token request\nspecific data] --> W
+    trsd((token request\nspecific data)) --> W
     A[CI url QR] -->|!external-qr-code-content| W
     W .->|timestamp| W
     W -->|script 3| acj[authCode_jwt] -->|http| authz{API /token\nauthz server}
