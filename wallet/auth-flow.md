@@ -20,16 +20,10 @@ autonumber
   S1->>S1: Execute zencode and produce "client" and "request" and "code verifier"
   S1->>H: Store "code verifier" in a state
   S1->>P: Pass "client" and "request"
-  P->>H: return "request_uri" and "exp_time" 
+  P->>H: return "request_uri" and "expires_in" 
 
 
 ```
 Glossary: 
 
-S1: [Script 1](https://github.com/ForkbombEu/mobile_zencode/blob/main/wallet/1_holder_to_authorize_on_authz_server.zen)
-
-
-
-## Flusso Authlete
-
-https://gyazo.com/9461e34b872fc4012a8e4f188df5329f
+Script 1: [Script 1](https://github.com/ForkbombEu/mobile_zencode/blob/main/wallet/1_holder_to_authorize_on_authz_server.zen)
