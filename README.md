@@ -1,8 +1,8 @@
 <div align="center">
 
-# DIDroom standalone microservices
+# Mobile Zencode
 
-### Implementation of the [OpenID4VC](https://openid.net/sg/openid4vc/) with the [Zenroom stack](https://forkbomb.solutions/component/zenroom/)
+### Mobile components implementating [OpenID4VC](https://openid.net/sg/openid4vc/) and [OpenID4VP](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html) based on [Zenroom stack](https://forkbomb.solutions/component/zenroom/) and [Slangroom](https://github.com/dyne/slangroom)
 
 </div>
 
