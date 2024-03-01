@@ -6,7 +6,6 @@ Rule unknown ignore
 Given I fetch the local timestamp in seconds and output into 'timestamp'
 Given I have a 'time' named 'timestamp'
 
-
 Given I have the 'keyring'
 
 # Given I have a 'string dictionary' named 'authorization_request_body'
@@ -27,11 +26,11 @@ Given I have a 'string' named 'authorization_server' inside 'qr-code-content'
 
 
 
+
 When I rename the 'authorizationCode' to 'code'
 
 When I create the copy of element '1' from array 'redirectUris'
-When I rename the 'redirectUris' to 'throw-away'
-When I rename the 'copy' to 'redirectUris'
+When I rename the 'copy' to 'redirect_uri'
 
 
 When I set 'base-url' to 'http://' as 'string'
@@ -40,7 +39,7 @@ When I create the url from 'base-url'
 When I append 'grant_type'  as http request to 'url'
 When I append 'client_id'     as http request to 'url'
 When I append 'code_verifier'  as http request to 'url'
-When I append the percent encoding of 'redirectUris'  as http request to 'url'
+When I append percent encoding of 'redirect_uri'  as http request to 'url'
 When I append 'code'  as http request to 'url'
 When I split the leftmost '8' bytes of 'url'
 When I rename the 'url' to 'body'
@@ -66,8 +65,9 @@ When I create the random object of '256' bits
 When I write the string '' in 'jti'
 When I append the 'url64' of 'random object' to 'jti'
 
-# Debug timestamp
+# debug timestamp
 # When I copy 'timestamp' to 'temp-timestamp'
+
 When I rename the 'timestamp' to 'iat'
 
 When I move 'jti' in 'payload'
@@ -88,8 +88,8 @@ Then print the 'request'
 
 Then print the 'authCode_jwt'
 
-# Debug timestamp
-# Then print the 'temp-timestamp'
+# debug timestamp
+#Then print the 'temp-timestamp'
 
 
 # Then print the 'jws header'

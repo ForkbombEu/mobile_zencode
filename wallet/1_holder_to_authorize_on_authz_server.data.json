@@ -1,0 +1,29 @@
+{
+	"!external-qr-code-content": {
+		"scope": "Auth1",
+		"relying_party": "http://relying-party1.zenswarm.forkbomb.eu:3100",
+		"resource": "http://issuer1.zenswarm.forkbomb.eu:3100/",
+		"authorization_server": "http://authz-server1.zenswarm.forkbomb.eu:3100"
+	},
+	"jwt-body-params": {
+		"response_type": "code",
+		"code_challenge_method": "S256",
+		"state": "xyz",
+		"redirectUris": [
+			"https://didroom.com/"
+		]
+	},
+	"request": {
+		"headers": {
+			"Authorization": "basic"
+		}
+	},
+	"client": {
+		"grants": [
+			"authorization_code"
+		],
+		"redirectUris": [
+			"https://didroom.com/"
+		]
+	}
+}
