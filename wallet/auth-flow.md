@@ -43,5 +43,21 @@ flowchart TD
     B -->|script 1| request -->|http| par
     par --> exp[expires_in] -->|http| B
     par --> requr[request_uri] -->|http| B
+```
 
+## Script 3
+```mermaid
+flowchart TD
+    requri -->|http| requri
+    requri[request uri] -->|authCode_jwt| W
+    W{Holder Wallet}
+    codever[code verifier] --> W
+    D[holder DID] -->|client_id| W
+    K[keyring] --> W
+    trsd[token request\nspecific data] --> W
+    A[CI url QR] -->|!external-qr-code-content| W
+    W .->|timestamp| W
+    W -->|script 3| acj[authCode_jwt] -->|http| authz{API /token\nauthz server}
+    W -->|script 3| req[request] -->|http| authz
+    authz ==> tok>accessToken_jwt] ==>|http| W
 ```
