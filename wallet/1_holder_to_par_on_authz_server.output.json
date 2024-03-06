@@ -1,0 +1,12 @@
+{
+   "clientSecret": "eyJhbGciOiJFUzI1NiJ9.eyJjb2RlX2NoYWxsZW5nZSI6Ik5sWmpkMjExWkVrME9VSjBkelpqVWpkTlVrcDZWbVF4YzNGMFozUnNhM0pOWDJocFEwaEhlRzVUT0EifQ.kvhddwMEHAXd6fPXz5KphjpqI83bK6vl_NRB2FX_pj1Uvh-U5YenO26D2kVM1czB3RnEC2O6GJITNOKE9QsiAg",
+   "client_id": "did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67",
+   "code_challenge": "6VcwmudI49Btw6cR7MRJzVd1sqtgtlkrM_hiCHGxnS8",
+   "code_challenge_method": "S256",
+   "code_verifier": "cQQVDrucOBQa21hgqtSoMoTpyULzwJVc37eM3VBfimE",
+   "redirect_uri": "https://didroom.com/",
+   "resource": "http://issuer1.zenswarm.forkbomb.eu/",
+   "response_type": "code",
+   "scope": "Auth1",
+   "state": "xyz"
+}

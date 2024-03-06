@@ -13,19 +13,6 @@
 			"redirectUris": [
 				"https://didroom.com/"
 			]
-		},
-		"request": {
-			"headers": {
-				"Authorization": "basic"
-			}
-		},
-		"client": {
-			"grants": [
-				"authorization_code"
-			],
-			"redirectUris": [
-				"https://didroom.com/"
-			]
 		}
 	}
 }
