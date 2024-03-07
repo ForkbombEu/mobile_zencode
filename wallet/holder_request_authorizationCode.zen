@@ -1,3 +1,5 @@
+Rule unknown ignore
+
 # prepare keys
 Given I send object 'keys_1' and send path 'keyring_path' and send value 'keyring' and manipulate and set and output into 'keys'
 Given I send object 'keys' and send path 'client_id_path' and send value 'client_id' and manipulate and set and output into 'keys'
