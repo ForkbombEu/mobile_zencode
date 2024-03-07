@@ -1,0 +1,26 @@
+{
+    "keys": {},
+    "data": {},
+    "keyring_path": "keyring",
+    "client_id_path": "client_id",
+    "oauth_flow_parameters_path": "oauth_flow_parameters",
+    "!external-qr-code-content_path": "!external-qr-code-content",
+    "request_uri_path": "request_uri",
+    "expires_in_path": "expires_in_path",
+    "authorization_server_authorize_endpoint_path": "authorization_server_authorize_endpoint",
+    "code_path": "code",
+    "code_verifier_path": "code_verifier",
+    "zen_1_path": "wallet/1_holder_to_par_on_authz_server.zen",
+    "zen_3_path": "wallet/3_holder_fetch_request_uri.zen",
+    "zen_5_path": "wallet/5_holder_sends_authorizationCode_and_more_to_api_token.zen",
+	"keyring": {
+		"bitcoin": "L532fW63yrm6Jgd36NXYFDEz5HsmgTz67mGYsKkCtt26rAg7qg8y",
+		"credential": "hd74Aegfq8nRDWCqs5vOA0lHOzHQzjzIByBLtgwfLYU=",
+		"ecdh": "oTiBxSDE71k5PFaXTxnTb9zsTTdZ701XMWKbdnhN5Jg=",
+		"eddsa": "ErCHR7PMWiCHNZnRwK2oAHLnrydMCKVzP84JZS8ZAuGd",
+		"es256": "i3XWJbqjkLvST16BSvNO1owZG56RcU590Kp/SvWgHy4=",
+		"ethereum": "bbcf12b582ec688474e765e63b45040981e1cebb657c17d2925298dfe6f75d40",
+		"reflow": "hd74Aegfq8nRDWCqs5vOA0lHOzHQzjzIByBLtgwfLYU="
+	},
+	"client_id": "did:dyne:sandbox.signroom:PTDvvQn1iWQiVxkfsDnUid8FbieKbHq46Qs8c9CZx67"
+}

@@ -1,9 +1,10 @@
 scenario 'w3c': DPoP
 
-
+# keys
 Given I have a 'keyring' 
 Given I have a 'string' named 'client_id'
 
+# data
 Given I have a 'string' named 'grant_type' inside 'oauth_flow_parameters'
 Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
 Given I have a 'string' named 'token_endpoint' inside 'oauth_flow_parameters'
@@ -60,17 +61,19 @@ When I create the jws signature of header 'DPoP-header' and payload 'DPoP-payloa
 
 When I rename the 'jws signature' to 'DPoP'
 
-Then print the 'DPoP'
-Then print the 'client_id'
-Then print the 'code'
-Then print the 'redirect_uri'
-Then print the 'code_verifier'
-Then print the 'grant_type'
+When I create the 'string dictionary' named 'post'
+When I create the 'string dictionary' named 'data'
+and I move 'DPoP' in 'data'
+and I move 'client_id' in 'data'
+and I move 'code' in 'data'
+and I move 'redirect_uri' in 'data'
+and I move 'code_verifier' in 'data'
+and I move 'grant_type' in 'data'
+and I move 'data' in 'post'
+
+Then print the 'post'
 Then print the '!authorization_server_token_endpoint'
 
 
 # TO DO
 # Slangroom send all the output to  to "!authorization_server_token_endpoint"
-
-
-

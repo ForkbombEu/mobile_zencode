@@ -1,9 +1,10 @@
-Given I have a 'string' named 'request_uri'
+# keys
 Given I have a 'string' named 'client_id'
+
+# data
+Given I have a 'string' named 'request_uri'
 Given I have a 'number' named 'expires_in'
 Given I have a 'string dictionary' named 'oauth_flow_parameters'
-
-
 Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
 Given I have a 'string' named 'authorize_endpoint' inside 'oauth_flow_parameters'
 # Given I have a 'string' named 'authorize_endpoint' inside '!external-qr-code-content'
@@ -14,17 +15,11 @@ When I split the rightmost '1' bytes of 'authorization_server'
 Endif 
 
 When I append 'authorize_endpoint' to 'authorization_server' 
-When I rename the 'authorization_server' to 'authorization_server_authorize_endpoint'
 
+When I create url from 'authorization_server'
+and I append percent encoding of 'request_uri' as http request to 'url'
+and I append percent encoding of 'client_id' as http request to 'url'
 
+When I rename the 'url' to 'authorization_server_authorize_endpoint'
 
-Then print the 'request_uri'
 Then print the 'authorization_server_authorize_endpoint'
-Then print the 'request_uri'
-Then print the 'client_id'
-
-
-## TO DO 
-# Slangroom GET to authorization_server_authorize_endpoint  sending  'request_uri' and  'client_id'
-
-

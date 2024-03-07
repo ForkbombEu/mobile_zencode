@@ -69,8 +69,6 @@ and I move 'data' in 'post'
 then print the 'authorization_server_endpoint_par'
 then print the 'post'
 
-then print the 'code_verifier'
 # this needs to saved into a state for later usage
 # code verifier will be sent authz server in a later stage
-
-Then I connect to 'authorization_server_endpoint_par' and send object 'post' and do post and output into 'authorization_server_endpoint_par_response' 
+then print the 'code_verifier'

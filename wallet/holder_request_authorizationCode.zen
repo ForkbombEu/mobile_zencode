@@ -1,0 +1,54 @@
+# keys
+Given I send object 'keys' and send path 'keyring_path' and send value 'keyring' and manipulate and set and output into 'keys'
+Given I send object 'keys' and send path 'client_id_path' and send value 'client_id' and manipulate and set and output into 'keys'
+
+# data
+Given I send object 'data' and send path 'oauth_flow_parameters_path' and send value 'oauth_flow_parameters' and manipulate and set and output into 'data'
+Given I send object 'data' and send path '!external-qr-code-content_path' and send value '!external-qr-code-content' and manipulate and set and output into 'data'
+
+# execute zen_1
+Given I send path 'zen_1_path' and read verbatim file content and output into 'zen_1'
+Given I send keys 'keys' and send data 'data' and send script 'zen_1' and execute zencode and output into 'zen_1_output'
+
+# extarct post parameters
+Given I send object 'zen_1_output' and send path 'post_path' and manipulate and get and output into 'post_1'
+Given I send object 'zen_1_output' and send path 'authorization_server_endpoint_par_path' and manipulate and get and output into 'authorization_server_endpoint_par'
+Given I send object 'zen_1_output' and send path 'code_verifier_path' and manipulate and get and output into 'code_verifier'
+
+# post
+Given I connect to 'authorization_server_endpoint_par' and send object 'post_1' and do post and output into 'authorization_server_endpoint_par_response' 
+
+# add stuff to data
+Given I send object 'authorization_server_endpoint_par_response' and send path 'request_uri_path' and manipulate and get and output into 'request_uri'
+Given I send object 'authorization_server_endpoint_par_response' and send path 'expires_in_path' and manipulate and get and output into 'expires_in'
+Given I send object 'data' and send path 'request_uri_path' and send value 'request_uri' and manipulate and set and output into 'data'
+Given I send object 'data' and send path 'expires_in_path' and send value 'expires_in' and manipulate and set and output into 'data'
+
+# execute zen_3
+Given I send path 'zen_3_path' and read verbatim file content and output into 'zen_3'
+Given I send keys 'keys' and send data 'data' and send script 'zen_3' and execute zencode and output into 'zen_3_output'
+
+# get parameters
+Given I send object 'zen_3_output' and send path 'authorization_server_authorize_endpoint_path' and manipulate and get and output into 'authorization_server_authorize_endpoint'
+
+# get
+Given I connect to 'authorization_server_authorize_endpoint' and do get and output into 'authorization_server_authorize_endpoint_response'
+
+# add stuff to data
+Given I send object 'authorization_server_authorize_endpoint_response' and send path 'code_path' and manipulate and get and output into 'code'
+Given I send object 'data' and send path 'code_path' and send value 'code' and manipulate and set and output into 'data'
+Given I send object 'data' and send path 'code_verifier_path' and send value 'code_verifier_path' and manipulate and set and output into 'data'
+
+# execute zen_5
+Given I send path 'zen_5_path' and read verbatim file content and output into 'zen_5'
+Given I send keys 'keys' and send data 'data' and send script 'zen_5' and execute zencode and output into 'zen_5_output'
+
+# extarct post parameters
+Given I send object 'zen_5_output' and send path 'post_path' and manipulate and get and output into 'post_5'
+Given I send object 'zen_5_output' and send path '!authorization_server_token_endpoint_path' and manipulate and get and output into '!authorization_server_token_endpoint'
+
+# post
+Given I connect to '!authorization_server_token_endpoint_path' and send object 'post_5' and do post and output into '!authorization_server_token_endpoint_path_5' 
+
+Given I have a 'string dictionary' named 'access token'
+Then print the 'access token'
