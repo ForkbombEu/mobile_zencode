@@ -36,7 +36,7 @@ flowchart LR
     A((CI url QR)) -->|!external-qr-code-content| B
     D((Holder DID)) -->|client_id| B
     K((Keyring)) --> B
-    R((Cred Req)) -->|cred_req_spec_data| B
+    R((Cred Req)) -->|spec_data| B
     B{Holder wallet\nScript 1}
     B ==>|save| qr>!external-qr-code-content]
     B ==>|save| id>client id]
@@ -50,12 +50,12 @@ flowchart LR
 ## Script 3
 ```mermaid
 flowchart LR
-    keys((.keys)) -->|auth endpoint| W
+    R((Cred Req)) -->|auth endpoint| W
     requri -->|http| requri
     requri>request uri] --> W
-    D>holder DID] -->|client id| W
+    id>client id] -->|client id| W
+    qr>!external-qr-code-content] -->|!external-qr-code-content| W
     W{Holder Wallet\nScript 3}
-    A>CI url QR] -->|!external-qr-code-content| W
     W --> req[auth server\n + auth endpoint\n + request uri\n + client id] -->|http| authz
     authz ==> tok>accessToken_jwt] ==>|http| W
 ```
