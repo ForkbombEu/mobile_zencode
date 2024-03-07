@@ -58,5 +58,5 @@ Given I send object 'zen_5_output' and send path '!authorization_server_token_en
 Given I connect to '!authorization_server_token_endpoint' and send object 'post_5' and do post and output into '!authorization_server_token_endpoint_path_response'
 
 # read accessToken_jwt
-Given I have a 'string dictionary' in path '!authorization_server_token_endpoint_path_response.result.accessToken_jwt'
+Given I have a 'string dictionary' in path '!authorization_server_token_endpoint_path_response.result'
 Then print the data
