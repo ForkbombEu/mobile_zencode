@@ -9,7 +9,7 @@ Given I send object 'data' and send path '!external-qr-code-content_path' and se
 #######
 # execute zen_1
 #######
-Given I send path 'zen_1_path' and read verbatim file content and output into 'zen_1'
+# Given I send path 'zen_1_path' and read verbatim file content and output into 'zen_1'
 Given I send keys 'keys' and send data 'data' and send script 'zen_1' and execute zencode and output into 'zen_1_output'
 
 # extract post parameters
@@ -29,7 +29,7 @@ Given I send object 'data' and send path 'expires_in_path' and send value 'expir
 #######
 # execute zen_3
 #######
-Given I send path 'zen_3_path' and read verbatim file content and output into 'zen_3'
+# Given I send path 'zen_3_path' and read verbatim file content and output into 'zen_3'
 Given I send keys 'keys' and send data 'data' and send script 'zen_3' and execute zencode and output into 'zen_3_output'
 
 # extract post parameters
@@ -47,7 +47,7 @@ Given I send object 'data' and send path 'code_verifier_path' and send value 'co
 #######
 # execute zen_5
 #######
-Given I send path 'zen_5_path' and read verbatim file content and output into 'zen_5'
+# Given I send path 'zen_5_path' and read verbatim file content and output into 'zen_5'
 Given I send keys 'keys' and send data 'data' and send script 'zen_5' and execute zencode and output into 'zen_5_output'
 
 # extract post parameters
