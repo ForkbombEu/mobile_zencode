@@ -53,7 +53,6 @@ When I append 'par_endpoint' to 'authorization_server'
 and I rename 'authorization_server' to 'authorization_server_endpoint_par'
 
 # - create par post body
-When I create the 'string dictionary' named 'post'
 When I create the 'string dictionary' named 'data'
 and I move 'response_type' in 'data'
 and I move 'client_id' in 'data'
@@ -64,10 +63,9 @@ and I move 'code_challenge_method' in 'data'
 and I move 'state' in 'data'
 and I move 'scope' in 'data'
 and I move 'resource' in 'data'
-and I move 'data' in 'post'
 
 then print the 'authorization_server_endpoint_par'
-then print the 'post'
+then print the 'data'
 
 # this needs to saved into a state for later usage
 # code verifier will be sent authz server in a later stage

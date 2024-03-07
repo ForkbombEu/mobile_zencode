@@ -16,11 +16,11 @@ When I split the rightmost '1' bytes of 'authorization_server'
 Endif 
 
 When I append 'authorize_endpoint' to 'authorization_server' 
+When I rename the 'authorization_server' to 'authorization_server_authorize_endpoint'
 
-When I create url from 'authorization_server'
-and I append percent encoding of 'request_uri' as http request to 'url'
-and I append percent encoding of 'client_id' as http request to 'url'
+When I create the 'string dictionary' named 'data'
+and I move 'request_uri' in 'data'
+and I move 'client_id' in 'data'
 
-When I rename the 'url' to 'authorization_server_authorize_endpoint'
-
+Then print the 'data'
 Then print the 'authorization_server_authorize_endpoint'

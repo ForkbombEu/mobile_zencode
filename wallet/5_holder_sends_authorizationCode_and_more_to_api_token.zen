@@ -12,7 +12,7 @@ Given I have a 'string' named 'token_endpoint' inside 'oauth_flow_parameters'
 Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
 
 
-Given I have a 'url64' named 'code_verifier'
+Given I have a 'string' named 'code_verifier'
 Given I have a 'string' named 'code'
 
 When I pickup from path 'jwt-body-params.redirectUris'
@@ -61,7 +61,6 @@ When I create the jws signature of header 'DPoP-header' and payload 'DPoP-payloa
 
 When I rename the 'jws signature' to 'DPoP'
 
-When I create the 'string dictionary' named 'post'
 When I create the 'string dictionary' named 'data'
 and I move 'DPoP' in 'data'
 and I move 'client_id' in 'data'
@@ -69,11 +68,6 @@ and I move 'code' in 'data'
 and I move 'redirect_uri' in 'data'
 and I move 'code_verifier' in 'data'
 and I move 'grant_type' in 'data'
-and I move 'data' in 'post'
 
-Then print the 'post'
+Then print the 'data'
 Then print the '!authorization_server_token_endpoint'
-
-
-# TO DO
-# Slangroom send all the output to  to "!authorization_server_token_endpoint"
