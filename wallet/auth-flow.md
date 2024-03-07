@@ -33,18 +33,35 @@ Script 1: [Script 1](https://github.com/ForkbombEu/mobile_zencode/blob/main/wall
 ## Script 1
 ```mermaid
 flowchart LR
-    A[CI url QR] -->|!external-qr-code-content| B
-    D[Holder DID] -->|client_id| B
-    K[Keyring] --> B
-    R[Cred Req] -->|cred_req_spec_data| B
-    B{Holder wallet}
-    B ==>|script 1| code_verifier>code verifier]
-    B -->|script 1| par_input>par input] -->|http| par{API /par\nauthz server}
+    A((CI url QR)) -->|!external-qr-code-content| B
+    D((Holder DID)) -->|client_id| B
+    K((Keyring)) --> B
+    R((Cred Req)) -->|cred_req_spec_data| B
+    B{Holder wallet\nScript 1}
+    B ==>|save| qr>!external-qr-code-content]
+    B ==>|save| id>client id]
+    B ==>|save| code_verifier>code verifier]
+    B --> par_input[par input] -->|http| par{API /par\nauthz server}
     par --> exp[expires_in] .->|http| B
-    par --> requr>request_uri] ==>|http| B
+    B ==>|save| requr>request_uri]
+    par -->requr
 ```
 
 ## Script 3
+```mermaid
+flowchart LR
+    keys((.keys)) -->|auth endpoint| W
+    requri -->|http| requri
+    requri>request uri] --> W
+    D>holder DID] -->|client id| W
+    W{Holder Wallet\nScript 3}
+    A>CI url QR] -->|!external-qr-code-content| W
+    W --> req[auth server\n + auth endpoint\n + request uri\n + client id] -->|http| authz
+    authz ==> tok>accessToken_jwt] ==>|http| W
+```
+
+
+## Script 5
 ```mermaid
 flowchart LR
     requri -->|http| requri
@@ -60,3 +77,4 @@ flowchart LR
     W -->|script 3| req[request] -->|http| authz
     authz ==> tok>accessToken_jwt] ==>|http| W
 ```
+
