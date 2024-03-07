@@ -1,3 +1,4 @@
+Scenario 'http': url
 # keys
 Given I have a 'string' named 'client_id'
 

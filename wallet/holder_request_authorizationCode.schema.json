@@ -1,10 +1,10 @@
 {
     "type": "object",
     "properties": {
-      "keys": {
+      "keys_1": {
         "type": "object"
       },
-      "data": {
+      "data_1": {
         "type": "object"
       },
       "keyring_path": {
@@ -83,8 +83,8 @@
       }
     },
     "required": [
-      "keys",
-      "data",
+      "keys_1",
+      "data_1",
       "keyring_path",
       "client_id_path",
       "oauth_flow_parameters_path",
