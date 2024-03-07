@@ -4,6 +4,8 @@ Scenario 'w3c' : create JWS
 Given I have a 'string dictionary' named '!external-qr-code-content'
 Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
 Given I have a 'string' named 'client_id'
+Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
+Given I have a 'string' named 'par_endpoint' inside 'oauth_flow_parameters'
 
 Given I have a 'keyring'
 
@@ -43,23 +45,32 @@ When I rename the 'copy' to 'redirect_uri'
 When I pickup from path '!external-qr-code-content.scope'
 When I pickup from path '!external-qr-code-content.resource'
 
-then print the 'response_type'
-then print the 'client_id'
-then print the 'clientSecret'
-then print the 'redirect_uri'
-then print the 'code_challenge'
-then print the 'code_challenge_method'
-then print the 'state'
-then print the 'scope'
-then print the 'resource'
+# - create par endpoint
+If I verify 'authorization_server' has suffix '/'
+When I split the rightmost '1' bytes of 'authorization_server'
+Endif
+When I append 'par_endpoint' to 'authorization_server' 
+and I rename 'authorization_server' to 'authorization_server_endpoint_par'
+
+# - create par post body
+When I create the 'string dictionary' named 'post'
+When I create the 'string dictionary' named 'data'
+and I move 'response_type' in 'data'
+and I move 'client_id' in 'data'
+and I move 'clientSecret' in 'data'
+and I move 'redirect_uri' in 'data'
+and I move 'code_challenge' in 'data'
+and I move 'code_challenge_method' in 'data'
+and I move 'state' in 'data'
+and I move 'scope' in 'data'
+and I move 'resource' in 'data'
+and I move 'data' in 'post'
+
+then print the 'authorization_server_endpoint_par'
+then print the 'post'
 
 then print the 'code_verifier'
 # this needs to saved into a state for later usage
 # code verifier will be sent authz server in a later stage
 
-
- 
-### TO DO:
-## 1) group and organize output based on the input to /par and the objects to be stored in a state
- 
-# 2) Add Slangroon script that sends data to /par
+Then I connect to 'authorization_server_endpoint_par' and send object 'post' and do post and output into 'authorization_server_endpoint_par_response' 
