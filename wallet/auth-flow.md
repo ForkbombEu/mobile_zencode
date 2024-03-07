@@ -36,45 +36,47 @@ flowchart LR
     A((CI url QR)) -->|!external-qr-code-content| B
     D((Holder DID)) -->|client_id| B
     K((Keyring)) --> B
-    R((Cred Req)) -->|spec_data| B
+    R((Oauth Flow\nParameters)) -->|spec_data\nredirect uri| B
     B{Holder wallet\nScript 1}
-    B ==>|save| qr>!external-qr-code-content]
+    B ==>|save| qr>qr-code]
     B ==>|save| id>client id]
     B ==>|save| code_verifier>code verifier]
     B --> par_input[par input] -->|http| par{API /par\nauthz server}
     par --> exp[expires_in] .->|http| B
     B ==>|save| requr>request_uri]
     par -->requr
+    par_input-->|copy out|redur
+    B ==>|save| redur>redirect uri]
 ```
 
 ## Script 3
 ```mermaid
 flowchart LR
-    R((Cred Req)) -->|auth endpoint| W
-    requri -->|http| requri
+    R((Oauth Flow\nParameters)) -->|auth endpoint| W
     requri>request uri] --> W
-    id>client id] -->|client id| W
-    qr>!external-qr-code-content] -->|!external-qr-code-content| W
+    id>client id] --> W
+    qr>qr-code] --> W
     W{Holder Wallet\nScript 3}
-    W --> req[auth server\n + auth endpoint\n + request uri\n + client id] -->|http| authz
-    authz ==> tok>accessToken_jwt] ==>|http| W
+    W -->|auth server\n + auth endpoint\n + request uri\n + client id| authz{API /authorize\nauthz server}
+    authz --> tok>code]
+    W ==>|save| tok
 ```
 
 
 ## Script 5
 ```mermaid
 flowchart LR
-    requri -->|http| requri
-    requri[request uri] -->|authCode_jwt| W
-    W{Holder Wallet}
-    codever[code verifier] --> W
-    D[holder DID] -->|client_id| W
-    K[keyring] --> W
-    trsd((token request\nspecific data)) --> W
-    A[CI url QR] -->|!external-qr-code-content| W
+    K((Keyring)) --> W
+    R((Oauth Flow\nParameters)) --> W
+    qr>qr-code] --> W
+    jwt>code] --> W
+    W{Holder Wallet\nScript 5}
+    codever>code verifier] --> W
+    id>client id] --> W
     W .->|timestamp| W
-    W -->|script 3| acj[authCode_jwt] -->|http| authz{API /token\nauthz server}
-    W -->|script 3| req[request] -->|http| authz
-    authz ==> tok>accessToken_jwt] ==>|http| W
+    W -->|http| authz{API /token\nauthz server}
+    authz --> tok>accessToken_jwt]
+    W ==>|save| tok
 ```
+
 
