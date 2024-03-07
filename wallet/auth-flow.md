@@ -38,8 +38,8 @@ flowchart LR
     K[Keyring] --> B
     R[Cred Req] -->|cred_req_spec_data| B
     B{Holder wallet}
-    B ==>|script 1| code_ver>code verifier]
-    B -->|script 1| client data -->|http| par{API /par\nauthz server}
+    B ==>|script 1| code_verifier>code verifier]
+    B -->|script 1| par_input>par input] -->|http| par{API /par\nauthz server}
     par --> exp[expires_in] .->|http| B
     par --> requr>request_uri] ==>|http| B
 ```
