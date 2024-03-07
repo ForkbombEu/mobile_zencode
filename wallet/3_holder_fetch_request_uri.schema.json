@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "client_id"
+  ]

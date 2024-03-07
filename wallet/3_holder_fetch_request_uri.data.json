@@ -1,0 +1,25 @@
+{
+	"request_uri": "urn:ietf:params:oauth:request_uri:28ddedb1ccda652dbcfc0314f9aeb6adbcf6d11a",
+	"expires_in": 300,
+	"authorization_server": "http://authz-server1.zenswarm.forkbomb.eu/authz_server",
+	"oauth_flow_parameters": {
+		"authorize_endpoint": "/authorize",
+		"par_endpoint": "/par",
+		"token_endpoint": "/token",
+		"grant_type": "authorization_code",
+		"jwt-body-params": {
+			"response_type": "code",
+			"code_challenge_method": "S256",
+			"state": "xyz",
+			"redirectUris": [
+				"https://didroom.com/"
+			]
+		}
+	},
+	"!external-qr-code-content": {
+		"scope": "Auth1",
+		"relying_party": "http://relying-party1.zenswarm.forkbomb.eu/",
+		"resource": "http://issuer1.zenswarm.forkbomb.eu/",
+		"authorization_server": "http://authz-server1.zenswarm.forkbomb.eu/"
+	}
+}

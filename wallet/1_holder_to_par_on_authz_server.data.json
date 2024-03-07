@@ -5,7 +5,11 @@
 		"resource": "http://issuer1.zenswarm.forkbomb.eu/",
 		"authorization_server": "http://authz-server1.zenswarm.forkbomb.eu/"
 	},
-	"credential_request_specific_data": {
+	"oauth_flow_parameters": {
+		"authorize_endpoint": "/authorize",
+		"par_endpoint": "/par",
+		"token_endpoint": "/token",
+		"grant_type": "authorization_code",
 		"jwt-body-params": {
 			"response_type": "code",
 			"code_challenge_method": "S256",

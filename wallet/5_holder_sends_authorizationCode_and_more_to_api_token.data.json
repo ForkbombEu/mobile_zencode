@@ -1,0 +1,24 @@
+{
+	"code": "eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiI2YjAzZmM4ZjY1YWYzMGM0OGZmMGIzYzFkNWNmM2M2OGM2NDdmOTBiIiwiaWF0IjoxNzA5ODA1NjY4LCJpc3MiOiJodHRwczovL2F1dGh6LXNlcnZlcjEuemVuc3dhcm0uZm9ya2JvbWIuZXU6MzEwMCIsImF1ZCI6ImRpZDpkeW5lOnNhbmRib3guc2lnbnJvb206UFREdnZRbjFpV1FpVnhrZnNEblVpZDhGYmllS2JIcTQ2UXM4YzlDWng2NyIsImV4cCI6MTcwOTgwOTI2N30.OhLIGrUMb4l4dUkJkL5z7MCj5KZDQMmLeeG0q3GRbtXr5hyqOFAobUc40GcUKBhJ4hzMaZ4KoIUzLBBaCe1yiw",
+	"code_verifier": "fS8Ofm6UN59msNmSRrMRALuOxF9ri-ZEk2plnUK9M9o",
+	"oauth_flow_parameters": {
+		"authorize_endpoint": "/authorize",
+		"par_endpoint": "/par",
+		"token_endpoint": "/token",
+		"grant_type": "authorization_code",
+		"jwt-body-params": {
+			"response_type": "code",
+			"code_challenge_method": "S256",
+			"state": "xyz",
+			"redirectUris": [
+				"https://didroom.com/"
+			]
+		}
+	},
+	"!external-qr-code-content": {
+		"scope": "Auth1",
+		"relying_party": "http://relying-party1.zenswarm.forkbomb.eu/",
+		"resource": "http://issuer1.zenswarm.forkbomb.eu/",
+		"authorization_server": "http://authz-server1.zenswarm.forkbomb.eu/"
+	}
+}

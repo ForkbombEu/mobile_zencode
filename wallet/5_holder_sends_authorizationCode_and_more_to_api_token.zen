@@ -1,0 +1,76 @@
+scenario 'w3c': DPoP
+
+
+Given I have a 'keyring' 
+Given I have a 'string' named 'client_id'
+
+Given I have a 'string' named 'grant_type' inside 'oauth_flow_parameters'
+Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
+Given I have a 'string' named 'token_endpoint' inside 'oauth_flow_parameters'
+
+Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
+
+
+Given I have a 'url64' named 'code_verifier'
+Given I have a 'string' named 'code'
+
+When I pickup from path 'jwt-body-params.redirectUris'
+When I create the copy of element '1' from array 'redirectUris'
+When I rename the 'copy' to 'redirect_uri'
+
+When I create jwk of es256 public key 
+
+When I create the random 'ramdom_jti'
+When I write the string '' in 'jti'
+When I append the 'url64' of 'ramdom_jti' to 'jti'
+
+
+
+If I verify 'authorization_server' has suffix '/'
+When I split the rightmost '1' bytes of 'authorization_server'
+Endif 
+
+When I append 'token_endpoint' to 'authorization_server' 
+When I copy 'authorization_server' to '!authorization_server_token_endpoint'
+When I rename the 'authorization_server' to 'htu'
+
+# 	 jti: randomBytes(16).toString('base64url'),
+#		htm: 'POST',
+#		htu: 'https://server.example.com/token',
+
+When I create the timestamp
+When I rename the 'timestamp' to 'iat'
+
+When I set 'htm' to 'POST' as 'string'
+When I set 'alg' to 'ES256' as 'string'
+When I set 'typ' to 'dpop+jwt' as 'string'
+
+When I create the 'string dictionary' named 'DPoP-payload'
+When I move 'iat' in 'DPoP-payload'
+When I move 'jti' in 'DPoP-payload'
+When I move 'htu' in 'DPoP-payload'
+When I move 'htm' in 'DPoP-payload'
+
+When I create the 'string dictionary' named 'DPoP-header'
+When I move 'alg' in 'DPoP-header'
+When I move 'typ' in 'DPoP-header'
+When I move 'jwk' in 'DPoP-header'
+
+When I create the jws signature of header 'DPoP-header' and payload 'DPoP-payload'
+
+When I rename the 'jws signature' to 'DPoP'
+
+Then print the 'DPoP'
+Then print the 'client_id'
+Then print the 'code'
+Then print the 'redirect_uri'
+Then print the 'code_verifier'
+Then print the 'grant_type'
+Then print the '!authorization_server_token_endpoint'
+
+
+# TO DO
+# Slangroom send all the output to  to "!authorization_server_token_endpoint"
+
+
+
