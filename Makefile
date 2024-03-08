@@ -44,3 +44,6 @@ test: ## 🧪 Run e2e tests on the APIs
 unit-test:
 	@git submodule update --init --recursive
 	@./test/bats/bin/bats test/wallet.bats
+
+api-test:
+	@npx stepci run "test/test_api.yml"

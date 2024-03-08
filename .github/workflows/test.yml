@@ -27,7 +27,7 @@ jobs:
       - name: 🏗️ build
         run: make &
       - name: 🚨 Run api test
-        run: npx stepci run "tests/credential_issuer.yml"
+        run: make api-test
   publish_docker_image:
     needs: api_test
     name: 🐳 publish docker image
