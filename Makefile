@@ -42,4 +42,5 @@ test: ## 🧪 Run e2e tests on the APIs
 	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
 
 unit-test:
+	@git submodule update --init --recursive
 	@./test/bats/bin/bats test/wallet.bats
