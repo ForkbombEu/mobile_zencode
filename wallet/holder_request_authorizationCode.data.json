@@ -10,6 +10,7 @@
 		"par_endpoint": "/par",
 		"token_endpoint": "/token",
 		"grant_type": "authorization_code",
+		"credential_endpoint": "/credential",
 		"jwt-body-params": {
 			"response_type": "code",
 			"code_challenge_method": "S256",
@@ -17,6 +18,10 @@
 			"redirectUris": [
 				"https://didroom.com/"
 			]
-		}
+		},
+		"format": "vc+sd-jwt",
+		"vct": "SD_JWT_VC_Auth1",
+		"Authorization": "BEARER "
 	}
 }
+

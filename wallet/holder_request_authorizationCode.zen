@@ -57,8 +57,29 @@ Given I send object 'zen_5_output' and send path 'data_path' and manipulate and 
 Given I send object 'zen_5_output' and send path '!authorization_server_token_endpoint_path' and manipulate and get and output into '!authorization_server_token_endpoint'
 
 # execute post 5
-Given I connect to '!authorization_server_token_endpoint' and send object 'post_5' and do post and output into '!authorization_server_token_endpoint_path_response'
+Given I connect to '!authorization_server_token_endpoint' and send object 'post_5' and do post and output into '!authorization_server_token_endpoint_response'
+
+# add results to data
+Given I send object '!authorization_server_token_endpoint_response' and send path 'r.access_token' and manipulate and get and output into 'access_token'
+Given I send object '!authorization_server_token_endpoint_response' and send path 'r.c_nonce' and manipulate and get and output into 'c_nonce'
+Given I send object 'data' and send path 'access_token_path' and send value 'access_token' and manipulate and set and output into 'data'
+Given I send object 'data' and send path 'c_nonce_path' and send value 'c_nonce' and manipulate and set and output into 'data'
+
+#######
+# execute zen_7
+#######
+# Given I send path 'zen_7_path' and read verbatim file content and output into 'zen_7'
+Given I send keys 'keys' and send data 'data' and send script 'zen_7' and execute zencode and output into 'zen_7_output'
+
+# extract post parameters
+Given I send object 'zen_7_output' and send path 'data_path' and manipulate and get and output into 'post_7'
+Given I send object 'zen_7_output' and send path 'authorization_server_credential_endpoint_path' and manipulate and get and output into 'authorization_server_credential_endpoint'
+Given I send object 'zen_7_output' and send path 'headers_path' and manipulate and get and output into 'headers'
+
+# set header to authorization
+# execute post 7
+Given I connect to 'authorization_server_credential_endpoint' and send object 'post_7' and send headers 'headers' and do post and output into 'authorization_server_credential_endpoint_response'
 
 # read accessToken_jwt
-Given I have a 'string dictionary' in path '!authorization_server_token_endpoint_path_response.result'
+Given I have a 'string dictionary' in path 'authorization_server_credential_endpoint_response.result'
 Then print the data
