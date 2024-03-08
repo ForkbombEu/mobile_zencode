@@ -3,11 +3,11 @@ name: Status Check
 env:
   host: localhost:3001
 tests:
-  post_to_authorization_code:
+  wallet_api:
     steps:
       - name: POST request
         http:
-          url: http://${{env.host}}/holder_request_authorizationCode
+          url: http://${{env.host}}/wallet/holder_request_authorizationCode
           method: POST
           body:
             file: ../wallet/holder_request_authorizationCode.data.json
