@@ -18,6 +18,7 @@ jobs:
           sudo cp zenroom /usr/local/bin
       - name: 🚨 Run test
         run: make unit-test
+
   api_test:
     runs-on: ubuntu-latest
     name: 🧪 VCI API Tests
@@ -28,9 +29,13 @@ jobs:
         run: make &
       - name: 🚨 Run api test
         run: make api-test
+
   publish_docker_image:
     needs: api_test
     name: 🐳 publish docker image
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      packages: write
     uses: interfacerproject/workflows/.github/workflows/publish-ghcr.yml@main
     secrets: inherit
