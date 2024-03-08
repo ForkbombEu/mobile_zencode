@@ -1,0 +1,108 @@
+#!/bin/bash
+
+set -e
+
+debug=0
+
+getscript() {
+    tszen="$R/$1"
+    echo $tszen
+    >&3 echo " ⚙️ $1"
+    return 0
+}
+
+getfile() {
+    file=$BATS_FILE_TMPDIR/$1
+    if [[ ! -r $file ]]; then file="$R/$1"; fi
+    if [[ ! -r $file ]]; then >&2 echo "Json not found: $1"; exit 1; fi
+    echo $file;
+}
+
+zexe() {
+    if [ "$conf" = "" ]; then
+	conf="debug=1"
+    fi
+    script=`getscript ${1}`
+    if (( $debug >= 1 )); then
+	>&3 cat $script
+    else
+	>&2 cat $script
+    fi
+    if [ $? != 0 ]; then >&2 echo "Error in Zencode script: $script"; return 1; fi
+
+    if [ "$2" == "" ]; then unset $input
+    else
+	input=`getfile ${2}`
+    if [[ $? != 0 ]]; then exit 1; fi
+	>&3 echo "   📝 `basename $input`"
+    fi
+
+    if [ "$3" == "" ]; then unset $keys
+    else
+	keys=`getfile ${3}`
+    if [[ $? != 0 ]]; then exit 1; fi
+	>&3 echo "   🔑 `basename $keys`"
+    fi
+
+    status=1 # BATS compatible
+
+    tmpout=$TMP/out
+    tmperr=$TMP/err
+
+    if [ "$keys" != "" ]; then
+	$ZENROOM_EXECUTABLE -c $conf -k $keys -a $input -z $script  1>$tmpout
+	status=$?
+    elif [ "$input" != "" ]; then
+	$ZENROOM_EXECUTABLE -c $conf -a $input -z $script           1>$tmpout
+	status=$?
+    else
+	$ZENROOM_EXECUTABLE -c $conf -z $script                     1>$tmpout
+	status=$?
+    fi
+    return $status
+}
+
+# jq_join_two path_file_1 path_file_2
+# save the result in path_file_2
+function json_join_two {
+    tmp=$(mktemp)
+    file1=`getfile ${1}`
+    if [[ $? != 0 ]]; then exit 1; fi
+    file2=`getfile ${2}`
+    if [[ $? != 0 ]]; then exit 1; fi
+    jq -s '.[0] * .[1]' $file1 $file2 > $tmp && mv $tmp $file2
+}
+
+# jq_insert key value path
+function jq_insert {
+    file=`getfile ${3}`
+    tmp=$(mktemp)
+    if [ `echo "$2" | jq type` == "\"object\"" ]; then
+        jq --arg key $1 --argjson value $2 '.[$key] = $value' $file > $tmp && mv $tmp $file
+    else
+        jq --arg key $1 --arg value $2 '.[$key] = $value' $file > $tmp && mv $tmp $file
+    fi
+}
+
+# jq_extract_raw key path
+function jq_extract_raw {
+    file=`getfile ${2}`
+    if [[ $? != 0 ]]; then exit 1; fi
+    jq -r --arg key $1 '.[$key]' $file
+}
+
+# jq_insert_json key path_json path_file
+function jq_insert_json {
+    json=`getfile ${2}`
+    if [[ $? != 0 ]]; then exit 1; fi
+    file=`getfile ${3}`
+    if [[ $? != 0 ]]; then exit 1; fi
+    tmp=$(mktemp)
+    jq --arg key $1 '.[$key] = input' $file $json > $tmp && mv $tmp $file
+}
+
+function save_tmp_output {
+    >&3 echo " 💾 $1"
+    export output=`cat $TMP/out`
+    cat $TMP/out | tee "$BATS_FILE_TMPDIR/$1"
+}

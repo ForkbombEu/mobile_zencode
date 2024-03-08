@@ -41,3 +41,5 @@ test: ## 🧪 Run e2e tests on the APIs
 	npx stepci run tests/credential_issuer.yml
 	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
 
+unit-test:
+	@./test/bats/bin/bats test/wallet.bats
