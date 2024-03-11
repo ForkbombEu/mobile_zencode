@@ -26,24 +26,21 @@ endif
 help: ## 🛟 Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-7s\033[0m %s\n", $$1, $$2}'
 
-setup: ## 📦 Install and setup the server
-ifeq (,$(wildcard ncr))
+ncr: ## 📦 Install and setup the server
 	@wget -q --show-progress https://github.com/forkbombeu/ncr/releases/latest/download/ncr
 	@chmod +x ./ncr
 	@echo "📦 Setup is done!"
-endif
 
-up:setup ## 🚀 Up & run the project
+up: ncr ## 🚀 Up & run the project
 	./ncr -p 3001 --hostname $(hn) 
 
-test: ## 🧪 Run e2e tests on the APIs
-	@./ncr -p 3001 & echo $$! > .test.ncr.pid
-	npx stepci run tests/credential_issuer.yml
-	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
+test: api-test unit-test
 
 unit-test:
 	@git submodule update --init --recursive
 	@./test/bats/bin/bats test/wallet.bats
 
-api-test:
-	@npx stepci run "test/test_api.yml"
+api-test: ncr
+	@./ncr -p 3001 & echo $$! > .test.ncr.pid
+	@npx stepci run test/test_api.yml
+	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
