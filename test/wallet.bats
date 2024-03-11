@@ -27,7 +27,7 @@ load ./bats_utils
     curl -X POST $url -d ''"$(echo $data)"'' 2>/dev/null 1> $TMP/out 
     save_tmp_output post_3_response.output.json
     # if --regexp resolve modify also here
-    assert_output --partial '{"code":"eyJhbGciOiJFUzI1NiJ9.'
+    assert_output --partial '{"code":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiOiJoLXlLRFRpVUttb0ZNcHdXR2tMcG42QksyU2pLeHdQYlVRMGVUaXpWeExrIiwieSI6Ii1VekQ0TlJtY2t0Qk5Db0dSUkNJWERuOUYwcUQzNDJVZlF5WTFSdG10TEEiLCJjcnYiOiJQLTI1NiJ9fQ.'
 }
 
 @test "Holder post to authz_server/token" {
@@ -41,7 +41,7 @@ load ./bats_utils
     curl -X POST $url -d ''"$(echo $data)"'' 2>/dev/null 1> $TMP/out 
     save_tmp_output post_5_response.output.json
     # if --regexp resolve modify also here
-    assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiJ9.'
+    assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiOiJoLXlLRFRpVUttb0ZNcHdXR2tMcG42QksyU2pLeHdQYlVRMGVUaXpWeExrIiwieSI6Ii1VekQ0TlJtY2t0Qk5Db0dSUkNJWERuOUYwcUQzNDJVZlF5WTFSdG10TEEiLCJjcnYiOiJQLTI1NiJ9fQ.'
     assert_output --partial '","c_nonce":"'
     assert_output --partial '","c_nonce_expires_in":3600,"expires_in":'
     assert_output --partial ',"resource":"https://issuer1.zenswarm.forkbomb.eu/credential_issuer/","scope":["Auth1"]}'
