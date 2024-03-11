@@ -1,0 +1,16 @@
+steps:
+  - name: POST request
+    http:
+      url: http://${{env.host}}/wallet/holder_request_authorizationCode
+      method: POST
+      body:
+        file: ../wallet/holder_request_authorizationCode.data.json
+      check:
+        status: 200
+        jsonpath:
+          $.result.credential_identifier:
+            - isDefined: true
+          $.result.proof.jwt:
+            - isDefined: true
+          $.result.proof.proof_type:
+            - eq: jwt
