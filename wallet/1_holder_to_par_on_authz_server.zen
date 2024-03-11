@@ -28,7 +28,7 @@ When I copy 'code_challenge' in 'jws payload'
 When I create jws header for p256 signature
 
 When I create jws signature of header 'jws header' and payload 'jws payload'
-When I rename the 'jws signature' to 'clientSecret'
+When I rename the 'jws signature' to 'client_secret'
 
 
 # - pickup stuff from jwt-body
@@ -56,7 +56,7 @@ and I rename 'authorization_server' to 'authorization_server_endpoint_par'
 When I create the 'string dictionary' named 'data'
 and I move 'response_type' in 'data'
 and I move 'client_id' in 'data'
-and I move 'clientSecret' in 'data'
+and I move 'client_secret' in 'data'
 and I move 'redirect_uri' in 'data'
 and I move 'code_challenge' in 'data'
 and I move 'code_challenge_method' in 'data'

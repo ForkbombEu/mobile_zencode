@@ -17,7 +17,7 @@ autonumber
   S1->>S1: Read "client_id" (DID)
   S1->>S1: Read "credential_request_specific_data" 
 
-  S1->>S1: Execute zencode and produce "clientSecret", "client_id", "code_challenge", "code_challenge_method", "redirect_uri", "resource", "response_type", "scope", "state" and "code_verifier"
+  S1->>S1: Execute zencode and produce "client_secret", "client_id", "code_challenge", "code_challenge_method", "redirect_uri", "resource", "response_type", "scope", "state" and "code_verifier"
   S1->>H: Store "code verifier" in a state
   S1->>P: Pass all the others to PAR endpoint
   P->>H: return "request_uri" and "expires_in" 
