@@ -56,6 +56,6 @@ load ./bats_utils
     curl -X POST $url -d ''"$(echo $data)"'' 2>/dev/null 1> $TMP/out
     save_tmp_output post_7_response.output.json
     # if --regexp resolve modify also here
-    assert_output --partial '{"credential_identifier":"ab8c936e-b9ab-4cf5-9862-c3a25bb82996","proof":{"jwt":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.'
-    assert_output --partial '","proof_type":"jwt"}}'
+    assert_output --partial '{"c_nonce":"'
+    assert_output --partial '","c_nonce_expires_in":600,"credential":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.'
 }
