@@ -10,7 +10,7 @@ steps:
         jsonpath:
           $.result.credential_identifier:
             - isDefined: true
-          $.result.proof.jwt:
+          $.result.c_nonce:
             - isDefined: true
-          $.result.proof.proof_type:
-            - eq: jwt
+          $.result.c_nonce_expires_in:
+            - eq: 600
