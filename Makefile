@@ -34,8 +34,11 @@ ncr: ## 📦 Install and setup the server
 up: ncr ## 🚀 Up & run the project
 	./ncr -p 3000 --hostname $(hn) -z wallet
 
+# TODO: as soon as live-directory supports symlink to folder switch to symlink intead of cp
 wallet/didroom_microservices:
 	git clone https://github.com/forkbombeu/didroom_microservices wallet/didroom_microservices
+	@mkdir -p wallet/didroom_microservices/public/didroom_microservices/credential_issuer/.well-known/
+	@cp wallet/didroom_microservices/public/credential_issuer/.well-known/openid-credential-issuer wallet/didroom_microservices/public/didroom_microservices/credential_issuer/.well-known/
 
 test: wallet/didroom_microservices ncr api-test unit-test
 
