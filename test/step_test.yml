@@ -1,7 +1,7 @@
 steps:
   - name: POST request
     http:
-      url: http://${{env.host}}/wallet/holder_request_authorizationCode
+      url: http://${{env.host}}/holder_request_authorizationCode
       method: POST
       body:
         file: ../wallet/holder_request_authorizationCode.data.json

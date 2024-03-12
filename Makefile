@@ -32,15 +32,25 @@ ncr: ## 📦 Install and setup the server
 	@echo "📦 Setup is done!"
 
 up: ncr ## 🚀 Up & run the project
-	./ncr -p 3001 --hostname $(hn) 
+	./ncr -p 3000 --hostname $(hn) -z wallet
 
-test: api-test unit-test
+wallet/didroom_microservices:
+	git clone https://github.com/forkbombeu/didroom_microservices wallet/didroom_microservices
+
+test: wallet/didroom_microservices ncr api-test unit-test
 
 unit-test:
+	@./ncr -p 3000 -z wallet --public-directory wallet/didroom_microservices/public & echo $$! > .test.ncr.pid
 	@git submodule update --init --recursive
+	sleep 2
 	@./test/bats/bin/bats test/wallet.bats
+	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
+	@rm -rf wallet/didroom_microservices
 
-api-test: ncr
-	@./ncr -p 3001 & echo $$! > .test.ncr.pid
+api-test:
+	@./ncr -p 3000 -z wallet & echo $$! > .test.ncr.pid
 	@npx stepci run test/test_api.yml
 	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
+
+clean:
+	rm -rf wallet/didroom_microservices
