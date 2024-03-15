@@ -7,8 +7,20 @@ Given I have a 'string' named 'client_id'
 Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
 Given I have a 'string' named 'par_endpoint' inside 'oauth_flow_parameters'
 
+Given I have a 'string' named 'credential_issuer' inside '!external-qr-code-content'
+Given I have a 'string' named 'credential_configuration_id' inside '!external-qr-code-content'
+
+Given I have a 'string dictionary' named 'authorization_details'
+
 Given I have a 'keyring'
 
+#- create authorization_details
+When I write the string 'openid_credential' in 'type'
+When I move 'type' in 'authorization_details'
+When I copy 'credential_configuration_id' in 'authorization_details'
+When I create the 'string array' named 'locations'
+When I copy 'credential_issuer' in 'locations'
+When I move 'locations' in 'authorization_details'
 
 #- create Code Verifier (rng in url64) (used in step 7)
 When I create the random object of '256' bits
@@ -41,9 +53,6 @@ When I pickup from path 'jwt-body-params.code_challenge_method'
 When I create the copy of element '1' from array 'redirectUris'
 When I rename the 'copy' to 'redirect_uri'
 
-# - pickup stuff drom qrcode
-When I pickup from path '!external-qr-code-content.scope'
-When I pickup from path '!external-qr-code-content.resource'
 
 # - create par endpoint
 If I verify 'authorization_server' has suffix '/'
@@ -61,8 +70,7 @@ and I move 'redirect_uri' in 'data'
 and I move 'code_challenge' in 'data'
 and I move 'code_challenge_method' in 'data'
 and I move 'state' in 'data'
-and I move 'scope' in 'data'
-and I move 'resource' in 'data'
+and I move 'authorization_details' in 'data'
 
 then print the 'authorization_server_endpoint_par'
 then print the 'data'
