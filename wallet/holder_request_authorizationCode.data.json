@@ -1,8 +1,8 @@
 {
 	"!external-qr-code-content": {
 		"credential_configuration_ids": ["Auth1"],
-		"credential_issuer": "http://localhost:3000/didroom_microservices/credential_issuer/",
-		"authorization_server": "http://localhost:3000/didroom_microservices/authz_server/"
+		"credential_issuer": "http://localhost:3001/",
+		"authorization_server": "http://localhost:3000/"
 	},
 	"oauth_flow_parameters": {
 		"authorize_endpoint": "/authorize",

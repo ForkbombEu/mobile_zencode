@@ -35,25 +35,35 @@ up: ncr ## 🚀 Up & run the project
 	./ncr -p 3000 --hostname $(hn) -z wallet
 
 # TODO: as soon as live-directory supports symlink to folder switch to symlink intead of cp
-wallet/didroom_microservices:
-	git clone https://github.com/forkbombeu/didroom_microservices wallet/didroom_microservices
-	@mkdir -p wallet/didroom_microservices/public/didroom_microservices/credential_issuer/.well-known/
-	@cp wallet/didroom_microservices/public/credential_issuer/.well-known/openid-credential-issuer wallet/didroom_microservices/public/didroom_microservices/credential_issuer/.well-known/
+test/didroom_microservices:
+	git clone https://github.com/forkbombeu/didroom_microservices test/didroom_microservices
 
-test: wallet/didroom_microservices ncr api-test unit-test
+authz_server_up: ncr
+	./ncr -p 3000 -z test/didroom_microservices/authz_server --public-directory test/didroom_microservices/public/authz_server & echo $$! > .test.authz_server.pid
+	sleep 5
 
-unit-test:
-	@./ncr -p 3000 -z wallet --public-directory wallet/didroom_microservices/public & echo $$! > .test.ncr.pid
+credential_issuer_up: ncr
+	./ncr -p 3001 -z test/didroom_microservices/credential_issuer --public-directory test/didroom_microservices/public/credential_issuer & echo $$! > .test.credential_issuer.pid
+	sleep 5
+
+mobile_zencode_up: ncr
+	./ncr -p 3002 -z ./wallet & echo $$! > .test.mobile_zencode.pid
+	sleep 5
+
+test: api-test unit-test
+
+unit-test: test/didroom_microservices authz_server_up credential_issuer_up mobile_zencode_up
 	@git submodule update --init --recursive
-	sleep 2
 	@./test/bats/bin/bats test/wallet.bats
-	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
-	@rm -rf wallet/didroom_microservices
+	@kill `cat .test.credential_issuer.pid` && rm .test.credential_issuer.pid
+	@kill `cat .test.authz_server.pid` && rm .test.authz_server.pid
+	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
 
-api-test:
-	@./ncr -p 3000 -z wallet & echo $$! > .test.ncr.pid
+api-test: test/didroom_microservices authz_server_up credential_issuer_up mobile_zencode_up
 	@npx stepci run test/test_api.yml
-	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
+	@kill `cat .test.credential_issuer.pid` && rm .test.credential_issuer.pid
+	@kill `cat .test.authz_server.pid` && rm .test.authz_server.pid
+	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
 
 clean:
-	rm -rf wallet/didroom_microservices
+	rm -rf test/didroom_microservices
