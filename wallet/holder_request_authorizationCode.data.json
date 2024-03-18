@@ -1,8 +1,7 @@
 {
 	"!external-qr-code-content": {
-		"scope": "Auth1",
-		"relying_party": "https://relying-party1.zenswarm.forkbomb.eu/relying_party/",
-		"resource": "https://issuer1.zenswarm.forkbomb.eu/credential_issuer/",
+		"credential_configuration_ids": ["Auth1"],
+		"credential_issuer": "https://issuer1.zenswarm.forkbomb.eu/credential_issuer",
 		"authorization_server": "https://authz-server1.zenswarm.forkbomb.eu/authz_server/"
 	},
 	"oauth_flow_parameters": {
@@ -20,8 +19,14 @@
 			]
 		},
 		"format": "vc+sd-jwt",
-		"vct": "SD_JWT_VC_Auth1",
+		"vct": "Auth1",
 		"Authorization": "BEARER "
+	},
+	"holder_claims": {
+		"given_name": "Pippo",
+		"family_name": "Peppe",
+		"is_human": true
 	}
+	
 }
 
