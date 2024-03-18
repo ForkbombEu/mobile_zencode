@@ -37,13 +37,14 @@ up: ncr ## 🚀 Up & run the project
 # TODO: as soon as live-directory supports symlink to folder switch to symlink intead of cp
 test/didroom_microservices:
 	git clone https://github.com/forkbombeu/didroom_microservices test/didroom_microservices
+	cp .env.test .env
 
 authz_server_up: ncr
-	./ncr -p 3000 -z test/didroom_microservices/authz_server --public-directory test/didroom_microservices/public/authz_server & echo $$! > .test.authz_server.pid
+	./ncr -p 3000 -z test/didroom_microservices/authz_server --public-directory test/didroom_microservices/tests/public/authz_server & echo $$! > .test.authz_server.pid
 	sleep 5
 
 credential_issuer_up: ncr
-	./ncr -p 3001 -z test/didroom_microservices/credential_issuer --public-directory test/didroom_microservices/public/credential_issuer & echo $$! > .test.credential_issuer.pid
+	./ncr -p 3001 -z test/didroom_microservices/credential_issuer --public-directory test/didroom_microservices/tests/public/credential_issuer & echo $$! > .test.credential_issuer.pid
 	sleep 5
 
 mobile_zencode_up: ncr
