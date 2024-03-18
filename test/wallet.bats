@@ -44,7 +44,7 @@ load ./bats_utils
     assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiOiJoLXlLRFRpVUttb0ZNcHdXR2tMcG42QksyU2pLeHdQYlVRMGVUaXpWeExrIiwieSI6Ii1VekQ0TlJtY2t0Qk5Db0dSUkNJWERuOUYwcUQzNDJVZlF5WTFSdG10TEEiLCJjcnYiOiJQLTI1NiJ9fQ.'
     assert_output --partial '","c_nonce":"'
     assert_output --partial '","c_nonce_expires_in":3600,"expires_in":'
-    assert_output --partial ',"resource":"http://localhost:3000/didroom_microservices/credential_issuer/","scope":["Auth1"]}'
+    assert_output --partial ',"authorization_details":[{"credential_configuration_id":"Auth1","family_name":"Peppe","given_name":"Pippo","is_human":true,"locations":["http://localhost:3001/"],"type":"openid_credential"}]}'
 }
 
 @test "Holder post to credantial_issuer/credential" {
