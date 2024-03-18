@@ -7,9 +7,9 @@ http:
   check:
     status: 200
     jsonpath:
-      $.result.credential_identifier:
+      $.result.credential:
         - isDefined: true
-      $.result.proof.jwt:
+      $.result.c_nonce:
         - isDefined: true
-      $.result.proof.proof_type:
-        - eq: jwt
+      $.result.c_nonce_expires_in:
+        - eq: 600
