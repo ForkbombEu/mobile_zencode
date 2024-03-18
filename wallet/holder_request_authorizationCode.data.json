@@ -1,8 +1,8 @@
 {
 	"!external-qr-code-content": {
 		"credential_configuration_ids": ["Auth1"],
-		"credential_issuer": "http://0.0.0.0:3001/",
-		"authorization_server": "http://0.0.0.0:3000/"
+		"credential_issuer": "http://localhost:3001/",
+		"authorization_server": "http://localhost:3000/"
 	},
 	"oauth_flow_parameters": {
 		"authorize_endpoint": "/authorize",
