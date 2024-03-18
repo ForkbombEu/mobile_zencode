@@ -3,6 +3,7 @@
     "data_1": {},
     "oauth_flow_parameters_path": "oauth_flow_parameters",
     "!external-qr-code-content_path": "!external-qr-code-content",
+    "holder_claims_path": "holder_claims",
     "request_uri_path": "request_uri",
     "expires_in_path": "expires_in",
     "code_path": "code",
