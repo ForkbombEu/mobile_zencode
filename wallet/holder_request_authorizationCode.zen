@@ -7,6 +7,7 @@ Given I send object 'keys' and send path 'client_id_path' and send value 'client
 # prepare data
 Given I send object 'data_1' and send path 'oauth_flow_parameters_path' and send value 'oauth_flow_parameters' and manipulate and set and output into 'data'
 Given I send object 'data' and send path '!external-qr-code-content_path' and send value '!external-qr-code-content' and manipulate and set and output into 'data'
+Given I send object 'data' and send path 'holder_claims_path' and send value 'holder_claims' and manipulate and set and output into 'data'
 
 #######
 # execute zen_1
