@@ -1,4 +1,3 @@
-
 # these 3 objects are now read from keys, keys will be emptied, so the have to be extracted
 Given I have a 'string dictionary' named 'credential_requested'
 Given I have a 'string dictionary' named 'openid-credential-issuer'
@@ -8,9 +7,19 @@ Given I have a 'string dictionary' named 'oauth-authorization-server'
 Given I have a 'string array' named 'credential_configuration_ids'
 Given I have a 'string' named 'credential_issuer'
 
+# Here we manipulate the .well-known to produce the output needed by oauth flow
 When I create the 'string dictionary' named 'credential_parameters'
 When I move 'openid-credential-issuer' in 'credential_parameters'
 When I move 'oauth-authorization-server' in 'credential_parameters'
 
+# Here we put the qr reading into an object, needed by oauth flow
+When I create the 'string dictionary' named '!external-qr-code-content'
+When I move 'credential_issuer' in '!external-qr-code-content'
+When I move 'credential_configuration_ids' in '!external-qr-code-content'
+
+# Print the extracted data
 Then print the 'credential_requested'
 Then print the 'credential_parameters'
+
+# Print the qr code stuff
+Then print the '!external-qr-code-content'
