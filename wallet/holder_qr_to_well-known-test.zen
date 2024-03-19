@@ -1,6 +1,14 @@
+
+# these 3 objects are now read from keys, keys will be emptied, so the have to be extracted
 Given I have a 'string dictionary' named 'credential_requested'
+Given I have a 'string dictionary' named 'openid-credential-issuer'
+Given I have a 'string dictionary' named 'oauth-authorization-server'
+
+# this is passed from the qr-code
 Given I have a 'string array' named 'credential_configuration_ids'
 Given I have a 'string' named 'credential_issuer'
 
 
 Then print the 'credential_requested'
+Then print the 'openid-credential-issuer'
+Then print the 'oauth-authorization-server'
