@@ -8,7 +8,9 @@ Given I have a 'string dictionary' named 'oauth-authorization-server'
 Given I have a 'string array' named 'credential_configuration_ids'
 Given I have a 'string' named 'credential_issuer'
 
+When I create the 'string dictionary' named 'credential_parameters'
+When I move 'openid-credential-issuer' in 'credential_parameters'
+When I move 'oauth-authorization-server' in 'credential_parameters'
 
 Then print the 'credential_requested'
-Then print the 'openid-credential-issuer'
-Then print the 'oauth-authorization-server'
+Then print the 'credential_parameters'
