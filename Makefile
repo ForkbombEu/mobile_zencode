@@ -32,15 +32,35 @@ ncr: ## 📦 Install and setup the server
 	@echo "📦 Setup is done!"
 
 up: ncr ## 🚀 Up & run the project
-	./ncr -p 3001 --hostname $(hn) 
+	./ncr -p 3000 --hostname $(hn) -z wallet
+
+# TODO: as soon as live-directory supports symlink to folder switch to symlink intead of cp
+test/didroom_microservices:
+	git clone https://github.com/forkbombeu/didroom_microservices test/didroom_microservices
+	cp .env.test .env
 
 test: api-test unit-test
 
-unit-test:
+unit-test: ncr test/didroom_microservices
+	@./ncr -p 3000 -z test/didroom_microservices/authz_server --public-directory test/didroom_microservices/tests/public/authz_server & echo $$! > .test.authz_server.pid
+	@./ncr -p 3001 -z test/didroom_microservices/credential_issuer --public-directory test/didroom_microservices/tests/public/credential_issuer & echo $$! > .test.credential_issuer.pid
+	@./ncr -p 3002 -z ./wallet & echo $$! > .test.mobile_zencode.pid
+	sleep 5
 	@git submodule update --init --recursive
 	@./test/bats/bin/bats test/wallet.bats
+	@kill `cat .test.credential_issuer.pid` && rm .test.credential_issuer.pid
+	@kill `cat .test.authz_server.pid` && rm .test.authz_server.pid
+	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
 
-api-test: ncr
-	@./ncr -p 3001 & echo $$! > .test.ncr.pid
+api-test: ncr test/didroom_microservices
+	@./ncr -p 3000 -z test/didroom_microservices/authz_server --public-directory test/didroom_microservices/tests/public/authz_server & echo $$! > .test.authz_server.pid
+	@./ncr -p 3001 -z test/didroom_microservices/credential_issuer --public-directory test/didroom_microservices/tests/public/credential_issuer & echo $$! > .test.credential_issuer.pid
+	@./ncr -p 3002 -z ./wallet & echo $$! > .test.mobile_zencode.pid
+	sleep 5
 	@npx stepci run test/test_api.yml
-	@kill `cat .test.ncr.pid` && rm .test.ncr.pid
+	@kill `cat .test.credential_issuer.pid` && rm .test.credential_issuer.pid
+	@kill `cat .test.authz_server.pid` && rm .test.authz_server.pid
+	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
+
+clean:
+	rm -rf test/didroom_microservices
