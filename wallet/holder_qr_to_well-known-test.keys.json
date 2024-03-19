@@ -1,0 +1,78 @@
+{
+	"credential_requested": {
+		"format": "vc+sd-jwt",
+		"cryptographic_binding_methods_supported": [
+			"jwk",
+			"did:dyne:sandbox.signroom"
+		],
+		"credential_signing_alg_values_supported": [
+			"ES256"
+		],
+		"proof_types_supported": {
+			"jwt": {
+				"proof_signing_alg_values_supported": [
+					"ES256"
+				]
+			}
+		},
+		"display": [
+			{
+				"name": "Above 18 identity",
+				"locale": "en-US",
+				"logo": {
+					"url": "https://avatars.githubusercontent.com/u/96812851",
+					"alt_text": "Forkbomb Logo"
+				},
+				"background_color": "#12107c",
+				"text_color": "#FFFFFF"
+			}
+		],
+		"credential_definition": {
+			"type": [
+				"Identity"
+			],
+			"credentialSubject": {
+				"given_name": {
+					"mandatory": true,
+					"display": [
+						{
+							"name": "Current First Name",
+							"locale": "en-US"
+						}
+					],
+					"value_type": "string"
+				},
+				"family_name": {
+					"mandatory": true,
+					"display": [
+						{
+							"name": "Current Family Name",
+							"locale": "en-US"
+						}
+					],
+					"value_type": "string"
+				},
+				"birth_date": {
+					"mandatory": true,
+					"display": [
+						{
+							"name": "Date of Birth",
+							"locale": "en-US"
+						}
+					],
+					"value_type": "number"
+				},
+				"above_18": {
+					"mandatory": true,
+					"display": [
+						{
+							"name": "Is above 18",
+							"locale": "en-US"
+						}
+					],
+					"value_type": "string"
+				}
+			}
+		}
+	}
+}

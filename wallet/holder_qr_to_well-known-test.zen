@@ -1,0 +1,6 @@
+Given I have a 'string dictionary' named 'credential_requested'
+Given I have a 'string array' named 'credential_configuration_ids'
+Given I have a 'string' named 'credential_issuer'
+
+
+Then print the 'credential_requested'
