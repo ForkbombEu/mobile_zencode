@@ -6,7 +6,7 @@ Given I have a 'string' named 'client_id'
 
 # data
 Given I have a 'string' named 'grant_type' inside 'credential_parameters'
-Given I have a 'string dictionary' named 'jwt-body-params'
+Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
 Given I have a 'string' named 'token_endpoint' inside 'credential_parameters'
 
 

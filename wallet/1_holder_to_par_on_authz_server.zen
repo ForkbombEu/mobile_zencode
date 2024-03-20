@@ -1,7 +1,7 @@
 Scenario 'http' : create GET
 Scenario 'w3c' : create JWS
 
-Given I have a 'string dictionary' named 'jwt-body-params'
+Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
 Given I have a 'string dictionary' named 'credential_parameters'
 Given I have a 'string' named 'client_id'
 Given I have a 'string' named 'authorization_server_endpoint_par' inside 'credential_parameters'
