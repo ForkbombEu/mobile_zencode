@@ -23,11 +23,6 @@ steps:
       url: http://${{env.mz_host}}/holder_request_authorizationCode
       method: POST
       json:
-        oauth_flow_parameters:
-          Authorization: "BEARER "
-          jwt-body-params:
-            state: xyz
-            redirectUris: [https://didroom.com/]
         holder_claims:
           given_name: Pippo
           family_name: Peppe
