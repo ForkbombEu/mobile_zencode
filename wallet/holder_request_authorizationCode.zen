@@ -6,13 +6,12 @@ Given I send object 'keys' and send path 'client_id_path' and send value 'client
 
 # prepare data
 Given I send object 'data_1' and send path 'oauth_flow_parameters_path' and send value 'oauth_flow_parameters' and manipulate and set and output into 'data'
-Given I send object 'data' and send path '!external-qr-code-content_path' and send value '!external-qr-code-content' and manipulate and set and output into 'data'
+Given I send object 'data' and send path 'credential_parameters_path' and send value 'credential_parameters' and manipulate and set and output into 'data'
 Given I send object 'data' and send path 'holder_claims_path' and send value 'holder_claims' and manipulate and set and output into 'data'
 
 #######
 # execute zen_1
 #######
-# Given I send path 'zen_1_path' and read verbatim file content and output into 'zen_1'
 Given I send keys 'keys' and send data 'data' and send script 'zen_1' and execute zencode and output into 'zen_1_output'
 
 # extract post parameters
@@ -32,7 +31,6 @@ Given I send object 'data' and send path 'expires_in_path' and send value 'expir
 #######
 # execute zen_3
 #######
-# Given I send path 'zen_3_path' and read verbatim file content and output into 'zen_3'
 Given I send keys 'keys' and send data 'data' and send script 'zen_3' and execute zencode and output into 'zen_3_output'
 
 # extract post parameters
@@ -50,7 +48,6 @@ Given I send object 'data' and send path 'code_verifier_path' and send value 'co
 #######
 # execute zen_5
 #######
-# Given I send path 'zen_5_path' and read verbatim file content and output into 'zen_5'
 Given I send keys 'keys' and send data 'data' and send script 'zen_5' and execute zencode and output into 'zen_5_output'
 
 # extract post parameters
