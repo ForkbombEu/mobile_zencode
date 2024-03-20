@@ -8,28 +8,29 @@ Given I send object 'data_1' and send path '!external-qr-code-content_path' and 
 # execute zen_1
 #######
 Given I send keys 'keys_1' and send data 'data' and send script 'zen_1' and execute zencode and output into 'zen_1_output'
+Given I manipulate and delete and output into 'data'
 
-Given I send object 'zen_1_output' and send properties 'credential_issuer_path' manipulate and get and output into 'credential_issuer'
-Given I send object 'zen_1_output' and send properties 'credential_configuration_id_path' manipulate and get and output into 'credential_configuration_id'
+Given I send object 'zen_1_output' and send path 'credential_issuer_path' and manipulate and get and output into 'credential_issuer'
+Given I send object 'zen_1_output' and send path 'credential_configuration_id_path' and manipulate and get and output into 'credential_configuration_id'
 
 ## fetch credential_issuer well-known
 Given I connect to 'credential_issuer' and do get and output into 'credential_issuer_well-known'
 
 ## get data from credential_issuer well-known
-Given I send object 'credential_issuer_well-known' and send path 'authorization_servers_path' and manipulate and get and output into 'authorization_servers_arr'
-Given I send object 'authorization_servers_arr' and send properties 'authz_server_path' manipulate and get and output into 'authorization_server'
-Given I send object 'credential_issuer_well-known' and send path 'credential_supported_path' and manipulate and get and output into 'credential_configurations_supported'
+Given I send object 'credential_issuer_well-known' and send path 'r.authorization_servers_path' and manipulate and get and output into 'authorization_servers_arr'
+Given I send object 'authorization_servers_arr' and send path 'authz_server_path' and manipulate and get and output into 'authorization_server'
+Given I send object 'credential_issuer_well-known' and send path 'r.credential_supported_path' and manipulate and get and output into 'credential_configurations_supported'
 
 ## prepare data for zen_2
-Given I send object 'data_2' and send path 'authorization_server_path' and send value 'authorization_server' and manipulate and set and output into 'data_2'
-Given I send object 'data_2' and send path 'credential_configuration_id_path' and send value 'credential_configuration_id' and manipulate and set and output into 'data_2'
-Given I send object 'data_2' and send path 'credential_supported_path' and send value 'credential_configurations_supported' and manipulate and set and output into 'data_2'
+Given I send object 'data_2' and send path 'authorization_server_path' and send value 'authorization_server' and manipulate and set and output into 'data'
+Given I send object 'data' and send path 'credential_configuration_id_path' and send value 'credential_configuration_id' and manipulate and set and output into 'data'
+Given I send object 'data' and send path 'credential_supported_path' and send value 'credential_configurations_supported' and manipulate and set and output into 'data'
 ##
 
 #######
 # execute zen_2
 #######
-Given I send keys 'keys_1' and send data 'data_2' and send script 'zen_2' and execute zencode and output into 'zen_2_output'
+Given I send keys 'keys_1' and send data 'data' and send script 'zen_2' and execute zencode and output into 'zen_2_output'
 
 #get more data from credential_issuer well-known
 Given I send object 'zen_2_output' and send path 'authorization_server_path' and manipulate and get and output into 'authorization_server'
@@ -39,22 +40,22 @@ Given I connect to 'authorization_server' and do get and output into 'authorizat
 
 # extract parameters
 
-Given I have a 'string dictionary' named 'credential_issuer_well-known'
-Given I have a 'string' named 'credential_endpoint' inside 'credential_issuer_well-known'
-Given I have a 'string' named 'credential_issuer' inside 'credential_issuer_well-known'
+# credential issuer well-known
+Given I have a 'string' in path 'credential_issuer_well-known.result.credential_endpoint'
+Given I have a 'string' in path 'credential_issuer_well-known.result.credential_issuer'
 
-Given I have a 'string dictionary' named 'zen_2_output'
+# authz_server well-known
+Given I have a 'string' in path 'authorization_server_well-known.result.token_endpoint'
+Given I have a 'string' in path 'authorization_server_well-known.result.pushed_authorization_request_endpoint'
+Given I have a 'string' in path 'authorization_server_well-known.result.authorization_endpoint'
+Given I have a 'string array' in path 'authorization_server_well-known.result.grant_types_supported'
+Given I have a 'string array' in path 'authorization_server_well-known.result.response_types_supported'
+Given I have a 'string array' in path 'authorization_server_well-known.result.code_challenge_methods_supported'
+
+# credential-requested, fromat and vct
 Given I have a 'string dictionary' named 'credential_requested' inside 'zen_2_output'
 Given I have a 'string' named 'format' inside 'zen_2_output'
 Given I have a 'string' named 'vct' inside 'zen_2_output'
-
-Given I have a 'string dictionary' named 'authorization_server_well-known'
-Given I have a 'string' named 'token_endpoint' inside 'authorization_server_well-known'
-Given I have a 'string' named 'pushed_authorization_request_endpoint' inside 'authorization_server_well-known'
-Given I have a 'string' named 'authorization_endpoint' inside 'authorization_server_well-known'
-Given I have a 'string array' named 'grant_types_supported' inside 'authorization_server_well-known'
-Given I have a 'string array' named 'response_types_supported' inside 'authorization_server_well-known'
-Given I have a 'string array' named 'code_challenge_methods_supported' inside 'authorization_server_well-known'
 
 When I create the 'string dictionary' named 'credential_parameters'
 When I move the 'credential_issuer' inside 'credential_parameters'
@@ -64,20 +65,16 @@ When I move the 'vct' inside 'credential_parameters'
 When I move the 'token_endpoint' inside 'credential_parameters'
 When I move the 'authorization_endpoint' inside 'credential_parameters'
 
-When I rename the 'pushed_authorization_request_endpoint' to 'authorization_server_endpoint_par'
-When I move the 'authorization_server_endpoint_par' inside 'credential_parameters'
+When I move the 'pushed_authorization_request_endpoint' to 'authorization_server_endpoint_par' inside 'credential_parameters'
 
 When I create the copy of element '1' from array 'grant_types_supported'
-When I rename the 'copy' to 'grant_type'
-When I move the 'grant_type' inside 'credential_parameters'
+When I move the 'copy' to 'grant_type' inside 'credential_parameters'
 
 When I create the copy of element '1' from array 'response_types_supported'
-When I rename the 'copy' to 'response_type'
-When I move the 'response_type' inside 'credential_parameters'
+When I move the 'copy' to 'response_type' inside 'credential_parameters'
 
 When I create the copy of element '1' from array 'code_challenge_methods_supported'
-When I rename the 'copy' to 'code_challenge_method'
-When I move the 'code_challenge_method' inside 'credential_parameters'
+When I move the 'copy' to 'code_challenge_method' inside 'credential_parameters'
 
 Then print the 'credential_requested'
 Then print the 'credential_parameters'
