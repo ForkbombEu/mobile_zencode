@@ -11,10 +11,10 @@ steps:
       check:
         status: 200
         jsonpath:
-          $.result.credential_parameters:
+          $.credential_parameters:
             - isDefined: true
               isObject: true
-          $.result.credential_requested:
+          $.credential_requested:
             - isDefined: true
               isObject: true
 
