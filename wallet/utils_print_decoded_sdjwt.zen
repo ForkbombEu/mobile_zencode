@@ -1,0 +1,7 @@
+Scenario 'sd_jwt': decode 
+
+# pass it the sd-jwt credential  
+Given I have a 'signed selective disclosure' named 'credential'
+
+# prints out the sdjwt as a decoded json
+Then print 'credential' as 'decoded selective disclosure'
