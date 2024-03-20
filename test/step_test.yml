@@ -1,15 +1,44 @@
-name: POST request
-http:
-  url: http://${{env.mz_host}}/holder_request_authorizationCode
-  method: POST
-  body:
-    file: ${{env.path_to_wallet}}/wallet/holder_request_authorizationCode.data.json
-  check:
-    status: 200
-    jsonpath:
-      $.result.credential:
-        - isDefined: true
-      $.result.c_nonce:
-        - isDefined: true
-      $.result.c_nonce_expires_in:
-        - eq: 600
+steps:
+  - name: holder_qr_to_well-known
+    http:
+      url: http://${{env.mz_host}}/holder_qr_to_well-known
+      method: POST
+      body:
+        file: ${{env.path_to_wallet}}/wallet/holder_request_authorizationCode.data.json
+      check:
+        status: 200
+        jsonpath:
+          $.result.credential_parameters:
+            - isDefined: true
+              isObject: true
+          $.result.credential_requested:
+            - isDefined: true
+              isObject: true
+      captures:
+        credential_parameters:
+          jsonpath: $.result.credential_parameters
+
+  - name: POST request
+    http:
+      url: http://${{env.mz_host}}/holder_request_authorizationCode
+      method: POST
+      json:
+        oauth_flow_parameters:
+          jwt-body-params:
+            state: xyz
+            redirectUris: 
+              0: https://didroom.com/
+        holder_claims:
+          given_name: Pippo
+          family_name: Peppe
+          is_human: true
+        credential_parameters: ${{captures.credential_parameters}}
+      check:
+        status: 200
+        jsonpath:
+          $.result.credential:
+            - isDefined: true
+          $.result.c_nonce:
+            - isDefined: true
+          $.result.c_nonce_expires_in:
+            - eq: 600
