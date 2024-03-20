@@ -3,15 +3,6 @@
 		"credential_configuration_ids": ["Auth1"],
 		"credential_issuer": "http://localhost:3001/"
 	},
-	"oauth_flow_parameters": {
-		"Authorization": "BEARER ",
-		"jwt-body-params": {
-			"state": "xyz",
-			"redirectUris": [
-				"https://didroom.com/"
-			]
-		}
-	},
 	"holder_claims": {
 		"given_name": "Pippo",
 		"family_name": "Peppe",
