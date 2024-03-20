@@ -41,6 +41,7 @@ Given I connect to 'authorization_server' and do get and output into 'authorizat
 
 Given I have a 'string dictionary' named 'credential_issuer_well-known'
 Given I have a 'string' named 'credential_endpoint' inside 'credential_issuer_well-known'
+Given I have a 'string' named 'credential_issuer' inside 'credential_issuer_well-known'
 
 Given I have a 'string dictionary' named 'zen_2_output'
 Given I have a 'string dictionary' named 'credential_requested' inside 'zen_2_output'
@@ -56,6 +57,7 @@ Given I have a 'string array' named 'response_types_supported' inside 'authoriza
 Given I have a 'string array' named 'code_challenge_methods_supported' inside 'authorization_server_well-known'
 
 When I create the 'string dictionary' named 'credential_parameters'
+When I move the 'credential_issuer' inside 'credential_parameters'
 When I move the 'credential_endpoint' inside 'credential_parameters'
 When I move the 'format' inside 'credential_parameters'
 When I move the 'vct' inside 'credential_parameters'
