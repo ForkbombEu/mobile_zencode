@@ -33,8 +33,9 @@ load ./bats_utils
     echo "{}" >$TMP/out
     save_tmp_output holder_qr_to_well-known.data.json 
     jq_insert_json zen_2_output read_authz_server.output.json holder_qr_to_well-known.data.json
-    jq_insert_json authorization_server_well-known authz_server_well-known.output.json holder_qr_to_well-known.data.json
-    jq_insert_json credential_issuer_well-known credential_issuer_well-known.output.json holder_qr_to_well-known.data.json
+    tmp=$(mktemp)
+    jq --arg key "authorization_server_well-known" '.[$key].result = input' $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json $BATS_FILE_TMPDIR/authz_server_well-known.output.json > $tmp && mv $tmp  $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json
+    jq --arg key "credential_issuer_well-known" '.[$key].result = input' $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json $BATS_FILE_TMPDIR/credential_issuer_well-known.output.json > $tmp && mv $tmp  $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json
     zexe $WALLET/holder_qr_to_well-known.zen $WALLET_KEYS holder_qr_to_well-known.data.json
     save_tmp_output holder_qr_to_well-known.output.json
     assert_output '{"credential_parameters":{"authorization_endpoint":"http://localhost:3000/authorize","authorization_server_endpoint_par":"http://localhost:3000/par","code_challenge_method":"S256","credential_endpoint":"http://localhost:3001/credential","credential_issuer":"http://localhost:3001","format":"vc+sd-jwt","grant_type":"authorization_code","response_type":"code","token_endpoint":"http://localhost:3000/token","vct":"Auth1"},"credential_requested":{"credential_definition":{"credentialSubject":{"family_name":{"display":[{"locale":"en-US","name":"Current Family Name"}],"mandatory":true},"given_name":{"display":[{"locale":"en-US","name":"Current First Name"}],"mandatory":true},"is_human":{"display":[{"locale":"en-US","name":"Proof of humanity"}],"mandatory":true}},"type":["Auth1"]},"credential_signing_alg_values_supported":["ES256"],"cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"display":[{"background_color":"#12107c","locale":"en-US","logo":{"alt_text":"Forkbomb Logo","url":"https://avatars.githubusercontent.com/u/96812851"},"name":"Proof of humanity","text_color":"#FFFFFF"}],"format":"vc+sd-jwt","proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}}'
