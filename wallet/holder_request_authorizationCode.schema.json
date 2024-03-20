@@ -1,56 +1,8 @@
 {
   "type": "object",
   "properties": {
-    "oauth_flow_parameters": {
-      "type": "object",
-      "properties": {
-        "Authorization": {
-          "type": "string"
-        },
-        "jwt-body-params": {
-          "type": "object",
-          "properties": {
-            "state": {
-              "type": "string"
-            },
-            "redirectUris": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "required": [
-            "state",
-            "redirectUris"
-          ]
-        }
-      },
-      "required": [
-        "Authorization",
-        "jwt-body-params"
-      ]
-    },
     "holder_claims": {
-      "type": "object",
-      "properties": {
-        "given_name": {
-          "type": "string"
-        },
-        "family_name": {
-          "type": "string"
-        },
-        "is_human": {
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "given_name",
-        "family_name",
-        "is_human"
-      ]
+      "type": "object"
     },
     "credential_parameters": {
       "type": "object",
@@ -101,7 +53,6 @@
     }
   },
   "required": [
-    "oauth_flow_parameters",
     "holder_claims",
     "credential_parameters"
   ]
