@@ -5,5 +5,4 @@ env:
   path_to_wallet: ..
 tests:
   wallet_api:
-    steps:
-      - $ref: test/step_test.yml
+    $ref: test/step_test.yml

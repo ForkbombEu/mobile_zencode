@@ -5,11 +5,9 @@ Given I have a 'keyring'
 Given I have a 'string' named 'client_id'
 
 # data
-Given I have a 'string' named 'grant_type' inside 'oauth_flow_parameters'
+Given I have a 'string' named 'grant_type' inside 'credential_parameters'
 Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
-Given I have a 'string' named 'token_endpoint' inside 'oauth_flow_parameters'
-
-Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
+Given I have a 'string' named 'token_endpoint' inside 'credential_parameters'
 
 
 Given I have a 'string' named 'code_verifier'
@@ -25,15 +23,8 @@ When I create the random 'ramdom_jti'
 When I write the string '' in 'jti'
 When I append the 'url64' of 'ramdom_jti' to 'jti'
 
-
-
-If I verify 'authorization_server' has suffix '/'
-When I split the rightmost '1' bytes of 'authorization_server'
-Endif 
-
-When I append 'token_endpoint' to 'authorization_server' 
-When I copy 'authorization_server' to '!authorization_server_token_endpoint'
-When I rename the 'authorization_server' to 'htu'
+When I copy 'token_endpoint' to '!authorization_server_token_endpoint'
+When I rename the 'token_endpoint' to 'htu'
 
 # 	 jti: randomBytes(16).toString('base64url'),
 #		htm: 'POST',

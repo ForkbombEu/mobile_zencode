@@ -1,14 +1,15 @@
 Scenario 'http' : create GET
 Scenario 'w3c' : create JWS
 
-Given I have a 'string dictionary' named '!external-qr-code-content'
 Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
+Given I have a 'string dictionary' named 'credential_parameters'
 Given I have a 'string' named 'client_id'
-Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
-Given I have a 'string' named 'par_endpoint' inside 'oauth_flow_parameters'
+Given I have a 'string' named 'authorization_server_endpoint_par' inside 'credential_parameters'
+Given I have a 'string' named 'code_challenge_method' inside 'credential_parameters'
+Given I have a 'string' named 'response_type' inside 'credential_parameters'
 
-Given I have a 'string' named 'credential_issuer' inside '!external-qr-code-content'
-Given I have a 'string array' named 'credential_configuration_ids' inside '!external-qr-code-content'
+Given I have a 'string' named 'credential_issuer' inside 'credential_parameters'
+Given I have a 'string' named 'vct' inside 'credential_parameters'
 
 Given I have a 'string dictionary' named 'holder_claims'
 
@@ -18,8 +19,7 @@ Given I have a 'keyring'
 When I create the 'string array' named 'authorization_details'
 When I write the string 'openid_credential' in 'type'
 When I move 'type' in 'holder_claims'
-When I create copy of element '1' from array 'credential_configuration_ids'
-When I rename the 'copy' to 'credential_configuration_id'
+When I copy 'vct' to 'credential_configuration_id'
 When I copy 'credential_configuration_id' in 'holder_claims'
 When I create the 'string array' named 'locations'
 When I copy 'credential_issuer' in 'locations'
@@ -49,21 +49,12 @@ When I rename the 'jws signature' to 'client_secret'
 
 # - pickup stuff from jwt-body
 When I pickup from path 'jwt-body-params.redirectUris'
-When I pickup from path 'jwt-body-params.response_type'
 When I pickup from path 'jwt-body-params.state'
-When I pickup from path 'jwt-body-params.code_challenge_method'
 
 # - fix redirectUris
 When I create the copy of element '1' from array 'redirectUris'
 When I rename the 'copy' to 'redirect_uri'
 
-
-# - create par endpoint
-If I verify 'authorization_server' has suffix '/'
-When I split the rightmost '1' bytes of 'authorization_server'
-Endif
-When I append 'par_endpoint' to 'authorization_server' 
-and I rename 'authorization_server' to 'authorization_server_endpoint_par'
 
 # - create par post body
 When I create the 'string dictionary' named 'data'

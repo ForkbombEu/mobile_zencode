@@ -1,26 +1,7 @@
 {
 	"!external-qr-code-content": {
 		"credential_configuration_ids": ["Auth1"],
-		"credential_issuer": "http://localhost:3001/",
-		"authorization_server": "http://localhost:3000/"
-	},
-	"oauth_flow_parameters": {
-		"authorize_endpoint": "/authorize",
-		"par_endpoint": "/par",
-		"token_endpoint": "/token",
-		"grant_type": "authorization_code",
-		"credential_endpoint": "/credential",
-		"jwt-body-params": {
-			"response_type": "code",
-			"code_challenge_method": "S256",
-			"state": "xyz",
-			"redirectUris": [
-				"https://didroom.com/"
-			]
-		},
-		"format": "vc+sd-jwt",
-		"vct": "Auth1",
-		"Authorization": "BEARER "
+		"credential_issuer": "http://localhost:3001/"
 	},
 	"holder_claims": {
 		"given_name": "Pippo",

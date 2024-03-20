@@ -5,18 +5,10 @@ Given I have a 'string' named 'client_id'
 # data
 Given I have a 'string' named 'request_uri'
 Given I have a 'number' named 'expires_in'
-Given I have a 'string dictionary' named 'oauth_flow_parameters'
-Given I have a 'string' named 'authorization_server' inside '!external-qr-code-content'
-Given I have a 'string' named 'authorize_endpoint' inside 'oauth_flow_parameters'
-# Given I have a 'string' named 'authorize_endpoint' inside '!external-qr-code-content'
+Given I have a 'string dictionary' named 'credential_parameters'
+Given I have a 'string' named 'authorization_endpoint' inside 'credential_parameters'
 
-
-If I verify 'authorization_server' has suffix '/'
-When I split the rightmost '1' bytes of 'authorization_server'
-Endif 
-
-When I append 'authorize_endpoint' to 'authorization_server' 
-When I rename the 'authorization_server' to 'authorization_server_authorize_endpoint'
+When I rename the 'authorization_endpoint' to 'authorization_server_authorize_endpoint'
 
 When I create the 'string dictionary' named 'data'
 and I move 'request_uri' in 'data'

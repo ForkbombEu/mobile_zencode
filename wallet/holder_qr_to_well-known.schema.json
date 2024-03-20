@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "properties": {
+      "!external-qr-code-content": {
+        "type": "object",
+        "properties": {
+          "credential_configuration_ids": {
+            "type": "array",
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "credential_issuer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "credential_configuration_ids",
+          "credential_issuer"
+        ]
+      }
+    },
+    "required": [
+      "!external-qr-code-content"
+    ]
+  }

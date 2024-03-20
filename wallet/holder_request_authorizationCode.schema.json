@@ -1,103 +1,59 @@
 {
-    "type": "object",
-    "properties": {
-      "keys_1": {
-        "type": "object"
-      },
-      "data_1": {
-        "type": "object"
-      },
-      "keyring_path": {
-        "type": "string"
-      },
-      "client_id_path": {
-        "type": "string"
-      },
-      "oauth_flow_parameters_path": {
-        "type": "string"
-      },
-      "!external-qr-code-content_path": {
-        "type": "string"
-      },
-      "request_uri_path": {
-        "type": "string"
-      },
-      "expires_in_path": {
-        "type": "string"
-      },
-      "authorization_server_authorize_endpoint_path": {
-        "type": "string"
-      },
-      "code_path": {
-        "type": "string"
-      },
-      "code_verifier_path": {
-        "type": "string"
-      },
-      "zen_1_path": {
-        "type": "string"
-      },
-      "zen_3_path": {
-        "type": "string"
-      },
-      "zen_5_path": {
-        "type": "string"
-      },
-      "keyring": {
-        "type": "object",
-        "properties": {
-          "bitcoin": {
-            "type": "string"
-          },
-          "credential": {
-            "type": "string"
-          },
-          "ecdh": {
-            "type": "string"
-          },
-          "eddsa": {
-            "type": "string"
-          },
-          "es256": {
-            "type": "string"
-          },
-          "ethereum": {
-            "type": "string"
-          },
-          "reflow": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "bitcoin",
-          "credential",
-          "ecdh",
-          "eddsa",
-          "es256",
-          "ethereum",
-          "reflow"
-        ]
-      },
-      "client_id": {
-        "type": "string"
-      }
+  "type": "object",
+  "properties": {
+    "holder_claims": {
+      "type": "object"
     },
-    "required": [
-      "keys_1",
-      "data_1",
-      "keyring_path",
-      "client_id_path",
-      "oauth_flow_parameters_path",
-      "!external-qr-code-content_path",
-      "request_uri_path",
-      "expires_in_path",
-      "authorization_server_authorize_endpoint_path",
-      "code_path",
-      "code_verifier_path",
-      "zen_1_path",
-      "zen_3_path",
-      "zen_5_path",
-      "keyring",
-      "client_id"
-    ]
-  }
+    "credential_parameters": {
+      "type": "object",
+      "properties": {
+        "authorization_endpoint": {
+          "type": "string"
+        },
+        "authorization_server_endpoint_par": {
+          "type": "string"
+        },
+        "code_challenge_method": {
+          "type": "string"
+        },
+        "credential_endpoint": {
+          "type": "string"
+        },
+        "credential_issuer": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "grant_type": {
+          "type": "string"
+        },
+        "response_type": {
+          "type": "string"
+        },
+        "token_endpoint": {
+          "type": "string"
+        },
+        "vct": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "authorization_endpoint",
+        "authorization_server_endpoint_par",
+        "code_challenge_method",
+        "credential_endpoint",
+        "credential_issuer",
+        "format",
+        "grant_type",
+        "response_type",
+        "token_endpoint",
+        "vct"
+      ]
+    }
+  },
+  "required": [
+    "holder_claims",
+    "credential_parameters"
+  ]
+}
