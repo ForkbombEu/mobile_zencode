@@ -9,8 +9,8 @@ Given I have a 'string array' named 'credential_configuration_ids'
 Given I have a 'string' named 'credential_issuer'
 
 # This is read from the wallet's holder identity
-Given I have a 'keyring' 
-Given I have a 'string' named 'client_id'
+# Given I have a 'keyring' 
+# Given I have a 'string' named 'client_id'
 
 # Here we manipulate the .well-known to produce the output needed by oauth flow
 When I create the 'string dictionary' named 'credential_parameters'
@@ -30,8 +30,8 @@ Then print the 'credential_parameters'
 Then print the '!external-qr-code-content'
 
 # Print the holder's identity
-Then print the 'keyring'
-Then print the 'client_id'
+# Then print the 'keyring'
+# Then print the 'client_id'
 
 
 
