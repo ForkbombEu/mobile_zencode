@@ -11,7 +11,7 @@
             "type": "string"
         },
         "exp": {
-            "type": "string"
+            "type": "number"
         },
         "request_uri": {
             "type": "string"
