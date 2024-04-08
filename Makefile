@@ -61,6 +61,7 @@ api-test: ncr test/didroom_microservices
 	@./ncr -p 3001 -z test/didroom_microservices/credential_issuer --public-directory test/didroom_microservices/tests/public/credential_issuer & echo $$! > .test.credential_issuer.pid
 	@./ncr -p 3002 -z ./wallet & echo $$! > .test.mobile_zencode.pid
 	@./ncr -p 3003 -z test/didroom_microservices/relying_party --public-directory test/didroom_microservices/tests/public/relying_party & echo $$! > .test.relying_party.pid
+	@./ncr -p 3004 -z ./verifier & echo $$! > .test.verifier.pid
 	@./ncr -p 3366 -z test/didroom_microservices/tests/test_push_server & echo $$! > .test.push_server.pid
 	sleep 5
 	@npx stepci run test/test_api.yml
@@ -68,6 +69,7 @@ api-test: ncr test/didroom_microservices
 	@kill `cat .test.authz_server.pid` && rm .test.authz_server.pid
 	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
 	@kill `cat .test.relying_party.pid` && rm .test.relying_party.pid
+	@kill `cat .test.verifier.pid` && rm .test.verifier.pid
 	@kill `cat .test.push_server.pid` && rm .test.push_server.pid
 
 clean:
