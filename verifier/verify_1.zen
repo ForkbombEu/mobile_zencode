@@ -1,0 +1,38 @@
+Scenario 'w3c': jwt
+
+Given I have a 'json web token' named 'message'
+Given I have a 'string array' in path 'result.verification_request.claims_required'
+
+# check expiration
+When I pickup from path 'message.payload.exp'
+When I create integer 'exp_int' cast of timestamp 'exp'
+When I create the timestamp
+When I create integer 'timestamp_int' cast of timestamp 'timestamp'
+
+If I verify number 'exp_int' is less than 'timestamp_int'
+When I exit with error message 'Expired jws, proof not verified'
+Endif
+
+# check required_claims
+When I pickup from path 'message.payload.result'
+Foreach 'claim' in 'result'
+If I verify 'claim' is found in 'claims_required'
+When I remove 'claim' from 'claims_required'
+EndIf
+Endforeach
+
+When I set 'zero' to '0' as 'float'
+If I verify size of 'claims_required' is more than 'zero'
+When I exit with error message 'Missing some required claims'
+EndIf
+
+When I pickup from path 'message.payload.iss'
+If I verify 'iss' has suffix '/'
+When I split the rightmost '1' bytes of 'iss'
+EndIf
+When I append the string '/.well-known/openid-relying-party' to 'iss'
+
+When I pickup from path 'message.header.alg'
+
+Then print the 'iss' as 'string'
+Then print the 'alg' as 'string'
