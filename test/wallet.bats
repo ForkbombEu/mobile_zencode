@@ -132,3 +132,25 @@ load ./bats_utils
     assert_output --partial '"server_response":{"status":"200","result":{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyOjNLeG1Ud0UxR0V1TUFxTk5DRVBHRFFRNUJFcXk4VVlvVHh3Sm5ITWJKTmtnI2VzMjU2X3B1YmxpY19rZXkiLCJrdHkiOiJFQyJ9LCJ0eXAiOiJvcGVuNHZjaS1wcm9vZitqd3QifQ.'
     assert_output --partial ',"registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"}'
 }
+
+@test "Verifier verify jws" {
+    # verify_1
+    claim_url=$(jq_extract_raw "claims_url" $VERIFIER/verify.data.json)
+    curl -X GET $claim_url | jq '{"result": .}' 1> $TMP/out
+    save_tmp_output claims.json
+    zexe $VERIFIER/verify_1.zen $VERIFIER/verify.data.json claims.json
+    save_tmp_output verify_1.output.json
+    # verfiy_2
+    rp_wk_url=$(jq_extract_raw "iss" verify_1.output.json)
+    curl -X GET $rp_wk_url | jq '{"result": .}' 1> $TMP/out
+    save_tmp_output rp_wk_endpoint_response.json
+    zexe $VERIFIER/verify_2.zen verify_1.output.json rp_wk_endpoint_response.json
+    save_tmp_output verify_2.output.json
+    # verify_3
+    did_url=$(jq_extract_raw "did_url" verify_2.output.json)
+    curl -X GET $did_url | jq '{"result": .}' 1> $TMP/out
+    save_tmp_output did_endpoint_response.json
+    zexe $VERIFIER/verify_3.zen $VERIFIER/verify.data.json did_endpoint_response.json
+    save_tmp_output verify_3.output.json
+    assert_output '{"output":["Signature_verification_successful"]}'
+}

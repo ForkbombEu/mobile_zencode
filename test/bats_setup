@@ -2,6 +2,7 @@ setup() {
     bats_require_minimum_version 1.5.0
     DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )"
     WALLET="$DIR/../wallet"
+    VERIFIER="$DIR/../verifier"
     WALLET_KEYS="$DIR/../wallet/holder_request_authorizationCode.keys.json"
     PATH="$SRC:$PATH"
     TMP=$BATS_RUN_TMPDIR
