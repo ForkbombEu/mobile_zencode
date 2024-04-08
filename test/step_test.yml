@@ -86,5 +86,5 @@ steps:
       check:
         status: 200
         jsonpath:
-          $.result.result:
+          $.result:
             - eq: Signature_verification_successful
