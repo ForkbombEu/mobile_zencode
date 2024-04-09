@@ -59,7 +59,7 @@ steps:
         relying_party: http://localhost:3003
         t: ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281
         m: f
-        exp: 1570000000
+        exp: 2012669299
         request_uri: https://apiroom.net/api/DIDroom/didroom_verification_request_mock1
         id: abCDe
         credential_array:

@@ -1,4 +1,11 @@
 Given I have a 'string' named 'relying_party'
+and I have a 'time' named 'exp'
+
+# check expiration
+When I create the timestamp
+If I verify number 'exp' is less than 'timestamp'
+When I exit with error message 'QR code is expired'
+EndIf
 
 If I verify 'relying_party' has suffix '/'
 When I split rightmost '1' bytes of 'relying_party'

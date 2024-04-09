@@ -1,6 +1,7 @@
 Rule unknown ignore
 
 Given I send object 'data' and send path 'rp_path' and send value 'relying_party' and manipulate and set
+Given I send object 'data' and send path 'exp_path' and send value 'exp' and manipulate and set
 
 # execute produce_vp_1
 Given I send keys 'empty_keys' and send data 'data' and send script 'zen_1' and execute zencode and output into 'zen_1_output'
