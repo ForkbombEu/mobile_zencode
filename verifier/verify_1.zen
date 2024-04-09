@@ -5,11 +5,9 @@ Given I have a 'string array' in path 'result.verification_request.claims_requir
 
 # check expiration
 When I pickup from path 'message.payload.exp'
-When I create integer 'exp_int' cast of timestamp 'exp'
 When I create the timestamp
-When I create integer 'timestamp_int' cast of timestamp 'timestamp'
 
-If I verify number 'exp_int' is less than 'timestamp_int'
+If I verify number 'exp' is less than 'timestamp'
 When I exit with error message 'Expired jws, proof not verified'
 Endif
 
