@@ -1,0 +1,18 @@
+Given I have a 'string array' in path 'result.jwks.keys'
+Given I have a 'string' named 'alg'
+
+Foreach 'jwk' in 'keys'
+If I verify 'alg' is equal to 'alg' in 'jwk'
+When I copy 'kid' from 'jwk' to 'kid'
+and break the foreach
+EndIf
+EndForeach
+
+If I verify 'kid' is not found
+When I exit with error message 'Relying party key matching the jws header alg not found'
+EndIf
+
+When I set 'did_url' to 'https://did.dyne.org/dids/' as 'string'
+and I append the 'kid' to 'did_url'
+
+Then print the 'did_url'

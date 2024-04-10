@@ -1,0 +1,11 @@
+{
+    "type": "object",
+    "properties": {
+        "message": {
+            "type": "string"
+        },
+        "claims_url": {
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "data": {},
+    "empty_keys": {},
+    "post_body": {},
+    "rp_wk_endpoint_path": "rp_wk_endpoint",
+    "rp_path": "relying_party",
+    "result_path": "result",
+    "credential_array_path": "credential_array",
+    "claims_array_path": "claims_array",
+    "rp_wk_path": "rp_wk",
+    "ac_path": "asked_claims",
+    "vp_path": "vp",
+    "t_path": "registrationToken",
+    "m_path": "m",
+    "exp_path": "exp",
+    "id_path": "id",
+    "verification_endpoint_path": "verification_endpoint",
+    "zen_1": "Given I have a 'string' named 'relying_party'\nand I have a 'time' named 'exp'\n\n# check expiration\nWhen I create the timestamp\nIf I verify number 'exp' is less than 'timestamp'\nWhen I exit with error message 'QR code is expired'\nEndIf\n\nIf I verify 'relying_party' has suffix '/'\nWhen I split rightmost '1' bytes of 'relying_party'\nEndIf\n\nWhen I append the string '/.well-known/openid-relying-party' to 'relying_party'\nand I rename 'relying_party' to 'rp_wk_endpoint'\n\nThen print the 'rp_wk_endpoint'\n",
+    "zen_2": "Scenario 'w3c': jwt\nScenario 'sd_jwt': vp\n\nGiven I have a 'string dictionary' named 'asked_claims'\nand I have a 'string dictionary' named 'rp_wk'\nand I have a 'signed selective disclosure array' named 'credential_array'\n\nWhen I pickup from path 'asked_claims.verification_request.claims_required'\nWhen I pickup from path 'rp_wk.trusted_credential_issuers'\n# at the moment extract just the first one\n# to be understand if they are always this to be chekced and loop over all the possible values\nWhen I pickup from path 'rp_wk.credential_configurations_supported.1.format'\nWhen I pickup from path 'rp_wk.credential_configurations_supported.1.credential_signing_alg_values_supported.1'\nand I rename '1' to 'credential_signing_alg_values_supported'\n\nWhen I create the 'signed selective disclosure array' named 'result_array'\nWhen I create the 'string array' named 'disclosures_array'\nForeach 'ssd' in 'credential_array'\nWhen I pickup from path 'ssd.jwt.payload'\nWhen I pickup from path 'ssd.jwt.header'\nWhen I verify 'iss' is found in 'payload'\nWhen I pickup from path 'payload.iss'\n# matches the cryptography of the credential (header)\nIf I verify 'format' is equal to 'typ' in 'header'\nand I verify 'credential_signing_alg_values_supported' is equal to 'alg' in 'header'\nand I verify 'iss' is found in 'trusted_credential_issuers'\nand I verify disclosures 'claims_required' are found in signed selective disclosure 'ssd'\nWhen I use signed selective disclosure 'ssd' only with disclosures 'claims_required'\nand I rename 'ssd' to 'vp'\nand I remove 'payload'\nand I remove 'header'\nand I remove 'iss'\nand I break foreach\nEndIf\nWhen I remove 'payload'\nand I remove 'header'\nand I remove 'iss'\nEndforeach\n\nIf I verify 'vp' is not found\nWhen I exit with error message 'no signed selective disclosure found that matched the requested claims'\nEndIf\n\nThen print the 'vp'\n"
+}

@@ -1,0 +1,23 @@
+Scenario 'jwt': jwt
+Scenario 'w3c': did
+
+Given I have a 'string dictionary' in path 'result.didDocument'
+and I have a 'string' named 'message'
+and I rename the 'message' to 'message_string'
+and I have a 'json web token' named 'message'
+
+When I pickup from path 'message.header.alg'
+and I set 'ES256' to 'ES256' as 'string'
+
+# possibility to add different type of keys
+If I verify 'alg' is equal to 'ES256'
+When I create 'es256' public key from did document 'didDocument'
+and I verify jws signature in 'message_string'
+and I set 'verifed' to 'true' as 'string'
+EndIf
+
+If I verify 'verifed' is not found
+When I exit with error message 'Signature verification failed'
+EndIf
+
+Then print the string 'Signature verification successful'

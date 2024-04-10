@@ -1,0 +1,31 @@
+{
+    "type": "object",
+    "properties": {
+        "relying_party": {
+            "type": "string"
+        },
+        "t": {
+            "type": "string"
+        },
+        "m": {
+            "type": "string"
+        },
+        "exp": {
+            "type": "number"
+        },
+        "request_uri": {
+            "type": "string"
+        },
+        "id": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "relying_party",
+        "t",
+        "m",
+        "exp",
+        "request_uri",
+        "id"
+    ]
+}

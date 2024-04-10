@@ -98,3 +98,59 @@ load ./bats_utils
     assert_output --partial '{"c_nonce":"'
     assert_output --partial '","c_nonce_expires_in":600,"credential":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9'
 }
+
+@test "Holder post to relying_party/verify" {
+    # first script
+    zexe $WALLET/produce_vp_1.zen $WALLET/produce_verifiable_presentation.data.json
+    save_tmp_output produce_vp_1.output.json
+    url=$(jq_extract_raw "rp_wk_endpoint" produce_vp_1.output.json)
+    curl -X GET $url | jq -c '.' 1> $TMP/out
+    save_tmp_output rp_wk_endpoint_response.json
+    assert_output '{"relying_party":"http://localhost:3003","verification_endpoint":"http://localhost:3003/verify","trusted_credential_issuers":["https://issuer1.zenswarm.forkbomb.eu","https://generic.issuer1.com","http://localhost:3001"],"display":[{"name":"DIDroom_RelyingParty1","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:3KxmTwE1GEuMAqNNCEPGDQQ5BEqy8UYoTxwJnHMbJNkg#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}]}'
+    request_uri=$(jq_extract_raw "request_uri" $WALLET/produce_verifiable_presentation.data.json)
+    curl -X GET $request_uri | jq -c '.' 1> $TMP/out
+    save_tmp_output request_uri_response.json
+    assert_output '{"verification_request":{"claims_optional":["nationality","birthdat","address"],"claims_required":["given_name","family_name","is_human"],"didroom_metadata":{"didroom_id":"abcde","iat":1234567,"organization":"f332rf2","origin":"https://didroom.com/s","owner":"sfewfw32424"},"type":"Auth1"}}'
+    echo "{}" >$TMP/out
+    save_tmp_output produce_vp_2.data.json
+    json_join_two $WALLET/produce_verifiable_presentation.data.json produce_vp_2.data.json
+    jq_insert_json rp_wk rp_wk_endpoint_response.json produce_vp_2.data.json
+    jq_insert_json asked_claims request_uri_response.json produce_vp_2.data.json
+    zexe $WALLET/produce_vp_2.zen produce_vp_2.data.json
+    save_tmp_output produce_vp_2.output.json
+    assert_output '{"vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.eyJfc2QiOiBbIk9pS05QX3lqTEI1T2Vfd3IzVzY1NXFuLXVrUXF6cTV6dmdNZk05Z3NzVHciLCAiU1RnaG5XemhXUDFSQ2NNU2lTNk5UX1M3YXdRNi1WSnJ6MG9PV1pDZlZHWSIsICJNRGNXeWdpWVJQWkR0Q0NsNHVJYU1WUWpfeWxzaWtsNFdYV2lyeTZkRkVVIl0sICJfc2RfYWxnIjogInNoYS0yNTYiLCAiZXhwIjogMTc0MzY5MjA4NywgImlhdCI6IDE3MTIyMjA2MDQsICJpc3MiOiAiaHR0cDovL2xvY2FsaG9zdDozMDAxIiwgIm5iZiI6IDE3MTIyMjA2MDQsICJzdWIiOiAiZGlkOmR5bmU6c2FuZGJveC5zaWducm9vbTpQVER2dlFuMWlXUWlWeGtmc0RuVWlkOEZiaWVLYkhxNDZRczhjOUNaeDY3IiwgInR5cGUiOiAiQXV0aDEifQ.Djous2sH3KSs_w5oL2IpEoVT7kDG1NXha-72vAe2ESjZtGv8bV78SyWkPxvvhYYiZztHc234zXsIk_r4VpGNNw~WyJzMVhZaVp3azJLSFR1Yk1XU2dnWWtRIiwgImdpdmVuX25hbWUiLCAiUGlwcG8iXQ~WyJpZk5sYXpNLWVOMDBSZzQ2ZVV1aTZ3IiwgImZhbWlseV9uYW1lIiwgIlBlcHBlIl0~WyJxeGItM0hQZS1iMHFSdFRSRC15QVFRIiwgImlzX2h1bWFuIiwgdHJ1ZV0~"}'
+    verify_endpoint=$(jq_extract_raw "verification_endpoint" rp_wk_endpoint_response.json)
+    token=$(jq_extract_raw "t" $WALLET/produce_verifiable_presentation.data.json)
+    id=$(jq_extract_raw "id" $WALLET/produce_verifiable_presentation.data.json)
+    m=$(jq_extract_raw "m" $WALLET/produce_verifiable_presentation.data.json)
+    jq_insert "registrationToken" $token produce_vp_2.output.json
+    jq_insert "id" $id produce_vp_2.output.json
+    jq_insert "m" $m produce_vp_2.output.json
+    curl -X POST $verify_endpoint -d ''"$(cat $BATS_FILE_TMPDIR/produce_vp_2.output.json)"'' 1>$TMP/out
+    save_tmp_output verify_endpoint_response.json
+    # if --regexp resolve modify also here
+    assert_output --partial '"server_response":{"status":"200","result":{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyOjNLeG1Ud0UxR0V1TUFxTk5DRVBHRFFRNUJFcXk4VVlvVHh3Sm5ITWJKTmtnI2VzMjU2X3B1YmxpY19rZXkiLCJrdHkiOiJFQyJ9LCJ0eXAiOiJvcGVuNHZjaS1wcm9vZitqd3QifQ.'
+    assert_output --partial ',"registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"}'
+}
+
+@test "Verifier verify jws" {
+    # verify_1
+    claim_url=$(jq_extract_raw "claims_url" $VERIFIER/verify.data.json)
+    curl -X GET $claim_url | jq '{"result": .}' 1> $TMP/out
+    save_tmp_output claims.json
+    zexe $VERIFIER/verify_1.zen $VERIFIER/verify.data.json claims.json
+    save_tmp_output verify_1.output.json
+    # verfiy_2
+    rp_wk_url=$(jq_extract_raw "iss" verify_1.output.json)
+    curl -X GET $rp_wk_url | jq '{"result": .}' 1> $TMP/out
+    save_tmp_output rp_wk_endpoint_response.json
+    zexe $VERIFIER/verify_2.zen verify_1.output.json rp_wk_endpoint_response.json
+    save_tmp_output verify_2.output.json
+    # verify_3
+    did_url=$(jq_extract_raw "did_url" verify_2.output.json)
+    curl -X GET $did_url | jq '{"result": .}' 1> $TMP/out
+    save_tmp_output did_endpoint_response.json
+    zexe $VERIFIER/verify_3.zen $VERIFIER/verify.data.json did_endpoint_response.json
+    save_tmp_output verify_3.output.json
+    assert_output '{"output":["Signature_verification_successful"]}'
+}

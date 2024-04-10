@@ -1,0 +1,26 @@
+
+# retrieve required_claims
+Given I connect to 'claims_url' and do get and output into 'claims_response'
+
+# check exp and rc and get iss wk url
+Given I send object 'data' and send path 'message_path' and send value 'message' and manipulate and set
+Given I send script 'zen_1' and send data 'data' and send keys 'claims_response' and execute zencode and output into 'zen_1_output'
+Given I send object 'zen_1_output' and send path 'iss_path' and manipulate and get and output into 'iss_wk_url'
+
+# retrieve iss_wk
+Given I connect to 'iss_wk_url' and do get and output into 'iss_wk'
+
+# extract did url
+Given I send script 'zen_2' and send data 'iss_wk' and send keys 'zen_1_output' and execute zencode and output into 'zen_2_output'
+Given I send object 'zen_2_output' and send path 'did_url_path' and manipulate and get and output into 'did_url'
+
+# retrieve did
+Given I connect to 'did_url' and do get and output into 'did'
+
+# verify jws signature
+Given I send script 'zen_3' and send data 'data' and send keys 'did' and execute zencode and output into 'zen_3_output'
+
+Given I have a 'string' in path 'zen_3_output.output.1'
+and I rename '1' to 'result'
+
+Then print the 'result'
