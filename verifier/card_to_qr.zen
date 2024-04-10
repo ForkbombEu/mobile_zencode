@@ -8,7 +8,7 @@ Given I have a 'string array' named 'letters'
 and I have a 'float' named '1'
 and I have a 'float' named '5'
 
-When I create the 'string dictionary' in path 'qr_json'
+When I create the 'string dictionary' named 'qr_json'
 
 # relying party
 When I move 'relying_party' in 'qr_json'
@@ -25,12 +25,12 @@ and I move 'result' to 'exp' in 'qr_json'
 
 # id
 When I write string '' in 'id'
-Foreach '_' in sequence from '0' to '5' with step '1'
+Foreach '_' in sequence from '1' to '5' with step '1'
 When I pick random object in 'letters'
 and I append the 'random object' to 'id'
 and I remove 'random object'
 EndForEach
-and I copy 'id' in 'qr_json'
+When I copy 'id' in 'qr_json'
 
 # stringify
 When I create json escaped string of 'qr_json'
