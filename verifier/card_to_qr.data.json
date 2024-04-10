@@ -1,0 +1,9 @@
+{
+    "credential_configuration_ids": [
+        "Auth1"
+    ],
+    "relying_party": "http://localhost:3003/",
+    "pb_url": "https://admin.signroom.io/_/#/",
+    "expires_in": 300,
+    "registrationToken": "ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"
+}

@@ -1,0 +1,43 @@
+
+Given I have a 'string' named 'relying_party'
+and I have a 'string' named 'registrationToken'
+and I have a 'time' named 'expires_in'
+
+# keys
+Given I have a 'string array' named 'letters'
+and I have a 'float' named '1'
+and I have a 'float' named '5'
+
+When I create the 'string dictionary' in path 'qr_json'
+
+# relying party
+When I move 'relying_party' in 'qr_json'
+
+# t
+When I move 'registrationToken' to 't' in 'qr_json'
+
+# exp
+When I create the timestamp
+and I create the result of 'timestamp' + 'expires_in'
+and I move 'result' to 'exp' in 'qr_json'
+
+# TODO: request uri
+
+# id
+When I write string '' in 'id'
+Foreach '_' in sequence from '0' to '5' with step '1'
+When I pick random object in 'letters'
+and I append the 'random object' to 'id'
+and I remove 'random object'
+EndForEach
+and I copy 'id' in 'qr_json'
+
+# stringify
+When I create json escaped string of 'qr_json'
+and I rename 'json_escaped_string' to 'qr_text'
+
+Then print the 'qr_text'
+and print the 'id'
+# and print the 'request_uri'
+
+Then I send text 'qr_text' and create qr code and output into 'qrcode'
