@@ -37,6 +37,18 @@
         },
         "registrationToken": {
             "type": "string"
+        },
+        "m": {
+            "type": "string"
         }
-    }
+    },
+    "required": [
+        "show_parameters",
+        "my_credentials",
+        "relying_party",
+        "pb_url",
+        "expires_in",
+        "registrationToken",
+        "m"
+    ]
 }

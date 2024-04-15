@@ -9,6 +9,7 @@ Given I have a 'string dictionary' named 'output'
 
 Given I have a 'string' named 'relying_party'
 and I have a 'string' named 'registrationToken'
+and I have a 'string' named 'm'
 and I have a 'time' named 'expires_in'
 and I have a 'string' named 'pb_url'
 and I have a 'string' named 'pb_api'
@@ -25,6 +26,9 @@ When I move 'relying_party' in 'qr_json'
 
 # t
 When I move 'registrationToken' to 't' in 'qr_json'
+
+# m
+When I move 'm' in 'qr_json'
 
 # exp
 When I create the timestamp
