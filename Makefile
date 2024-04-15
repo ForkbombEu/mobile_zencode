@@ -42,6 +42,7 @@ tests-well-known:
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/par.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/par.keys.json
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/token.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/token.keys.json
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/authorize.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/authorize.keys.json
+	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/introspection.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/introspection.keys.json
 # ci
 	@jq '."well-known_path" = "tests/public/credential_issuer/.well-known/openid-credential-issuer"' ${DM_PATH}/credential_issuer/credential.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/credential_issuer/credential.keys.json
 	@jq '."well-known_path" = "tests/public/credential_issuer/.well-known/openid-credential-issuer"' ${DM_PATH}/credential_issuer/.autorun/identity.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/credential_issuer/.autorun/identity.keys.json
@@ -62,7 +63,15 @@ unit-test: ncr test/didroom_microservices tests-well-known
 	@./ncr -p 3002 -z ./wallet & echo $$! > .test.mobile_zencode.pid
 	@./ncr -p 3003 -z test/didroom_microservices/relying_party --public-directory test/didroom_microservices/tests/public/relying_party & echo $$! > .test.relying_party.pid
 	@./ncr -p 3366 -z test/didroom_microservices/tests/test_push_server & echo $$! > .test.push_server.pid
-	sleep 5
+	@for port in 3000 3001 3002 3003 3366; do \
+		timeout 30s bash -c 'port=$$1; until nc -z localhost $$port; do \
+			echo "Port $$port is not yet reachable, waiting..."; \
+			sleep 1; \
+		done' _ "$$port" || { \
+			echo "Timeout while waiting for port $$port to be reachable"; \
+			exit 1; \
+		}; \
+	done
 	@git submodule update --init --recursive
 	@./test/bats/bin/bats test/wallet.bats
 	@kill `cat .test.credential_issuer.pid` && rm .test.credential_issuer.pid
@@ -78,7 +87,15 @@ api-test: ncr test/didroom_microservices tests-well-known
 	@./ncr -p 3003 -z test/didroom_microservices/relying_party --public-directory test/didroom_microservices/tests/public/relying_party & echo $$! > .test.relying_party.pid
 	@./ncr -p 3004 -z ./verifier & echo $$! > .test.verifier.pid
 	@./ncr -p 3366 -z test/didroom_microservices/tests/test_push_server & echo $$! > .test.push_server.pid
-	sleep 10
+	@for port in 3000 3001 3002 3003 3004 3366; do \
+		timeout 30s bash -c 'port=$$1; until nc -z localhost $$port; do \
+			echo "Port $$port is not yet reachable, waiting..."; \
+			sleep 1; \
+		done' _ "$$port" || { \
+			echo "Timeout while waiting for port $$port to be reachable"; \
+			exit 1; \
+		}; \
+	done
 	@npx stepci run test/test_api.yml
 	@kill `cat .test.credential_issuer.pid` && rm .test.credential_issuer.pid
 	@kill `cat .test.authz_server.pid` && rm .test.authz_server.pid
