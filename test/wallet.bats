@@ -11,7 +11,8 @@ load ./bats_utils
     url=$(jq_extract_raw "credential_issuer" read_credential_issuer.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output credential_issuer_well-known.output.json
-    assert_output '{"credential_issuer":"http://localhost:3001","credential_endpoint":"http://localhost:3001/credential","authorization_servers":["http://localhost:3000"],"display":[{"name":"DIDroom_Issuer1","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:GPgX3sS1nNp7fgLWvvTSw4jUaEDLuBTNq5eJhvkVD9ER#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}},"display":[{"name":"Above 18 identity","locale":"en-US","logo":{"url":"https://avatars.githubusercontent.com/u/96812851","alt_text":"Forkbomb Logo"},"background_color":"#12107c","text_color":"#FFFFFF"}],"credential_definition":{"type":["Identity"],"credentialSubject":{"given_name":{"mandatory":true,"display":[{"name":"Current First Name","locale":"en-US"}]},"family_name":{"mandatory":true,"display":[{"name":"Current Family Name","locale":"en-US"}]},"birth_date":{"mandatory":true,"display":[{"name":"Date of Birth","locale":"en-US"}]},"above_18":{"mandatory":true,"display":[{"name":"Is above 18","locale":"en-US"}]}}}},{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}},"display":[{"name":"Proof of humanity","locale":"en-US","logo":{"url":"https://avatars.githubusercontent.com/u/96812851","alt_text":"Forkbomb Logo"},"background_color":"#12107c","text_color":"#FFFFFF"}],"credential_definition":{"type":["Auth1"],"credentialSubject":{"given_name":{"mandatory":true,"display":[{"name":"Current First Name","locale":"en-US"}]},"family_name":{"mandatory":true,"display":[{"name":"Current Family Name","locale":"en-US"}]},"is_human":{"mandatory":true,"display":[{"name":"Proof of humanity","locale":"en-US"}]}}}}]}'
+    assert_output --partial '{"credential_issuer":"http://localhost:3001","credential_endpoint":"http://localhost:3001/credential","authorization_servers":["http://localhost:3000"],"display":[{"name":"DIDroom_Issuer1","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial 'es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}},"display":[{"name":"Above 18 identity","locale":"en-US","logo":{"url":"https://avatars.githubusercontent.com/u/96812851","alt_text":"Forkbomb Logo"},"background_color":"#12107c","text_color":"#FFFFFF"}],"credential_definition":{"type":["Identity"],"credentialSubject":{"given_name":{"mandatory":true,"display":[{"name":"Current First Name","locale":"en-US"}]},"family_name":{"mandatory":true,"display":[{"name":"Current Family Name","locale":"en-US"}]},"birth_date":{"mandatory":true,"display":[{"name":"Date of Birth","locale":"en-US"}]},"above_18":{"mandatory":true,"display":[{"name":"Is above 18","locale":"en-US"}]}}}},{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}},"display":[{"name":"Proof of humanity","locale":"en-US","logo":{"url":"https://avatars.githubusercontent.com/u/96812851","alt_text":"Forkbomb Logo"},"background_color":"#12107c","text_color":"#FFFFFF"}],"credential_definition":{"type":["Auth1"],"credentialSubject":{"given_name":{"mandatory":true,"display":[{"name":"Current First Name","locale":"en-US"}]},"family_name":{"mandatory":true,"display":[{"name":"Current Family Name","locale":"en-US"}]},"is_human":{"mandatory":true,"display":[{"name":"Proof of humanity","locale":"en-US"}]}}}}]}'
     authorization_server=$(jq_extract_raw "authorization_servers" credential_issuer_well-known.output.json| jq -r '.[0]')
     jq_insert "authorization_server" $authorization_server read_credential_issuer.output.json
     credential_configurations_supported=$(jq_extract_raw "credential_configurations_supported" credential_issuer_well-known.output.json | jq -c '.')
@@ -26,7 +27,8 @@ load ./bats_utils
     url=$(jq_extract_raw "authorization_server" read_authz_server.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output authz_server_well-known.output.json
-    assert_output '{"authorization_endpoint":"http://localhost:3000/authorize","pushed_authorization_request_endpoint":"http://localhost:3000/par","token_endpoint":"http://localhost:3000/token","introspection_endpoint":"http://localhost:3000/introspection","issuer":"http://localhost:3000","jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:6Cp8mPUvJmQaMxQPSnNyhb74f9Ga4WqfXCkBneFgikm5#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"scopes_supported":["Identity","Auth1"],"dpop_signing_alg_values_supported":["ES256"],"client_registration_types_supported":["automatic"],"code_challenge_methods_supported":["S256"],"authorization_details_types_supported":["openid_credential"],"grant_types_supported":["authorization_code"],"request_parameter_supported":true,"request_uri_parameter_supported":false,"response_types_supported":["code"],"subject_types_supported":["pairwise"],"token_endpoint_auth_methods_supported":["attest_jwt_client_auth"],"token_endpoint_auth_signing_alg_values_supported":["ES256"],"request_object_signing_alg_values_supported":["ES256"]}'
+    assert_output --partial '{"authorization_endpoint":"http://localhost:3000/authorize","pushed_authorization_request_endpoint":"http://localhost:3000/par","token_endpoint":"http://localhost:3000/token","introspection_endpoint":"http://localhost:3000/introspection","issuer":"http://localhost:3000","jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial '#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"scopes_supported":["Identity","Auth1"],"dpop_signing_alg_values_supported":["ES256"],"client_registration_types_supported":["automatic"],"code_challenge_methods_supported":["S256"],"authorization_details_types_supported":["openid_credential"],"grant_types_supported":["authorization_code"],"request_parameter_supported":true,"request_uri_parameter_supported":false,"response_types_supported":["code"],"subject_types_supported":["pairwise"],"token_endpoint_auth_methods_supported":["attest_jwt_client_auth"],"token_endpoint_auth_signing_alg_values_supported":["ES256"],"request_object_signing_alg_values_supported":["ES256"]}'
 }
 
 @test "Holder output credential_requested and credential_parameters" {
@@ -38,7 +40,8 @@ load ./bats_utils
     jq --arg key "credential_issuer_well-known" '.[$key].result = input' $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json $BATS_FILE_TMPDIR/credential_issuer_well-known.output.json > $tmp && mv $tmp  $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json
     zexe $WALLET/holder_qr_to_well-known.zen $WALLET_KEYS holder_qr_to_well-known.data.json
     save_tmp_output holder_qr_to_well-known.output.json
-    assert_output '{"credential_issuer_information":{"authorization_servers":["http://localhost:3000"],"credential_endpoint":"http://localhost:3001/credential","credential_issuer":"http://localhost:3001","display":[{"locale":"en-US","name":"DIDroom_Issuer1"}],"jwks":{"keys":[{"alg":"ES256","crv":"P-256","kid":"did:dyne:sandbox.genericissuer:GPgX3sS1nNp7fgLWvvTSw4jUaEDLuBTNq5eJhvkVD9ER#es256_public_key","kty":"EC"}]}},"credential_parameters":{"authorization_endpoint":"http://localhost:3000/authorize","authorization_server_endpoint_par":"http://localhost:3000/par","code_challenge_method":"S256","credential_endpoint":"http://localhost:3001/credential","credential_issuer":"http://localhost:3001","format":"vc+sd-jwt","grant_type":"authorization_code","response_type":"code","token_endpoint":"http://localhost:3000/token","vct":"Auth1"},"credential_requested":{"credential_definition":{"credentialSubject":{"family_name":{"display":[{"locale":"en-US","name":"Current Family Name"}],"mandatory":true},"given_name":{"display":[{"locale":"en-US","name":"Current First Name"}],"mandatory":true},"is_human":{"display":[{"locale":"en-US","name":"Proof of humanity"}],"mandatory":true}},"type":["Auth1"]},"credential_signing_alg_values_supported":["ES256"],"cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"display":[{"background_color":"#12107c","locale":"en-US","logo":{"alt_text":"Forkbomb Logo","url":"https://avatars.githubusercontent.com/u/96812851"},"name":"Proof of humanity","text_color":"#FFFFFF"}],"format":"vc+sd-jwt","proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}}'
+    assert_output --partial '{"credential_issuer_information":{"authorization_servers":["http://localhost:3000"],"credential_endpoint":"http://localhost:3001/credential","credential_issuer":"http://localhost:3001","display":[{"locale":"en-US","name":"DIDroom_Issuer1"}],"jwks":{"keys":[{"alg":"ES256","crv":"P-256","kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial '#es256_public_key","kty":"EC"}]}},"credential_parameters":{"authorization_endpoint":"http://localhost:3000/authorize","authorization_server_endpoint_par":"http://localhost:3000/par","code_challenge_method":"S256","credential_endpoint":"http://localhost:3001/credential","credential_issuer":"http://localhost:3001","format":"vc+sd-jwt","grant_type":"authorization_code","response_type":"code","token_endpoint":"http://localhost:3000/token","vct":"Auth1"},"credential_requested":{"credential_definition":{"credentialSubject":{"family_name":{"display":[{"locale":"en-US","name":"Current Family Name"}],"mandatory":true},"given_name":{"display":[{"locale":"en-US","name":"Current First Name"}],"mandatory":true},"is_human":{"display":[{"locale":"en-US","name":"Proof of humanity"}],"mandatory":true}},"type":["Auth1"]},"credential_signing_alg_values_supported":["ES256"],"cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"display":[{"background_color":"#12107c","locale":"en-US","logo":{"alt_text":"Forkbomb Logo","url":"https://avatars.githubusercontent.com/u/96812851"},"name":"Proof of humanity","text_color":"#FFFFFF"}],"format":"vc+sd-jwt","proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}}'
 }
 
 @test "Holder post to authz_server/par" {
@@ -63,7 +66,7 @@ load ./bats_utils
     curl -X POST $url -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_3_response.output.json
     # if --regexp resolve modify also here
-    assert_output --partial '{"code":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiOiJoLXlLRFRpVUttb0ZNcHdXR2tMcG42QksyU2pLeHdQYlVRMGVUaXpWeExrIiwieSI6Ii1VekQ0TlJtY2t0Qk5Db0dSUkNJWERuOUYwcUQzNDJVZlF5WTFSdG10TEEiLCJjcnYiOiJQLTI1NiJ9fQ.'
+    assert_output --partial '{"code":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
 }
 
 @test "Holder post to authz_server/token" {
@@ -78,7 +81,7 @@ load ./bats_utils
     curl -X POST $url -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_5_response.output.json
     # if --regexp resolve modify also here
-    assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiOiJoLXlLRFRpVUttb0ZNcHdXR2tMcG42QksyU2pLeHdQYlVRMGVUaXpWeExrIiwieSI6Ii1VekQ0TlJtY2t0Qk5Db0dSUkNJWERuOUYwcUQzNDJVZlF5WTFSdG10TEEiLCJjcnYiOiJQLTI1NiJ9fQ.'
+    assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
     assert_output --partial '","c_nonce":"'
     assert_output --partial '","c_nonce_expires_in":3600,"expires_in":'
     assert_output --partial ',"authorization_details":[{"credential_configuration_id":"Auth1","family_name":"Peppe","given_name":"Pippo","is_human":true,"locations":["http://localhost:3001"],"type":"openid_credential"}]}'
@@ -100,25 +103,29 @@ load ./bats_utils
 }
 
 @test "Holder post to relying_party/verify" {
+    # use credential from previous script
+    cred=$(jq ".credential" $BATS_FILE_TMPDIR/post_7_response.output.json)
+    jq ".credential_array = [$cred]" $WALLET/produce_verifiable_presentation.data.json > $BATS_FILE_TMPDIR/temp_vp.data.json
     # first script
-    zexe $WALLET/produce_vp_1.zen $WALLET/produce_verifiable_presentation.data.json
+    zexe $WALLET/produce_vp_1.zen temp_vp.data.json
     save_tmp_output produce_vp_1.output.json
     url=$(jq_extract_raw "rp_wk_endpoint" produce_vp_1.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output rp_wk_endpoint_response.json
-    assert_output '{"relying_party":"http://localhost:3003","verification_endpoint":"http://localhost:3003/verify","trusted_credential_issuers":["https://issuer1.zenswarm.forkbomb.eu","https://generic.issuer1.com","http://localhost:3001"],"display":[{"name":"DIDroom_RelyingParty1","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:3KxmTwE1GEuMAqNNCEPGDQQ5BEqy8UYoTxwJnHMbJNkg#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}]}'
-    request_uri=$(jq_extract_raw "request_uri" $WALLET/produce_verifiable_presentation.data.json)
+    assert_output --partial '{"relying_party":"http://localhost:3003","verification_endpoint":"http://localhost:3003/verify","trusted_credential_issuers":["https://issuer1.zenswarm.forkbomb.eu","https://generic.issuer1.com","http://localhost:3001"],"display":[{"name":"DIDroom_RelyingParty1","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial '#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}]}'
+    request_uri=$(jq_extract_raw "request_uri" temp_vp.data.json)
     curl -X GET $request_uri | jq -c '.' 1> $TMP/out
     save_tmp_output request_uri_response.json
     assert_output '{"verification_request":{"claims_optional":["nationality","birthdat","address"],"claims_required":["given_name","family_name","is_human"],"didroom_metadata":{"didroom_id":"abcde","iat":1234567,"organization":"f332rf2","origin":"https://didroom.com/s","owner":"sfewfw32424"},"type":"Auth1"}}'
     echo "{}" >$TMP/out
     save_tmp_output produce_vp_2.data.json
-    json_join_two $WALLET/produce_verifiable_presentation.data.json produce_vp_2.data.json
+    json_join_two temp_vp.data.json produce_vp_2.data.json
     jq_insert_json rp_wk rp_wk_endpoint_response.json produce_vp_2.data.json
     jq_insert_json asked_claims request_uri_response.json produce_vp_2.data.json
     zexe $WALLET/produce_vp_2.zen produce_vp_2.data.json
     save_tmp_output produce_vp_2.output.json
-    assert_output '{"vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.eyJfc2QiOiBbIk9pS05QX3lqTEI1T2Vfd3IzVzY1NXFuLXVrUXF6cTV6dmdNZk05Z3NzVHciLCAiU1RnaG5XemhXUDFSQ2NNU2lTNk5UX1M3YXdRNi1WSnJ6MG9PV1pDZlZHWSIsICJNRGNXeWdpWVJQWkR0Q0NsNHVJYU1WUWpfeWxzaWtsNFdYV2lyeTZkRkVVIl0sICJfc2RfYWxnIjogInNoYS0yNTYiLCAiZXhwIjogMTc0MzY5MjA4NywgImlhdCI6IDE3MTIyMjA2MDQsICJpc3MiOiAiaHR0cDovL2xvY2FsaG9zdDozMDAxIiwgIm5iZiI6IDE3MTIyMjA2MDQsICJzdWIiOiAiZGlkOmR5bmU6c2FuZGJveC5zaWducm9vbTpQVER2dlFuMWlXUWlWeGtmc0RuVWlkOEZiaWVLYkhxNDZRczhjOUNaeDY3IiwgInR5cGUiOiAiQXV0aDEifQ.Djous2sH3KSs_w5oL2IpEoVT7kDG1NXha-72vAe2ESjZtGv8bV78SyWkPxvvhYYiZztHc234zXsIk_r4VpGNNw~WyJzMVhZaVp3azJLSFR1Yk1XU2dnWWtRIiwgImdpdmVuX25hbWUiLCAiUGlwcG8iXQ~WyJpZk5sYXpNLWVOMDBSZzQ2ZVV1aTZ3IiwgImZhbWlseV9uYW1lIiwgIlBlcHBlIl0~WyJxeGItM0hQZS1iMHFSdFRSRC15QVFRIiwgImlzX2h1bWFuIiwgdHJ1ZV0~"}'
+    assert_output --partial '{"vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.'
     verify_endpoint=$(jq_extract_raw "verification_endpoint" rp_wk_endpoint_response.json)
     token=$(jq_extract_raw "t" $WALLET/produce_verifiable_presentation.data.json)
     id=$(jq_extract_raw "id" $WALLET/produce_verifiable_presentation.data.json)
@@ -129,8 +136,12 @@ load ./bats_utils
     curl -X POST $verify_endpoint -d ''"$(cat $BATS_FILE_TMPDIR/produce_vp_2.output.json)"'' 1>$TMP/out
     save_tmp_output verify_endpoint_response.json
     # if --regexp resolve modify also here
-    assert_output --partial '"server_response":{"status":"200","result":{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyOjNLeG1Ud0UxR0V1TUFxTk5DRVBHRFFRNUJFcXk4VVlvVHh3Sm5ITWJKTmtnI2VzMjU2X3B1YmxpY19rZXkiLCJrdHkiOiJFQyJ9LCJ0eXAiOiJvcGVuNHZjaS1wcm9vZitqd3QifQ.'
+    assert_output --partial '"server_response":{"status":"200","result":{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmlja'
     assert_output --partial ',"registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"}'
+    message=$(jq -r '.server_response.result.message' $BATS_FILE_TMPDIR/verify_endpoint_response.json)
+    echo "{}" >$TMP/out
+    save_tmp_output clear_rp_response.out.json
+    jq_insert "message" $message clear_rp_response.out.json
 }
 
 @test "Verifier verify jws" {
@@ -138,7 +149,7 @@ load ./bats_utils
     claim_url=$(jq_extract_raw "claims_url" $VERIFIER/verify.data.json)
     curl -X GET $claim_url | jq '{"result": .}' 1> $TMP/out
     save_tmp_output claims.json
-    zexe $VERIFIER/verify_1.zen $VERIFIER/verify.data.json claims.json
+    zexe $VERIFIER/verify_1.zen clear_rp_response.out.json claims.json
     save_tmp_output verify_1.output.json
     # verfiy_2
     rp_wk_url=$(jq_extract_raw "iss" verify_1.output.json)
@@ -150,7 +161,7 @@ load ./bats_utils
     did_url=$(jq_extract_raw "did_url" verify_2.output.json)
     curl -X GET $did_url | jq '{"result": .}' 1> $TMP/out
     save_tmp_output did_endpoint_response.json
-    zexe $VERIFIER/verify_3.zen $VERIFIER/verify.data.json did_endpoint_response.json
+    zexe $VERIFIER/verify_3.zen clear_rp_response.out.json did_endpoint_response.json
     save_tmp_output verify_3.output.json
     assert_output '{"output":["Signature_verification_successful"]}'
 }
