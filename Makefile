@@ -78,7 +78,7 @@ api-test: ncr test/didroom_microservices tests-well-known
 	@./ncr -p 3003 -z test/didroom_microservices/relying_party --public-directory test/didroom_microservices/tests/public/relying_party & echo $$! > .test.relying_party.pid
 	@./ncr -p 3004 -z ./verifier & echo $$! > .test.verifier.pid
 	@./ncr -p 3366 -z test/didroom_microservices/tests/test_push_server & echo $$! > .test.push_server.pid
-	sleep 5
+	sleep 10
 	@npx stepci run test/test_api.yml
 	@kill `cat .test.credential_issuer.pid` && rm .test.credential_issuer.pid
 	@kill `cat .test.authz_server.pid` && rm .test.authz_server.pid
