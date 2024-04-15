@@ -42,6 +42,7 @@ tests-well-known:
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/par.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/par.keys.json
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/token.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/token.keys.json
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/authorize.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/authorize.keys.json
+	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/introspection.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/introspection.keys.json
 # ci
 	@jq '."well-known_path" = "tests/public/credential_issuer/.well-known/openid-credential-issuer"' ${DM_PATH}/credential_issuer/credential.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/credential_issuer/credential.keys.json
 	@jq '."well-known_path" = "tests/public/credential_issuer/.well-known/openid-credential-issuer"' ${DM_PATH}/credential_issuer/.autorun/identity.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/credential_issuer/.autorun/identity.keys.json
