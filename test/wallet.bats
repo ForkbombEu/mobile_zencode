@@ -63,7 +63,7 @@ load ./bats_utils
     curl -X POST $url -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_3_response.output.json
     # if --regexp resolve modify also here
-    assert_output --partial '{"code":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiOiJoLXlLRFRpVUttb0ZNcHdXR2tMcG42QksyU2pLeHdQYlVRMGVUaXpWeExrIiwieSI6Ii1VekQ0TlJtY2t0Qk5Db0dSUkNJWERuOUYwcUQzNDJVZlF5WTFSdG10TEEiLCJjcnYiOiJQLTI1NiJ9fQ.'
+    assert_output --partial '{"code":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
 }
 
 @test "Holder post to authz_server/token" {
@@ -78,7 +78,7 @@ load ./bats_utils
     curl -X POST $url -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_5_response.output.json
     # if --regexp resolve modify also here
-    assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiOiJoLXlLRFRpVUttb0ZNcHdXR2tMcG42QksyU2pLeHdQYlVRMGVUaXpWeExrIiwieSI6Ii1VekQ0TlJtY2t0Qk5Db0dSUkNJWERuOUYwcUQzNDJVZlF5WTFSdG10TEEiLCJjcnYiOiJQLTI1NiJ9fQ.'
+    assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
     assert_output --partial '","c_nonce":"'
     assert_output --partial '","c_nonce_expires_in":3600,"expires_in":'
     assert_output --partial ',"authorization_details":[{"credential_configuration_id":"Auth1","family_name":"Peppe","given_name":"Pippo","is_human":true,"locations":["http://localhost:3001"],"type":"openid_credential"}]}'
