@@ -135,6 +135,10 @@ load ./bats_utils
     # if --regexp resolve modify also here
     assert_output --partial '"server_response":{"status":"200","result":{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmlja'
     assert_output --partial ',"registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"}'
+    message=$(jq -r '.server_response.result.message' $BATS_FILE_TMPDIR/verify_endpoint_response.json)
+    echo "{}" >$TMP/out
+    save_tmp_output clear_rp_response.out.json
+    jq_insert "message" $message clear_rp_response.out.json
 }
 
 @test "Verifier verify jws" {
@@ -142,7 +146,7 @@ load ./bats_utils
     claim_url=$(jq_extract_raw "claims_url" $VERIFIER/verify.data.json)
     curl -X GET $claim_url | jq '{"result": .}' 1> $TMP/out
     save_tmp_output claims.json
-    zexe $VERIFIER/verify_1.zen $VERIFIER/verify.data.json claims.json
+    zexe $VERIFIER/verify_1.zen clear_rp_response.out.json claims.json
     save_tmp_output verify_1.output.json
     # verfiy_2
     rp_wk_url=$(jq_extract_raw "iss" verify_1.output.json)
@@ -154,7 +158,7 @@ load ./bats_utils
     did_url=$(jq_extract_raw "did_url" verify_2.output.json)
     curl -X GET $did_url | jq '{"result": .}' 1> $TMP/out
     save_tmp_output did_endpoint_response.json
-    zexe $VERIFIER/verify_3.zen $VERIFIER/verify.data.json did_endpoint_response.json
+    zexe $VERIFIER/verify_3.zen clear_rp_response.out.json did_endpoint_response.json
     save_tmp_output verify_3.output.json
     assert_output '{"output":["Signature_verification_successful"]}'
 }
