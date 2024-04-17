@@ -11,7 +11,7 @@ Given I send object 'zen_1_output' and send path 'rp_wk_endpoint_path' and manip
 Given I connect to 'rp_wk_endpoint' and do get and output into 'result.rp_wk'
 Given I send object 'result.rp_wk' and send path 'result_path' and manipulate and get and output into 'rp_wk'
 Given I connect to 'request_uri' and do get and output into 'result.asked_claims'
-Given I send object 'result.asked_claims' and send path 'result_path' and manipulate and get and output into 'asked_claims'
+Given I send object 'result.asked_claims' and send path 'result.items.schema_path' and manipulate and get and output into 'asked_claims'
 
 Given I send object 'data' and send path 'credential_array_path' and send value 'credential_array' and manipulate and set
 Given I send object 'data' and send path 'rp_wk_path' and send value 'rp_wk' and manipulate and set
