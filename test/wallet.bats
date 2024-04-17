@@ -143,6 +143,13 @@ load ./bats_utils
     jq_insert "message" $message clear_rp_response.out.json
 }
 
+@test "Verifier retrieve id from message" {
+    id=$(jq_extract_raw "id" $WALLET/produce_verifiable_presentation.data.json)
+    zexe $VERIFIER/jws_to_id.zen clear_rp_response.out.json
+    save_tmp_output jws_to_id.output.json
+    assert_output "{\"id\":\"$id\"}"
+}
+
 @test "Verifier verify jws" {
     # verify_1
     claim_url=$(jq_extract_raw "claims_url" $VERIFIER/verify.data.json)
