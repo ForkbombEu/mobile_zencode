@@ -1,0 +1,7 @@
+Scenario 'w3c': jwt
+
+Given I have a 'json web token' named 'message'
+
+When I pickup from path 'message.payload.id'
+
+Then print the 'id' as 'string'
