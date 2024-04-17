@@ -1,7 +1,7 @@
 {
     "type": "object",
     "properties": {
-        "relying_party": {
+        "rp": {
             "type": "string"
         },
         "t": {
@@ -13,19 +13,23 @@
         "exp": {
             "type": "number"
         },
-        "request_uri": {
+        "ru": {
             "type": "string"
         },
         "id": {
             "type": "string"
+        },
+        "sid": {
+            "type": "string"
         }
     },
     "required": [
-        "relying_party",
+        "rp",
         "t",
         "m",
         "exp",
-        "request_uri",
-        "id"
+        "ru",
+        "id",
+        "sid"
     ]
 }

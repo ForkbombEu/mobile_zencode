@@ -13,6 +13,7 @@ and I have a 'string' named 'm'
 and I have a 'time' named 'expires_in'
 and I have a 'string' named 'pb_url'
 and I have a 'string' named 'pb_api'
+and I have a 'string' named 'id'
 
 # keys
 Given I have a 'string array' named 'letters'
@@ -22,13 +23,16 @@ and I have a 'float' named '5'
 When I create the 'string dictionary' named 'qr_json'
 
 # relying party
-When I move 'relying_party' in 'qr_json'
+When I move 'relying_party' to 'rp' in 'qr_json'
 
 # t
 When I move 'registrationToken' to 't' in 'qr_json'
 
 # m
 When I move 'm' in 'qr_json'
+
+# id
+When I move 'id' in 'qr_json'
 
 # exp
 When I create the timestamp
@@ -46,16 +50,16 @@ When I append the 'pb_api' to 'pb_url'
 and I create url from 'pb_url'
 and I append percent encoding of 'filter' as http request to 'url'
 and I append percent encoding of 'fields' as http request to 'url'
-and I move 'url' to 'request_uri' in 'qr_json'
+and I move 'url' to 'ru' in 'qr_json'
 
-# id
-When I write string '' in 'id'
+# sid
+When I write string '' in 'sid'
 Foreach '_' in sequence from '1' to '5' with step '1'
 When I pick random object in 'letters'
-and I append the 'random object' to 'id'
+and I append the 'random object' to 'sid'
 and I remove 'random object'
 EndForEach
-When I copy 'id' in 'qr_json'
+When I copy 'sid' in 'qr_json'
 
 # stringify
 When I create json escaped string of 'qr_json'

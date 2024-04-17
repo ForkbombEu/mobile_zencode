@@ -1,10 +1,11 @@
 {
-    "relying_party": "http://localhost:3003",
+    "rp": "http://localhost:3003",
     "t": "ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281",
     "m": "f",
     "exp": "2012669299",
-    "request_uri": "https://apiroom.net/api/DIDroom/didroom_verification_request_mock2",
-    "id": "abCDe",
+    "ru": "https://apiroom.net/api/DIDroom/didroom_verification_request_mock2",
+    "sid": "abCDe",
+    "id": "qt8lsswrob68eru",
     "credential_array": [
         "eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.eyJfc2QiOiBbIk9pS05QX3lqTEI1T2Vfd3IzVzY1NXFuLXVrUXF6cTV6dmdNZk05Z3NzVHciLCAiU1RnaG5XemhXUDFSQ2NNU2lTNk5UX1M3YXdRNi1WSnJ6MG9PV1pDZlZHWSIsICJNRGNXeWdpWVJQWkR0Q0NsNHVJYU1WUWpfeWxzaWtsNFdYV2lyeTZkRkVVIl0sICJfc2RfYWxnIjogInNoYS0yNTYiLCAiZXhwIjogMTc0MzY5MjA4NywgImlhdCI6IDE3MTIyMjA2MDQsICJpc3MiOiAiaHR0cDovL2xvY2FsaG9zdDozMDAxIiwgIm5iZiI6IDE3MTIyMjA2MDQsICJzdWIiOiAiZGlkOmR5bmU6c2FuZGJveC5zaWducm9vbTpQVER2dlFuMWlXUWlWeGtmc0RuVWlkOEZiaWVLYkhxNDZRczhjOUNaeDY3IiwgInR5cGUiOiAiQXV0aDEifQ.Djous2sH3KSs_w5oL2IpEoVT7kDG1NXha-72vAe2ESjZtGv8bV78SyWkPxvvhYYiZztHc234zXsIk_r4VpGNNw~WyJxeGItM0hQZS1iMHFSdFRSRC15QVFRIiwgImlzX2h1bWFuIiwgdHJ1ZV0~WyJpZk5sYXpNLWVOMDBSZzQ2ZVV1aTZ3IiwgImZhbWlseV9uYW1lIiwgIlBlcHBlIl0~WyJzMVhZaVp3azJLSFR1Yk1XU2dnWWtRIiwgImdpdmVuX25hbWUiLCAiUGlwcG8iXQ~"
     ]

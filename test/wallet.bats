@@ -114,7 +114,7 @@ load ./bats_utils
     save_tmp_output rp_wk_endpoint_response.json
     assert_output --partial '{"relying_party":"http://localhost:3003","verification_endpoint":"http://localhost:3003/verify","trusted_credential_issuers":["https://issuer1.zenswarm.forkbomb.eu","https://generic.issuer1.com","http://localhost:3001"],"display":[{"name":"DIDroom_RelyingParty1","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
     assert_output --partial '#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}]}'
-    request_uri=$(jq_extract_raw "request_uri" temp_vp.data.json)
+    request_uri=$(jq_extract_raw "ru" temp_vp.data.json)
     curl -X GET $request_uri | jq -c '.' 1> $TMP/out
     save_tmp_output request_uri_response.json
     assert_output '{"items":[{"schema":{"properties":{"family_name":{"title":"family name","type":"string"},"given_name":{"title":"given name","type":"string"},"is_human":{"title":"is human","type":"boolean"}},"required":["family_name","given_name","is_human"],"type":"object"}}],"page":1,"perPage":30,"totalItems":1,"totalPages":1}'

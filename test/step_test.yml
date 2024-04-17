@@ -56,12 +56,13 @@ steps:
       url: http://${{env.mz_host}}/produce_verifiable_presentation
       method: POST
       json:
-        relying_party: http://localhost:3003
+        rp: http://localhost:3003
         t: ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281
         m: f
         exp: 2012669299
-        request_uri: https://apiroom.net/api/DIDroom/didroom_verification_request_mock2
-        id: abCDe
+        ru: https://apiroom.net/api/DIDroom/didroom_verification_request_mock2
+        sid: abCDe
+        id: qt8lsswrob68eru
         credential_array:
           - ${{captures.credential}}
       captures:
