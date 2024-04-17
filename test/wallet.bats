@@ -117,12 +117,11 @@ load ./bats_utils
     request_uri=$(jq_extract_raw "request_uri" temp_vp.data.json)
     curl -X GET $request_uri | jq -c '.' 1> $TMP/out
     save_tmp_output request_uri_response.json
-    assert_output '{"verification_request":{"claims_optional":["nationality","birthdat","address"],"claims_required":["given_name","family_name","is_human"],"didroom_metadata":{"didroom_id":"abcde","iat":1234567,"organization":"f332rf2","origin":"https://didroom.com/s","owner":"sfewfw32424"},"type":"Auth1"}}'
-    echo "{}" >$TMP/out
+    assert_output '{"items":[{"schema":{"properties":{"family_name":{"title":"family name","type":"string"},"given_name":{"title":"given name","type":"string"},"is_human":{"title":"is human","type":"boolean"}},"required":["family_name","given_name","is_human"],"type":"object"}}],"page":1,"perPage":30,"totalItems":1,"totalPages":1}'
+    cat $BATS_FILE_TMPDIR/request_uri_response.json | jq '{"asked_claims": .items[0].schema}' > $TMP/out
     save_tmp_output produce_vp_2.data.json
     json_join_two temp_vp.data.json produce_vp_2.data.json
     jq_insert_json rp_wk rp_wk_endpoint_response.json produce_vp_2.data.json
-    jq_insert_json asked_claims request_uri_response.json produce_vp_2.data.json
     zexe $WALLET/produce_vp_2.zen produce_vp_2.data.json
     save_tmp_output produce_vp_2.output.json
     assert_output --partial '{"vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.'
