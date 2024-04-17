@@ -1,7 +1,7 @@
 Scenario 'w3c': jwt
 
 Given I have a 'json web token' named 'message'
-Given I have a 'string array' in path 'result.verification_request.claims_required'
+Given I have a 'string array' in path 'result.items.1.schema.required'
 
 # check expiration
 When I pickup from path 'message.payload.exp'
@@ -14,13 +14,13 @@ Endif
 # check required_claims
 When I pickup from path 'message.payload.result'
 Foreach 'claim' in 'result'
-If I verify 'claim' is found in 'claims_required'
-When I remove 'claim' from 'claims_required'
+If I verify 'claim' is found in 'required'
+When I remove 'claim' from 'required'
 EndIf
 Endforeach
 
 When I set 'zero' to '0' as 'float'
-If I verify size of 'claims_required' is more than 'zero'
+If I verify size of 'required' is more than 'zero'
 When I exit with error message 'Missing some required claims'
 EndIf
 
