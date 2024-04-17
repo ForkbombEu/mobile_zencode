@@ -1,0 +1,54 @@
+{
+    "type": "object",
+    "properties": {
+        "show_parameters": {
+            "type": "object",
+            "properties": {
+                "collection": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "fields": {
+                    "type": "string"
+                }
+            }
+        },
+        "my_credentials": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "relying_party": {
+            "type": "string"
+        },
+        "pb_url": {
+            "type": "string"
+        },
+        "expires_in": {
+            "type": "number"
+        },
+        "registrationToken": {
+            "type": "string"
+        },
+        "m": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "show_parameters",
+        "my_credentials",
+        "relying_party",
+        "pb_url",
+        "expires_in",
+        "registrationToken",
+        "m"
+    ]
+}

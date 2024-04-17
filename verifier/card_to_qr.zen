@@ -1,0 +1,69 @@
+Scenario 'http': url
+
+# if used from node use the commented statement instead of the capacitr one
+# Given I connect to 'pb_url' and start pb client
+Given I connect to 'pb_url' and start capacitor pb client
+Given I send my_credentials 'my_credentials' and login
+Given I send show_parameters 'show_parameters' and get one record and output into 'output'
+Given I have a 'string dictionary' named 'output'
+
+Given I have a 'string' named 'relying_party'
+and I have a 'string' named 'registrationToken'
+and I have a 'string' named 'm'
+and I have a 'time' named 'expires_in'
+and I have a 'string' named 'pb_url'
+and I have a 'string' named 'pb_api'
+
+# keys
+Given I have a 'string array' named 'letters'
+and I have a 'float' named '1'
+and I have a 'float' named '5'
+
+When I create the 'string dictionary' named 'qr_json'
+
+# relying party
+When I move 'relying_party' in 'qr_json'
+
+# t
+When I move 'registrationToken' to 't' in 'qr_json'
+
+# m
+When I move 'm' in 'qr_json'
+
+# exp
+When I create the timestamp
+and I create the result of 'timestamp' + 'expires_in'
+and I move 'result' to 'exp' in 'qr_json'
+
+# request uri
+When I pickup from path 'output.template'
+and I set 'filter' to '(id="' as 'string'
+and I append 'template' to 'filter'
+and I append the string  '")' to 'filter'
+When I set 'fields' to 'schema' as 'string'
+
+When I append the 'pb_api' to 'pb_url'
+and I create url from 'pb_url'
+and I append percent encoding of 'filter' as http request to 'url'
+and I append percent encoding of 'fields' as http request to 'url'
+and I move 'url' to 'request_uri' in 'qr_json'
+
+# id
+When I write string '' in 'id'
+Foreach '_' in sequence from '1' to '5' with step '1'
+When I pick random object in 'letters'
+and I append the 'random object' to 'id'
+and I remove 'random object'
+EndForEach
+When I copy 'id' in 'qr_json'
+
+# stringify
+When I create json escaped string of 'qr_json'
+and I rename 'json_escaped_string' to 'qr_text'
+
+Then print the 'qr_text'
+Then print the 'id'
+Then print the 'request_uri' from 'qr_json'
+
+Then I send text 'qr_text' and create qr code and output into 'qrcode'
+Then I manipulate and delete and output into 'qr_text'
