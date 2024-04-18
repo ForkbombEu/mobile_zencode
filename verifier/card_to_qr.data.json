@@ -4,10 +4,6 @@
         "id": "4xcph0e79f76gdy",
         "fields": "template"
     },
-    "my_credentials": {
-        "email": "test@didroom.com",
-        "password": "testtest"
-    },
     "relying_party": "http://localhost:3003/",
     "pb_url": "https://admin.signroom.io",
     "pb_api": "/api/collections/templates/records",

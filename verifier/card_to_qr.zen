@@ -1,9 +1,7 @@
 Scenario 'http': url
 
-# if used from node use the commented statement instead of the capacitr one
-# Given I connect to 'pb_url' and start pb client
+# login is done automatically by capacitor/preferences plugin
 Given I connect to 'pb_url' and start capacitor pb client
-Given I send my_credentials 'my_credentials' and login
 Given I send show_parameters 'show_parameters' and get one record and output into 'output'
 Given I have a 'string dictionary' named 'output'
 
