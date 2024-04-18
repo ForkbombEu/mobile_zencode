@@ -1,0 +1,9 @@
+{
+    "result_to_name_path": "result.display.0.name",
+    "name_path": "name",
+    "pb_url": "https://admin.signroom.io",
+    "show_parameters_temp": {
+        "collection": "users",
+        "fields": "name"
+    }
+}

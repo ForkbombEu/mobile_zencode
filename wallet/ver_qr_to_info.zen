@@ -1,0 +1,27 @@
+
+Given I have a 'string' named 'rp'
+Given I have a 'string' named 'id'
+and I have a 'string' named 'show_parameters_temp'
+
+When I move 'id' in 'show_parameters_temp'
+and I rename 'show_parameters_temp' to 'show_parameters'
+
+If I verify 'rp' has suffix '/'
+When I split rightmost '1' bytes of 'rp'
+EndIf
+
+When I append the string '/.well-known/openid-relying-party' to 'rp'
+
+Then print the 'rp'
+Then print the 'show_parameters'
+
+# rp name
+Then I connect to 'rp' and do get and output into 'rp_wk'
+Then I send object 'rp_wk' and send path 'result_to_name_path' and manipulate and get and output into 'rp_name'
+
+# verifier name
+Then I connect to 'pb_url' and start capacitor client
+Then I send show_parameters 'show_parameters' and get one record and output into 'output'
+Then I send object 'output' and send path 'name_path' and manipulate and get and output into 'verifier_name'
+
+# TODO: add name and title of required_claims as soon as collection view is implemented 
