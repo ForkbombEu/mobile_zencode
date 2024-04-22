@@ -64,7 +64,7 @@ When I create json escaped string of 'qr_json'
 and I rename 'json_escaped_string' to 'qr_text'
 
 Then print the 'qr_text'
-Then print the 'id'
+Then print the 'sid'
 Then print the 'request_uri' from 'qr_json'
 
 Then I send text 'qr_text' and create qr code and output into 'qrcode'
