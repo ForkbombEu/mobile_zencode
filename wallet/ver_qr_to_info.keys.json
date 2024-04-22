@@ -1,7 +1,8 @@
 {
     "result_to_name_path": "result.display.0.name",
+    "result_to_schema_path": "result.items.0.schema",
     "name_path": "name",
-    "pb_url": "https://admin.signroom.io",
+    "pb_url": "https://admin.didroom.com",
     "show_parameters_temp": {
         "collection": "users",
         "fields": "name"

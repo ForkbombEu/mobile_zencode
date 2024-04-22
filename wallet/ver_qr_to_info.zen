@@ -1,5 +1,7 @@
 
 Given I have a 'string' named 'rp'
+and I have a 'string' named 'request_uri'
+
 Given I have a 'string' named 'id'
 and I have a 'string' named 'show_parameters_temp'
 
@@ -24,4 +26,7 @@ Then I connect to 'pb_url' and start capacitor client
 Then I send show_parameters 'show_parameters' and get one record and output into 'output'
 Then I send object 'output' and send path 'name_path' and manipulate and get and output into 'verifier_name'
 
-# TODO: add name and title of required_claims as soon as collection view is implemented 
+# required claims
+Then I connect to 'request_uri' and do get and output into 'r.asked_claims'
+Then I send object 'r.asked_claims' and send path 'result_to_schema_path' and manipulate and get and output into 'asked_claims'
+
