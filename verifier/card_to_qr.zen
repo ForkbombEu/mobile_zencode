@@ -1,11 +1,7 @@
 Scenario 'http': url
 
-# login is done automatically by capacitor/preferences plugin
-Given I connect to 'pb_url' and start capacitor pb client
-Given I send show_parameters 'show_parameters' and get one record and output into 'output'
-Given I have a 'string dictionary' named 'output'
-
-Given I have a 'string' named 'relying_party'
+Given I have a 'string' named 'template'
+and I have a 'string' named 'relying_party'
 and I have a 'string' named 'registrationToken'
 and I have a 'string' named 'm'
 and I have a 'time' named 'expires_in'
@@ -38,8 +34,7 @@ and I create the result of 'timestamp' + 'expires_in'
 and I move 'result' to 'exp' in 'qr_json'
 
 # request uri
-When I pickup from path 'output.template'
-and I set 'filter' to '(id="' as 'string'
+When I set 'filter' to '(id="' as 'string'
 and I append 'template' to 'filter'
 and I append the string  '")' to 'filter'
 When I set 'fields' to 'schema' as 'string'
