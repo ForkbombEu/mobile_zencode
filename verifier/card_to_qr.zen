@@ -1,3 +1,4 @@
+Rule unknown ignore
 Scenario 'http': url
 
 Given I have a 'string' named 'template'
@@ -60,7 +61,9 @@ and I rename 'json_escaped_string' to 'qr_text'
 
 Then print the 'qr_text'
 Then print the 'sid'
-Then print the 'request_uri' from 'qr_json'
+Then print the 'ru' from 'qr_json'
+Then print the 'qr_json'
 
 Then I send text 'qr_text' and create qr code and output into 'qrcode'
 Then I manipulate and delete and output into 'qr_text'
+Then I manipulate and delete and output into 'qr_json'
