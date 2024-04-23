@@ -51,18 +51,39 @@ steps:
           $.result.c_nonce_expires_in:
             - eq: 600
 
+  - name: verifier produce qr_code
+    http:
+      url: http://${{env.verifier_host}}/card_to_qr
+      method: POST
+      body:
+        file: ${{env.path_to_wallet}}/verifier/card_to_qr.data.json
+      captures:
+        qr_json:
+          jsonpath: $.qr_json
+      check:
+        status: 200
+        jsonpath:
+          $.qr_json:
+            - isDefined: true
+              isObject: true
+          $.qr_json.ru:
+            - eq: "https://admin.signroom.io/api/collections/templates_public_data/records?filter=%28id%3D%22k65idtkjkdl6de1%22%29&fields=schema"
+          $.qrcode:
+            - isDefined: true
+              isString: true
+
   - name: produce vp and send to rp
     http:
       url: http://${{env.mz_host}}/produce_verifiable_presentation
       method: POST
       json:
-        rp: http://localhost:3003
-        t: ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281
-        m: f
-        exp: 2012669299
-        ru: https://apiroom.net/api/DIDroom/didroom_verification_request_mock2
-        sid: abCDe
-        id: qt8lsswrob68eru
+        rp: ${{captures.qr_json.rp}}
+        t: ${{captures.qr_json.t}}
+        m: ${{captures.qr_json.m}}
+        exp: ${{captures.qr_json.exp}}
+        ru: ${{captures.qr_json.ru}}
+        sid: ${{captures.qr_json.sid}}
+        id: ${{captures.qr_json.id}}
         credential_array:
           - ${{captures.credential}}
       captures:
@@ -87,7 +108,7 @@ steps:
         status: 200
         jsonpath:
           $.id:
-            - eq: abCDe
+            - eq: ${{captures.qr_json.sid}}
 
   - name: verifier checks rp response
     http:
@@ -95,7 +116,7 @@ steps:
       method: POST
       json:
         message: ${{captures.message}}
-        claims_url: https://apiroom.net/api/DIDroom/didroom_verification_request_mock2
+        claims_url: ${{captures.qr_json.ru}}
       check:
         status: 200
         jsonpath:

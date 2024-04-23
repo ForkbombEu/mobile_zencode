@@ -64,7 +64,7 @@ unit-test: ncr test/didroom_microservices tests-well-known
 	@./ncr -p 3003 -z test/didroom_microservices/relying_party --public-directory test/didroom_microservices/tests/public/relying_party & echo $$! > .test.relying_party.pid
 	@./ncr -p 3366 -z test/didroom_microservices/tests/test_push_server & echo $$! > .test.push_server.pid
 	@for port in 3000 3001 3002 3003 3366; do \
-		timeout 30s bash -c 'port=$$1; until nc -z localhost $$port; do \
+		timeout 90s bash -c 'port=$$1; until nc -z localhost $$port; do \
 			echo "Port $$port is not yet reachable, waiting..."; \
 			sleep 1; \
 		done' _ "$$port" || { \
@@ -88,7 +88,7 @@ api-test: ncr test/didroom_microservices tests-well-known
 	@./ncr -p 3004 -z ./verifier & echo $$! > .test.verifier.pid
 	@./ncr -p 3366 -z test/didroom_microservices/tests/test_push_server & echo $$! > .test.push_server.pid
 	@for port in 3000 3001 3002 3003 3004 3366; do \
-		timeout 30s bash -c 'port=$$1; until nc -z localhost $$port; do \
+		timeout 90s bash -c 'port=$$1; until nc -z localhost $$port; do \
 			echo "Port $$port is not yet reachable, waiting..."; \
 			sleep 1; \
 		done' _ "$$port" || { \
