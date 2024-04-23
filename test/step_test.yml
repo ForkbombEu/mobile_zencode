@@ -72,9 +72,9 @@ steps:
             - isDefined: true
               isString: true
 
-  - name: produce vp and send to rp
+  - name: scan qr and produce vp
     http:
-      url: http://${{env.mz_host}}/produce_verifiable_presentation
+      url: http://${{env.mz_host}}/temp_ver_qr_to_info
       method: POST
       json:
         rp: ${{captures.qr_json.rp}}
@@ -87,16 +87,41 @@ steps:
         credential_array:
           - ${{captures.credential}}
       captures:
-        message:
-          jsonpath: $.result.server_response.result.message
+        post_to_rp:
+          jsonpath: $.post
       check:
         status: 200
         jsonpath:
-          $.result.server_response.result.message:
+          $.post.url:
             - isDefined: true
             - isString: true
-          $.result.server_response.result.registrationToken:
-            - eq: ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281
+          $.post.body:
+            - isDefined: true
+            - isObject: true
+          $.info:
+            - isDefined: true
+            - isObject: true
+          $.info.verifier_name:
+            - eq: "a@a.com"
+
+  - name: send vp to rp
+    http:
+      url: ${{captures.post_to_rp.url}}
+      method: POST
+      json:
+        id: ${{captures.post_to_rp.body.id}}
+        m: ${{captures.post_to_rp.body.m}}
+        registrationToken: ${{captures.post_to_rp.body.registrationToken}}
+        vp: ${{captures.post_to_rp.body.vp}}
+      captures:
+        message:
+          jsonpath: $.server_response.result.message
+      check:
+        status: 200
+        jsonpath:
+          $.server_response.result.message:
+            - isDefined: true
+            - isString: true
 
   - name: verifier extract id from rp response
     http:
