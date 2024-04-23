@@ -20,6 +20,7 @@ Given I send object 'data' and send path 'rp_wk_path' and send value 'rp_wk' and
 Given I send object 'data' and send path 'asked_claims_path' and send value 'asked_claims' and manipulate and set
 
 Given I send keys 'keys' and send data 'data' and send script 'zen_2' and execute zencode and output into 'zen_2_output'
+Given I send object 'zen_2_output' and send path 'vp_path' and manipulate and get and output into 'vp'
 
 # rp verification endpoint
 Given I send object 'r.rp_wk' and send path 'result_to_verification_endpoint_path' and manipulate and get and output into 'rp_verification_endpoint'
@@ -28,7 +29,7 @@ Given I send object 'r.rp_wk' and send path 'result_to_verification_endpoint_pat
 Given I send object 'r.rp_wk' and send path 'result_to_name_path' and manipulate and get and output into 'rp_name'
 
 # info.verifier_name
-Given I connect to 'pb_url' and start capacitor client
+Given I connect to 'pb_url' and start pb capacitor client
 Given I send show_parameters 'show_parameters' and get one record and output into 'output'
 Given I send object 'output' and send path 'name_path' and manipulate and get and output into 'verifier_name'
 

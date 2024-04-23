@@ -1,0 +1,39 @@
+{
+    "type": "object",
+    "properties": {
+        "rp": {
+            "type": "string"
+        },
+        "t": {
+            "type": "string"
+        },
+        "m": {
+            "type": "string"
+        },
+        "exp": {
+            "type": "number"
+        },
+        "ru": {
+            "type": "string"
+        },
+        "sid": {
+            "type": "string"
+        },
+        "id": {
+            "type": "string"
+        },
+        "credential_array": {
+            "type": "array"
+        }
+    },
+    "required": [
+        "rp",
+        "t",
+        "m",
+        "exp",
+        "ru",
+        "sid",
+        "id",
+        "credential_array"
+    ]
+}
