@@ -1,32 +1,63 @@
 
-Given I have a 'string' named 'rp'
-and I have a 'string' named 'request_uri'
+Given I send object 'data' and send path 'rp_path' and send value 'rp' and manipulate and set
+Given I send object 'data' and send path 'exp_path' and send value 'exp' and manipulate and set
+Given I send object 'data' and send path 'id_path' and send value 'id' and manipulate and set
+Given I send object 'data' and send path 'show_parameters_temp_path' and send value 'show_parameters_temp' and manipulate and set
 
-Given I have a 'string' named 'id'
-and I have a 'string' named 'show_parameters_temp'
+Given I send keys 'keys' and send data 'data' and send script 'zen_1' and execute zencode and output into 'zen_1_output'
+Given I send object 'zen_1_output' and send path 'rp_wk_endpoint_path' and manipulate and get and output into 'rp_wk_endpoint'
+Given I send object 'zen_1_output' and send path 'show_parameters_path' and manipulate and get and output into 'show_parameters'
 
-When I move 'id' in 'show_parameters_temp'
-and I rename 'show_parameters_temp' to 'show_parameters'
+Given I connect to 'rp_wk_endpoint' and do get and output into 'r.rp_wk'
+Given I send object 'r.rp_wk' and send path 'result_path' and manipulate and get and output into 'rp_wk'
+Given I connect to 'ru' and do get and output into 'claims'
+# info.required_claims
+Given I send object 'claims' and send path 'result_to_schema_path' and manipulate and get and output into 'asked_claims'
 
-If I verify 'rp' has suffix '/'
-When I split rightmost '1' bytes of 'rp'
-EndIf
+Given I send object 'data' and send path 'credential_array_path' and send value 'credential_array' and manipulate and set
+Given I send object 'data' and send path 'rp_wk_path' and send value 'rp_wk' and manipulate and set
+Given I send object 'data' and send path 'asked_claims_path' and send value 'asked_claims' and manipulate and set
 
-When I append the string '/.well-known/openid-relying-party' to 'rp'
+Given I send keys 'keys' and send data 'data' and send script 'zen_2' and execute zencode and output into 'zen_2_output'
 
-Then print the 'rp'
-Then print the 'show_parameters'
+# rp verification endpoint
+Given I send object 'r.rp_wk' and send path 'result_to_verification_endpoint_path' and manipulate and get and output into 'rp_verification_endpoint'
 
-# rp name
-Then I connect to 'rp' and do get and output into 'rp_wk'
-Then I send object 'rp_wk' and send path 'result_to_name_path' and manipulate and get and output into 'rp_name'
+# info.rp_name
+Given I send object 'r.rp_wk' and send path 'result_to_name_path' and manipulate and get and output into 'rp_name'
 
-# verifier name
-Then I connect to 'pb_url' and start capacitor client
-Then I send show_parameters 'show_parameters' and get one record and output into 'output'
-Then I send object 'output' and send path 'name_path' and manipulate and get and output into 'verifier_name'
+# info.verifier_name
+Given I connect to 'pb_url' and start capacitor client
+Given I send show_parameters 'show_parameters' and get one record and output into 'output'
+Given I send object 'output' and send path 'name_path' and manipulate and get and output into 'verifier_name'
 
-# required claims
-Then I connect to 'request_uri' and do get and output into 'r.asked_claims'
-Then I send object 'r.asked_claims' and send path 'result_to_schema_path' and manipulate and get and output into 'asked_claims'
+# from slangroom
+Given I have a 'string' named 'rp_name'
+and I have a 'string' named 'verifier_name'
+and I have a 'string dictionary' named 'asked_claims'
+and I have a 'stirng' named 'rp_verification_endpoint'
+and I have a 'string' named 'vp'
 
+# from data
+Given I have a 'string' named 't'
+and I have a 'string' named 'sid'
+and I have a 'string' named 'm'
+
+# info
+When I create the 'string dictionary' named 'info'
+and I move 'rp_name' in 'info'
+and I move 'verifier_name' in 'info'
+and I move 'asked_claims' in 'info'
+
+# prepare vp
+When I create the 'string dictionary' named 'post'
+and I move 'rp_verification_endpoint' to 'url' in 'post'
+and I create the 'string dictionary' named 'body'
+and I move 'vp' in 'body'
+and I move 't' in 'body'
+and I move 'sid' to 'id' in 'body'
+and I move 'm' in 'body'
+and I move 'body in 'post'
+
+Then print the 'info'
+and print the 'post'

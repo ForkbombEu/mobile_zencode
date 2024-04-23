@@ -1,10 +1,23 @@
 {
+    "data": {},
+    "keys": {},
     "result_to_name_path": "result.display.0.name",
     "result_to_schema_path": "result.items.0.schema",
+    "result_to_verification_endpoint_path": "result.verification_endpoint",
     "name_path": "name",
+    "show_parameters_path": "show_parameters_temp",
+    "rp_path": "rp",
+    "exp_path": "exp",
+    "id_path": "id",
+    "rp_wk_endpoint_path": "rp_wk_endpoint",
+    "rp_wk_path": "rp_wk",
+    "credential_array_path": "credential_array",
+    "asked_claims_path": "asked_claims",
+    "show_parameters_temp_path": "show_parameters_temp",
     "pb_url": "https://admin.didroom.com",
     "show_parameters_temp": {
         "collection": "users",
         "fields": "name"
-    }
+    },
+    "zen_1": ""
 }
