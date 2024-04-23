@@ -102,10 +102,17 @@ load ./bats_utils
     assert_output --partial '","c_nonce_expires_in":600,"credential":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9'
 }
 
+@test "Verifier generate qr" {
+    zexe $VERIFIER/card_to_qr.zen $VERIFIER/card_to_qr.data.json $VERIFIER/card_to_qr.keys.json
+    save_tmp_output card_to_qr.output.json
+    assert_output --regexp '^\{"qr_json":\{"exp":[0-9]{10},"id":"qt8lsswrob68eru","m":"f","rp":"http://localhost:3003/","ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%22k65idtkjkdl6de1%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"qr_text":".*,"ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%22k65idtkjkdl6de1%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
+}
+
 @test "Holder post to relying_party/verify" {
-    # use credential from previous script
     cred=$(jq ".credential" $BATS_FILE_TMPDIR/post_7_response.output.json)
-    jq ".credential_array = [$cred]" $WALLET/produce_verifiable_presentation.data.json > $BATS_FILE_TMPDIR/temp_vp.data.json
+    jq_extract_raw "qr_json" card_to_qr.output.json > $BATS_FILE_TMPDIR/temp_temp_vp.data.json
+    jq ".credential_array = [$cred]" $BATS_FILE_TMPDIR/temp_temp_vp.data.json > $BATS_FILE_TMPDIR/temp_vp.data.json
+    # use credential from previous script
     # first script
     zexe $WALLET/produce_vp_1.zen temp_vp.data.json
     save_tmp_output produce_vp_1.output.json
@@ -114,10 +121,10 @@ load ./bats_utils
     save_tmp_output rp_wk_endpoint_response.json
     assert_output --partial '{"relying_party":"http://localhost:3003","verification_endpoint":"http://localhost:3003/verify","trusted_credential_issuers":["https://issuer1.zenswarm.forkbomb.eu","https://generic.issuer1.com","http://localhost:3001"],"display":[{"name":"DIDroom_RelyingParty1","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
     assert_output --partial '#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}]}'
-    request_uri=$(jq_extract_raw "request_uri" temp_vp.data.json)
+    request_uri=$(jq_extract_raw "ru" temp_vp.data.json)
     curl -X GET $request_uri | jq -c '.' 1> $TMP/out
     save_tmp_output request_uri_response.json
-    assert_output '{"items":[{"schema":{"properties":{"family_name":{"title":"family name","type":"string"},"given_name":{"title":"given name","type":"string"},"is_human":{"title":"is human","type":"boolean"}},"required":["family_name","given_name","is_human"],"type":"object"}}],"page":1,"perPage":30,"totalItems":1,"totalPages":1}'
+    assert_output '{"items":[{"schema":{"properties":{"family_name":{"title":"Current Family Name","type":"string"},"given_name":{"title":"Current First Name","type":"string"},"is_human":{"title":"Proof of humanity","type":"string"}},"required":["given_name","family_name","is_human"],"type":"object"}}],"page":1,"perPage":30,"totalItems":1,"totalPages":1}'
     cat $BATS_FILE_TMPDIR/request_uri_response.json | jq '{"asked_claims": .items[0].schema}' > $TMP/out
     save_tmp_output produce_vp_2.data.json
     json_join_two temp_vp.data.json produce_vp_2.data.json

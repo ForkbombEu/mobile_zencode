@@ -1,35 +1,16 @@
 {
     "type": "object",
     "properties": {
-        "show_parameters": {
-            "type": "object",
-            "properties": {
-                "collection": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "fields": {
-                    "type": "string"
-                }
-            }
-        },
-        "my_credentials": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
+        "template": {
+            "type": "string"
         },
         "relying_party": {
             "type": "string"
         },
         "pb_url": {
+            "type": "string"
+        },
+        "pb_api": {
             "type": "string"
         },
         "expires_in": {
@@ -40,15 +21,19 @@
         },
         "m": {
             "type": "string"
+        },
+        "id": {
+            "type": "string"
         }
     },
     "required": [
-        "show_parameters",
-        "my_credentials",
+        "template",
         "relying_party",
         "pb_url",
+        "pb_api",
         "expires_in",
         "registrationToken",
-        "m"
+        "m",
+        "id"
     ]
 }
