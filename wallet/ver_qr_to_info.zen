@@ -1,3 +1,4 @@
+Rule unknown ignore
 
 Given I send object 'data' and send path 'rp_path' and send value 'rp' and manipulate and set
 Given I send object 'data' and send path 'exp_path' and send value 'exp' and manipulate and set
@@ -35,7 +36,7 @@ Given I send object 'output' and send path 'name_path' and manipulate and get an
 Given I have a 'string' named 'rp_name'
 and I have a 'string' named 'verifier_name'
 and I have a 'string dictionary' named 'asked_claims'
-and I have a 'stirng' named 'rp_verification_endpoint'
+and I have a 'string' named 'rp_verification_endpoint'
 and I have a 'string' named 'vp'
 
 # from data
@@ -54,10 +55,10 @@ When I create the 'string dictionary' named 'post'
 and I move 'rp_verification_endpoint' to 'url' in 'post'
 and I create the 'string dictionary' named 'body'
 and I move 'vp' in 'body'
-and I move 't' in 'body'
+and I move 't' to 'registrationToken' in 'body'
 and I move 'sid' to 'id' in 'body'
 and I move 'm' in 'body'
-and I move 'body in 'post'
+and I move 'body' in 'post'
 
 Then print the 'info'
 and print the 'post'

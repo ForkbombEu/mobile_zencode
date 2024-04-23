@@ -1,7 +1,7 @@
 Given I have a 'string' named 'rp'
 and I have a 'time' named 'exp'
 and I have a 'string' named 'id'
-and I have a 'string' named 'show_parameters_temp'
+and I have a 'string dictionary' named 'show_parameters_temp'
 
 # check qr expiration
 When I create the timestamp
