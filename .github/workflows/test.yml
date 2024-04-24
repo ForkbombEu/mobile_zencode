@@ -18,12 +18,12 @@ jobs:
       - name: 🧪 Run test
         run: make test
 
-  publish_docker_image:
-    needs: test
-    name: 🐳 publish docker image
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    permissions:
-      contents: read
-      packages: write
-    uses: interfacerproject/workflows/.github/workflows/publish-ghcr.yml@main
-    secrets: inherit
+#  publish_docker_image:
+#    needs: test
+#    name: 🐳 publish docker image
+#    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+#    permissions:
+#      contents: read
+#      packages: write
+#   uses: interfacerproject/workflows/.github/workflows/publish-ghcr.yml@main
+#    secrets: inherit
