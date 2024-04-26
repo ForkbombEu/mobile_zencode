@@ -16,11 +16,14 @@
         "ru": {
             "type": "string"
         },
+        "sid": {
+            "type": "string"
+        },
         "id": {
             "type": "string"
         },
-        "sid": {
-            "type": "string"
+        "credential_array": {
+            "type": "array"
         }
     },
     "required": [
@@ -29,7 +32,8 @@
         "m",
         "exp",
         "ru",
+        "sid",
         "id",
-        "sid"
+        "credential_array"
     ]
 }

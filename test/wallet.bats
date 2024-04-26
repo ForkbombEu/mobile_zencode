@@ -105,53 +105,66 @@ load ./bats_utils
 @test "Verifier generate qr" {
     zexe $VERIFIER/card_to_qr.zen $VERIFIER/card_to_qr.data.json $VERIFIER/card_to_qr.keys.json
     save_tmp_output card_to_qr.output.json
-    assert_output --regexp '^\{"qr_json":\{"exp":[0-9]{10},"id":"qt8lsswrob68eru","m":"f","rp":"http://localhost:3003/","ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%22k65idtkjkdl6de1%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"qr_text":".*,"ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%22k65idtkjkdl6de1%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
+    assert_output --regexp '^\{"qr_json":\{"exp":[0-9]{10},"id":"25gfc77ab67w7ib","m":"f","rp":"http://localhost:3003/","ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%22k65idtkjkdl6de1%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"qr_text":".*,"ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%22k65idtkjkdl6de1%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
 }
 
-@test "Holder post to relying_party/verify" {
+@test "Holder scan qr" {
     cred=$(jq ".credential" $BATS_FILE_TMPDIR/post_7_response.output.json)
     jq_extract_raw "qr_json" card_to_qr.output.json > $BATS_FILE_TMPDIR/temp_temp_vp.data.json
-    jq ".credential_array = [$cred]" $BATS_FILE_TMPDIR/temp_temp_vp.data.json > $BATS_FILE_TMPDIR/temp_vp.data.json
-    # use credential from previous script
-    # first script
-    zexe $WALLET/produce_vp_1.zen temp_vp.data.json
-    save_tmp_output produce_vp_1.output.json
-    url=$(jq_extract_raw "rp_wk_endpoint" produce_vp_1.output.json)
+    jq ".credential_array = [$cred]" $BATS_FILE_TMPDIR/temp_temp_vp.data.json > $BATS_FILE_TMPDIR/ver_qr_to_info_test.data.json
+    # scan_ver_qr_1
+    zexe $WALLET/ver_qr_to_info_1_qr_checks.zen ver_qr_to_info_test.data.json $WALLET/ver_qr_to_info.keys.json
+    save_tmp_output ver_qr_to_info_1_qr_checks.output.json
+    # get rp_wk
+    url=$(jq_extract_raw "rp_wk_endpoint" ver_qr_to_info_1_qr_checks.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output rp_wk_endpoint_response.json
     assert_output --partial '{"relying_party":"http://localhost:3003","verification_endpoint":"http://localhost:3003/verify","trusted_credential_issuers":["https://issuer1.zenswarm.forkbomb.eu","https://generic.issuer1.com","http://localhost:3001"],"display":[{"name":"DIDroom_RelyingParty1","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
     assert_output --partial '#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}]}'
-    request_uri=$(jq_extract_raw "ru" temp_vp.data.json)
+    # get claims
+    request_uri=$(jq_extract_raw "ru" ver_qr_to_info_test.data.json)
     curl -X GET $request_uri | jq -c '.' 1> $TMP/out
     save_tmp_output request_uri_response.json
     assert_output '{"items":[{"schema":{"properties":{"family_name":{"title":"Current Family Name","type":"string"},"given_name":{"title":"Current First Name","type":"string"},"is_human":{"title":"Proof of humanity","type":"string"}},"required":["given_name","family_name","is_human"],"type":"object"}}],"page":1,"perPage":30,"totalItems":1,"totalPages":1}'
+    # prepare input for second script
     cat $BATS_FILE_TMPDIR/request_uri_response.json | jq '{"asked_claims": .items[0].schema}' > $TMP/out
-    save_tmp_output produce_vp_2.data.json
-    json_join_two temp_vp.data.json produce_vp_2.data.json
-    jq_insert_json rp_wk rp_wk_endpoint_response.json produce_vp_2.data.json
-    zexe $WALLET/produce_vp_2.zen produce_vp_2.data.json
-    save_tmp_output produce_vp_2.output.json
+    save_tmp_output asked_claims.json
+    save_tmp_output ver_qr_to_info_2_vp.data.json
+    json_join_two ver_qr_to_info_test.data.json ver_qr_to_info_2_vp.data.json
+    jq_insert_json rp_wk rp_wk_endpoint_response.json ver_qr_to_info_2_vp.data.json
+    # scan_ver_qr_2
+    zexe $WALLET/ver_qr_to_info_2_vp.zen ver_qr_to_info_2_vp.data.json
+    save_tmp_output ver_qr_to_info_2_vp.output.json
     assert_output --partial '{"vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.'
-    verify_endpoint=$(jq_extract_raw "verification_endpoint" rp_wk_endpoint_response.json)
-    token=$(jq_extract_raw "t" $WALLET/produce_verifiable_presentation.data.json)
-    id=$(jq_extract_raw "id" $WALLET/produce_verifiable_presentation.data.json)
-    m=$(jq_extract_raw "m" $WALLET/produce_verifiable_presentation.data.json)
-    jq_insert "registrationToken" $token produce_vp_2.output.json
-    jq_insert "id" $id produce_vp_2.output.json
-    jq_insert "m" $m produce_vp_2.output.json
-    curl -X POST $verify_endpoint -d ''"$(cat $BATS_FILE_TMPDIR/produce_vp_2.output.json)"'' 1>$TMP/out
-    save_tmp_output verify_endpoint_response.json
-    # if --regexp resolve modify also here
-    assert_output --partial '"server_response":{"status":"200","result":{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmlja'
-    assert_output --partial ',"registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"}'
-    message=$(jq -r '.server_response.result.message' $BATS_FILE_TMPDIR/verify_endpoint_response.json)
+    # prepare input for third script
+    json_join_two ver_qr_to_info_test.data.json ver_qr_to_info_2_vp.output.json
+    rp_name=$(jq -r '.display[0].name' $BATS_FILE_TMPDIR/rp_wk_endpoint_response.json)
+    jq_insert "rp_name" $rp_name ver_qr_to_info_2_vp.output.json
+    rp_verification_endpoint=$(jq -r '.verification_endpoint' $BATS_FILE_TMPDIR/rp_wk_endpoint_response.json)
+    echo $rp_verification_endpoint
+    jq_insert "rp_verification_endpoint" $rp_verification_endpoint ver_qr_to_info_2_vp.output.json
+    verifier_name="a@a.com"
+    jq_insert "verifier_name" $verifier_name ver_qr_to_info_2_vp.output.json
+    json_join_two asked_claims.json ver_qr_to_info_2_vp.output.json
+    zexe $WALLET/ver_qr_to_info.zen ver_qr_to_info_2_vp.output.json
+    save_tmp_output ver_qr_to_info.output.json
+    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"family_name":\{"title":"Current Family Name","type":"string"\},"given_name":\{"title":"Current First Name","type":"string"\},"is_human":\{"title":"Proof of humanity","type":"string"\}\},"required":\["given_name","family_name","is_human"\],"type":"object"\},"rp_name":"DIDroom_RelyingParty1","verifier_name":"a@a\.com"\},"post":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281","vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*$'
+}
+
+@test "Holder send the vp" {
+    url=$(jq -r '.post.url' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
+    body=$(jq -r '.post.body' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
+    curl -X POST $url -d "$body" 1> $TMP/out
+    save_tmp_output rp_response.json
+    assert_output --regexp '\{"url":"http://localhost:3366/verify-credential","body":\{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyO.*","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"server_response":\{"status":"200","result":\{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyO.*","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\}\}\}'
+    message=$(jq -r '.server_response.result.message' $BATS_FILE_TMPDIR/rp_response.json)
     echo "{}" >$TMP/out
     save_tmp_output clear_rp_response.out.json
     jq_insert "message" $message clear_rp_response.out.json
 }
 
 @test "Verifier retrieve id from message" {
-    id=$(jq_extract_raw "id" $WALLET/produce_verifiable_presentation.data.json)
+    id=$(jq_extract_raw "sid" card_to_qr.output.json)
     zexe $VERIFIER/jws_to_id.zen clear_rp_response.out.json
     save_tmp_output jws_to_id.output.json
     assert_output "{\"id\":\"$id\"}"
