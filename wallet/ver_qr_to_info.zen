@@ -29,7 +29,7 @@ Given I send object 'r.rp_wk' and send path 'result_to_verification_endpoint_pat
 Given I send object 'r.rp_wk' and send path 'result_to_name_path' and manipulate and get and output into 'rp_name'
 
 # info.verifier_name
-Given I connect to 'pb_url' and start pb capacitor client
+Given I connect to 'pb_url' and start capacitor pb client
 Given I send show_parameters 'show_parameters' and get one record and output into 'output'
 Given I send object 'output' and send path 'name_path' and manipulate and get and output into 'verifier_name'
 
