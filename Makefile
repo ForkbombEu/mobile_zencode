@@ -82,7 +82,7 @@ unit-test: ncr test/didroom_microservices tests-well-known
 
 api-test: ncr test/didroom_microservices tests-well-known
 # modify wallet contract to not use capacitor
-	@cat wallet/ver_qr_to_info.zen | sed "s/.*Given I connect to 'pb_url' and start pb capacitor client.*/Given I connect to 'pb_url' and start pb client\nGiven I send my_credentials 'my_credentials' and login/" > wallet/temp_ver_qr_to_info.zen
+	@cat wallet/ver_qr_to_info.zen | sed "s/.*Given I connect to 'pb_url' and start capacitor pb client.*/Given I connect to 'pb_url' and start pb client\nGiven I send my_credentials 'my_credentials' and login/" > wallet/temp_ver_qr_to_info.zen
 	@cp wallet/ver_qr_to_info.keys.json wallet/temp_ver_qr_to_info.keys.json
 	@cp wallet/ver_qr_to_info.schema.json wallet/temp_ver_qr_to_info.schema.json
 # start tests
