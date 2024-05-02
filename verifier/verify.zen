@@ -1,3 +1,4 @@
+Rule unknown ignore
 
 # retrieve required_claims
 Given I connect to 'claims_url' and do get and output into 'claims_response'
