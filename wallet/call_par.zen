@@ -1,3 +1,5 @@
+Rule unknown ignore
+
 Scenario 'http' : create GET
 Scenario 'w3c' : create JWS
 
