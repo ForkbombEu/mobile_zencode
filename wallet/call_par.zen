@@ -67,7 +67,7 @@ When I rename the 'copy' to 'redirect_uri'
 # - create par post body
 When I create the 'string dictionary' named 'data'
 and I move 'response_type' in 'data'
-and I move 'client_id' in 'data'
+and I copy 'client_id' in 'data'
 and I move 'client_secret' in 'data'
 and I move 'redirect_uri' in 'data'
 and I move 'code_challenge' in 'data'
@@ -88,7 +88,7 @@ Then I connect to 'authorization_server_endpoint_par' and send object 'data' and
 Then I send object 'par_response' and send path 'r.request_uri_path' and manipulate and get and output into 'request_uri'
 Then I send object 'par_response' and send path 'r.expires_in_path' and manipulate and get and output into 'expires_in'
 
-Then I manipulate and delete and output into 'par response'
+Then I manipulate and delete and output into 'par_response'
 Then I manipulate and delete and output into 'data'
 Then I manipulate and delete and output into 'authorization_server_endpoint_par'
 
