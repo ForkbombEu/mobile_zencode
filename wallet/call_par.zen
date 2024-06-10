@@ -1,0 +1,97 @@
+Rule unknown ignore
+
+Scenario 'http' : create GET
+Scenario 'w3c' : create JWS
+
+# data
+Given I have a 'string dictionary' named 'credential_parameters'
+
+# keys
+Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
+Given I have a 'string' named 'client_id'
+Given I have a 'keyring'
+
+# pickup stuff from credential_parameters
+When I pickup from path 'credential_parameters.authorization_server_endpoint_par'
+When I pickup from path 'credential_parameters.authorization_endpoint'
+When I pickup from path 'credential_parameters.code_challenge_method'
+When I pickup from path 'credential_parameters.response_type'
+When I pickup from path 'credential_parameters.credential_issuer'
+When I pickup from path 'credential_parameters.vct'
+
+#- create authorization_details
+When I create the 'string array' named 'authorization_details'
+and I create the 'string dictionary' named 'dict_details'
+
+When I create the 'string array' named 'locations'
+and I move 'credential_issuer' in 'locations'
+
+When I write the string 'openid_credential' in 'type'
+
+When I move 'type' in 'dict_details'
+and I move 'vct' to 'credential_configuration_id' in 'dict_details'
+and I move 'locations' in 'dict_details'
+
+When I move 'dict_details' in 'authorization_details'
+
+#- create Code Verifier (rng in url64) (used in step 7)
+When I create the random object of '256' bits
+When I write the string '' in 'code_verifier'
+When I append the 'url64' of 'random_object' to 'code_verifier'
+
+# - create Code Challenge (sha256 of Code Verifier printed in url64 ) (sent to /PAR)
+When I create the hash of 'code_verifier'
+When I write the string '' in 'code_challenge'
+When I append the 'url64' of 'hash' to 'code_challenge'
+
+# - create ClientSecret
+When I create the 'url64 dictionary' 
+When I rename the 'url64 dictionary' to 'jws payload'
+
+When I copy 'code_challenge' in 'jws payload'
+When I create jws header for p256 signature
+
+When I create jws signature of header 'jws header' and payload 'jws payload'
+When I rename the 'jws signature' to 'client_secret'
+
+
+# - pickup stuff from jwt-body
+When I pickup from path 'jwt-body-params.redirectUris'
+When I pickup from path 'jwt-body-params.state'
+
+# - fix redirectUris
+When I create the copy of element '1' from array 'redirectUris'
+When I rename the 'copy' to 'redirect_uri'
+
+
+# - create par post body
+When I create the 'string dictionary' named 'data'
+and I move 'response_type' in 'data'
+and I copy 'client_id' in 'data'
+and I move 'client_secret' in 'data'
+and I move 'redirect_uri' in 'data'
+and I move 'code_challenge' in 'data'
+and I move 'code_challenge_method' in 'data'
+and I move 'state' in 'data'
+and I move 'authorization_details' in 'data'
+
+Then print the 'authorization_server_endpoint_par'
+and print the 'data'
+and print the 'authorization_endpoint'
+and print the 'client_id'
+
+# this needs to saved into a state for later usage
+# code verifier will be sent authz server in a later stage
+Then print the 'code_verifier'
+
+Then I connect to 'authorization_server_endpoint_par' and send object 'data' and do post and output into 'par_response' 
+Then I send object 'par_response' and send path 'r.request_uri_path' and manipulate and get and output into 'request_uri'
+Then I send object 'par_response' and send path 'r.expires_in_path' and manipulate and get and output into 'expires_in'
+
+Then I manipulate and delete and output into 'par_response'
+Then I manipulate and delete and output into 'data'
+Then I manipulate and delete and output into 'authorization_server_endpoint_par'
+
+# at this point visit : ${authorization_endpoint}?request_uri=${request_uri}&client_id=${client_id}
+# and save 'code_verifier' to be used later on
+# expires_in is not used now

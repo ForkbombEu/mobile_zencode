@@ -1,9 +1,6 @@
 {
   "type": "object",
   "properties": {
-    "holder_claims": {
-      "type": "object"
-    },
     "credential_parameters": {
       "type": "object",
       "properties": {
@@ -53,7 +50,6 @@
     }
   },
   "required": [
-    "holder_claims",
     "credential_parameters"
   ]
 }
