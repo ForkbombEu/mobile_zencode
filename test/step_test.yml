@@ -4,7 +4,7 @@ steps:
       url: http://${{env.mz_host}}/holder_qr_to_well-known
       method: POST
       body:
-        file: ${{env.path_to_wallet}}/wallet/holder_request_authorizationCode.data.json
+        file: ${{env.path_to_wallet}}/wallet/holder_qr_to_well-known.data.json
       captures:
         credential_parameters:
           jsonpath: $.credential_parameters
@@ -18,15 +18,11 @@ steps:
             - isDefined: true
               isObject: true
 
-  - name: Create new credential
+  - name: Call par endpoint
     http:
-      url: http://${{env.mz_host}}/holder_request_authorizationCode
+      url: http://${{env.mz_host}}/call_par
       method: POST
       json:
-        holder_claims:
-          given_name: Pippo
-          family_name: Peppe
-          is_human: true
         credential_parameters:
           authorization_endpoint: ${{captures.credential_parameters.authorization_endpoint}}
           authorization_server_endpoint_par: ${{captures.credential_parameters.authorization_server_endpoint_par}}
@@ -39,12 +35,84 @@ steps:
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
           vct: ${{captures.credential_parameters.vct}}
       captures:
+        code_verifier:
+          jsonpath: $.code_verifier
+        request_uri:
+          jsonpath: $.request_uri
+        client_id:
+          jsonpath: $.client_id
+        authorization_endpoint:
+          jsonpath: $.authorization_endpoint
+      check:
+        status: 200
+        jsonpath:
+          $.code_verifier:
+            - isDefined: true
+          $.request_uri:
+            - isDefined: true
+          $.client_id:
+            - isDefined: true
+          $.authorization_endpoint:
+            - eq: http://localhost:3000/authorize
+          $.expires_in:
+            - eq: 600
+
+  - name: Simulate authhorize endpoint pt1 (call /ru_to_toc)
+    http:
+      url: http://localhost:3000/ru_to_toc
+      method: POST
+      json:
+        request_uri: ${{captures.request_uri}}
+        client_id: ${{captures.client_id}}
+      check:
+        status: 200
+        jsonpath:
+          $.credential_configuration_id:
+            - eq: test_credential
+
+  - name: Simulate authhorize endpoint pt2 (call /ru_to_ac)
+    http:
+      url: http://localhost:3000/ru_to_ac
+      method: POST
+      json:
+        request_uri: ${{captures.request_uri}}
+        client_id: ${{captures.client_id}}
+        data:
+          id: "123456789"
+      captures:
+        code:
+          jsonpath: $.code
+      check:
+        status: 200
+        jsonpath:
+          $.code:
+            - isDefined: true
+
+  - name: Call token and credential endpoints
+    http:
+      url: http://${{env.mz_host}}/call_token_and_credential
+      method: POST
+      json:
+        credential_parameters:
+          authorization_endpoint: ${{captures.credential_parameters.authorization_endpoint}}
+          authorization_server_endpoint_par: ${{captures.credential_parameters.authorization_server_endpoint_par}}
+          code_challenge_method: ${{captures.credential_parameters.code_challenge_method}}
+          credential_endpoint: ${{captures.credential_parameters.credential_endpoint}}
+          credential_issuer: ${{captures.credential_parameters.credential_issuer}}
+          format: ${{captures.credential_parameters.format}}
+          grant_type: ${{captures.credential_parameters.grant_type}}
+          response_type: ${{captures.credential_parameters.response_type}}
+          token_endpoint: ${{captures.credential_parameters.token_endpoint}}
+          vct: ${{captures.credential_parameters.vct}}
+        code: ${{captures.code}}
+        code_verifier: ${{captures.code_verifier}}
+      captures:
         credential:
           jsonpath: $.result.credential
       check:
         status: 200
         jsonpath:
-          $.result.credential:
+          $.result.crednetial:
             - isDefined: true
           $.result.c_nonce:
             - isDefined: true
@@ -67,7 +135,7 @@ steps:
             - isDefined: true
               isObject: true
           $.qr_json.ru:
-            - eq: "https://admin.signroom.io/api/collections/templates_public_data/records?filter=%28id%3D%22k65idtkjkdl6de1%22%29&fields=schema"
+            - eq: "https://admin.signroom.io/api/collections/templates_public_data/records?filter=%28id%3D%22gbmpegf0koyex6b%22%29&fields=schema"
           $.qrcode:
             - isDefined: true
               isString: true
