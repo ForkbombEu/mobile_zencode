@@ -41,8 +41,9 @@ tests-well-known:
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/.autorun/identity.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/.autorun/identity.keys.json
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/par.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/par.keys.json
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/token.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/token.keys.json
-	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/authorize.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/authorize.keys.json
 	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/introspection.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/introspection.keys.json
+	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/ru_to_ac.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/ru_to_ac.keys.json
+	@jq '."well-known_path" = "tests/public/authz_server/.well-known/oauth-authorization-server"' ${DM_PATH}/authz_server/ru_to_toc.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/authz_server/ru_to_toc.keys.json
 # ci
 	@jq '."well-known_path" = "tests/public/credential_issuer/.well-known/openid-credential-issuer"' ${DM_PATH}/credential_issuer/credential.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/credential_issuer/credential.keys.json
 	@jq '."well-known_path" = "tests/public/credential_issuer/.well-known/openid-credential-issuer"' ${DM_PATH}/credential_issuer/.autorun/identity.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/credential_issuer/.autorun/identity.keys.json
@@ -51,8 +52,22 @@ tests-well-known:
 	@jq '."well-known_path" = "tests/public/relying_party/.well-known/openid-relying-party"' ${DM_PATH}/relying_party/.autorun/identity.keys.json > ${tmp} && mv ${tmp} ${DM_PATH}/relying_party/.autorun/identity.keys.json
 	@rm -f ${tmp}
 
+test/didroom_microservices: tmp := $(shell mktemp)
 test/didroom_microservices:
 	git clone https://github.com/forkbombeu/didroom_microservices test/didroom_microservices
+# custom code
+	@for f in test/didroom_microservices/authz_server/custom_code/*.example; do \
+		name=$$(echo $$f | rev | cut -d'.' -f2- | rev); \
+		cp $$f $${name}; \
+	done;
+	@for f in test/didroom_microservices/credential_issuer/custom_code/*.example; do \
+		name=$$(echo $$f | rev | cut -d'.' -f2- | rev); \
+		cp $$f $${name}; \
+	done;
+	@cd test/didroom_microservices; make authorize AUTHZ_FILE=tests/public/authz_server/authorize; cd -
+	@jq '.precondition=".authorize"' test/didroom_microservices/tests/public/authz_server/authorize.metadata.json > ${tmp} && mv ${tmp} test/didroom_microservices/tests/public/authz_server/authorize.metadata.json
+# verifier
+	@jq '.firebase_url="http://localhost:3366/verify-credential"' test/didroom_microservices/relying_party/verify.keys.json > ${tmp} && mv ${tmp} test/didroom_microservices/relying_party/verify.keys.json
 	cp .env.test .env
 
 test: api-test unit-test
