@@ -112,7 +112,7 @@ steps:
       check:
         status: 200
         jsonpath:
-          $.result.crednetial:
+          $.result.credential:
             - isDefined: true
           $.result.c_nonce:
             - isDefined: true
