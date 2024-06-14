@@ -157,7 +157,7 @@ load ./bats_utils
     json_join_two asked_claims.json ver_qr_to_info_2_vp.output.json
     zexe $WALLET/ver_qr_to_info.zen ver_qr_to_info_2_vp.output.json
     save_tmp_output ver_qr_to_info.output.json
-    assert_output --regexp '\{"inf":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"rp_name":"DIDroom_Test_RelyingParty","verifier_name":"a@a\.com"\},"post":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281","vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*$'
+    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"rp_name":"DIDroom_Test_RelyingParty","verifier_name":"a@a\.com"\},"post":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281","vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*$'
 }
 
 @test "Holder send the vp" {
@@ -181,7 +181,7 @@ load ./bats_utils
 
 @test "Verifier verify jws [verify.zen]" {
     # verify_1
-    claim_url=$(jq_extract_raw "claims_url" $VERIFIER/verify.data.json)
+    claim_url=$(jq_extract_raw "ru" card_to_qr.output.json)
     curl -X GET $claim_url | jq '{"result": .}' 1> $TMP/out
     save_tmp_output claims.json
     zexe $VERIFIER/verify_1.zen clear_rp_response.out.json claims.json
