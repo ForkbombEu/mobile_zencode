@@ -215,3 +215,5 @@ steps:
         jsonpath:
           $.result:
             - eq: Signature_verification_successful
+          $.input_to_custom_code:
+            - eq: { "tested" : "true" }
