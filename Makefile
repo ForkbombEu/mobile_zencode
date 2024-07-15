@@ -69,17 +69,19 @@ test/didroom_microservices:
 # verifier
 	@jq '.firebase_url="http://localhost:3366/verify-credential"' test/didroom_microservices/relying_party/verify.keys.json > ${tmp} && mv ${tmp} test/didroom_microservices/relying_party/verify.keys.json
 	cp .env.test .env
+	cp .env.test test/didroom_microservices/
+	cp ncr test/didroom_microservices/
 
 test: api-test unit-test
 
 unit-test: ncr test/didroom_microservices tests-well-known
-	@./ncr -p 3000 -z test/didroom_microservices/authz_server --public-directory test/didroom_microservices/tests/public/authz_server & echo $$! > .test.authz_server.pid
-	@./ncr -p 3001 -z test/didroom_microservices/credential_issuer --public-directory test/didroom_microservices/tests/public/credential_issuer & echo $$! > .test.credential_issuer.pid
+	@cd test/didroom_microservices; ./ncr -p 3000 -z authz_server --public-directory tests/public/authz_server & echo $$! > ../../.test.authz_server.pid; cd -
+	@cd test/didroom_microservices; ./ncr -p 3001 -z credential_issuer --public-directory tests/public/credential_issuer & echo $$! > ../../.test.credential_issuer.pid; cd -
 	@./ncr -p 3002 -z ./wallet & echo $$! > .test.mobile_zencode.pid
-	@./ncr -p 3003 -z test/didroom_microservices/relying_party --public-directory test/didroom_microservices/tests/public/relying_party & echo $$! > .test.relying_party.pid
-	@./ncr -p 3366 -z test/didroom_microservices/tests/test_push_server & echo $$! > .test.push_server.pid
+	@cd test/didroom_microservices; ./ncr -p 3003 -z relying_party --public-directory tests/public/relying_party & echo $$! > ../../.test.relying_party.pid; cd -
+	@cd test/didroom_microservices; ./ncr -p 3366 -z tests/test_push_server & echo $$! > ../../.test.push_server.pid; cd -
 	@for port in 3000 3001 3002 3003 3366; do \
-		timeout 90s bash -c 'port=$$1; until nc -z localhost $$port; do \
+		timeout --foreground 30s bash -c 'port=$$1; until nc -z localhost $$port; do \
 			echo "Port $$port is not yet reachable, waiting..."; \
 			sleep 1; \
 		done' _ "$$port" || { \
@@ -101,14 +103,14 @@ api-test: ncr test/didroom_microservices tests-well-known
 	@cp wallet/ver_qr_to_info.keys.json wallet/temp_ver_qr_to_info.keys.json
 	@cp wallet/ver_qr_to_info.schema.json wallet/temp_ver_qr_to_info.schema.json
 # start tests
-	@./ncr -p 3000 -z test/didroom_microservices/authz_server --public-directory test/didroom_microservices/tests/public/authz_server & echo $$! > .test.authz_server.pid
-	@./ncr -p 3001 -z test/didroom_microservices/credential_issuer --public-directory test/didroom_microservices/tests/public/credential_issuer & echo $$! > .test.credential_issuer.pid
+	@cd test/didroom_microservices; ./ncr -p 3000 -z authz_server --public-directory tests/public/authz_server & echo $$! > ../../.test.authz_server.pid; cd -
+	@cd test/didroom_microservices; ./ncr -p 3001 -z credential_issuer --public-directory tests/public/credential_issuer & echo $$! > ../../.test.credential_issuer.pid; cd -
 	@./ncr -p 3002 -z ./wallet & echo $$! > .test.mobile_zencode.pid
-	@./ncr -p 3003 -z test/didroom_microservices/relying_party --public-directory test/didroom_microservices/tests/public/relying_party & echo $$! > .test.relying_party.pid
+	@cd test/didroom_microservices; ./ncr -p 3003 -z relying_party --public-directory tests/public/relying_party & echo $$! > ../../.test.relying_party.pid; cd -
 	@./ncr -p 3004 -z ./verifier & echo $$! > .test.verifier.pid
-	@./ncr -p 3366 -z test/didroom_microservices/tests/test_push_server & echo $$! > .test.push_server.pid
+	@cd test/didroom_microservices; ./ncr -p 3366 -z tests/test_push_server & echo $$! > ../../.test.push_server.pid; cd -
 	@for port in 3000 3001 3002 3003 3004 3366; do \
-		timeout 90s bash -c 'port=$$1; until nc -z localhost $$port; do \
+		timeout --foreground 30s bash -c 'port=$$1; until nc -z localhost $$port; do \
 			echo "Port $$port is not yet reachable, waiting..."; \
 			sleep 1; \
 		done' _ "$$port" || { \

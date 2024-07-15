@@ -21,7 +21,9 @@ Given I connect to 'did_url' and do get and output into 'did'
 # verify jws signature
 Given I send script 'zen_3' and send data 'data' and send keys 'did' and execute zencode and output into 'zen_3_output'
 
+Given I have a 'string dictionary' in path 'zen_1_output.input_to_custom_code'
 Given I have a 'string' in path 'zen_3_output.output.1'
 and I rename '1' to 'result'
 
 Then print the 'result'
+Then print the 'input_to_custom_code'
