@@ -13,7 +13,9 @@ Endif
 
 # check required_claims
 When I pickup from path 'message.payload.result'
-Foreach 'claim' in 'result'
+When I rename 'result' to 'input_to_custom_code'
+When I create flat array of keys in 'result'
+Foreach 'claim' in 'flat array'
 If I verify 'claim' is found in 'required'
 When I remove 'claim' from 'required'
 EndIf
@@ -34,3 +36,4 @@ When I pickup from path 'message.header.alg'
 
 Then print the 'iss' as 'string'
 Then print the 'alg' as 'string'
+Then print the 'input_to_custom_code'
