@@ -135,7 +135,7 @@ steps:
             - isDefined: true
               isObject: true
           $.qr_json.ru:
-            - eq: "https://admin.signroom.io/api/collections/templates_public_data/records?filter=%28id%3D%22gbmpegf0koyex6b%22%29&fields=schema"
+            - eq: "https://admin.signroom.io/api/collections/templates_public_data/records?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema"
           $.qrcode:
             - isDefined: true
               isString: true
