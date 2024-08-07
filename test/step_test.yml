@@ -170,7 +170,7 @@ steps:
             - isDefined: true
             - isObject: true
           $.info.verifier_name:
-            - eq: "a@a.com"
+            - eq: "didroom microservices ci (DO NOT DELETE!)"
 
   - name: send vp to rp
     http:
