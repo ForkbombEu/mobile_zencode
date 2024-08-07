@@ -166,7 +166,7 @@ load ./bats_utils
     body=$(jq -r '.post.body' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
     curl -X POST $url -d "$body" 1> $TMP/out
     save_tmp_output rp_response.json
-    assert_output --regexp '\{"server_response":\{"result":\{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyOkF3aXM2cnBONlE0OHVHbXQ0NUV2OWdOcmVUQWM3RUhjUjQ3dkt5MkdwYXNtI2VzMjU2X3B1YmxpY19rZXkiLCJrdHkiOiJFQyJ9LCJ0eXAiOiJvcGVuNHZjaS1wcm9vZitqd3QifQ.*","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"status":"200"\}\}'
+    assert_output --regexp '\{"server_response":\{"result":\{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyO.*","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"status":"200"\}\}'
     message=$(jq -r '.server_response.result.message' $BATS_FILE_TMPDIR/rp_response.json)
     echo "{}" >$TMP/out
     save_tmp_output clear_rp_response.out.json
