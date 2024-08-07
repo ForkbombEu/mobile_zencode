@@ -21,7 +21,6 @@ all:
 ifndef WGET
     $(error "🥶 wget is not available! Please retry after you install it")
 endif
-    
 
 help: ## 🛟 Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-7s\033[0m %s\n", $$1, $$2}'
@@ -52,7 +51,7 @@ test/didroom_microservices:
 	@cd test/didroom_microservices; make authorize AUTHZ_FILE=public/authz_server/authorize; cd -
 	@jq '.precondition=".authorize"' test/didroom_microservices/public/authz_server/authorize.metadata.json > ${tmp} && mv ${tmp} test/didroom_microservices/public/authz_server/authorize.metadata.json
 # verifier
-	@jq '.firebase_url="http://localhost:3366/verify-credential"' test/didroom_microservices/relying_party/verify.keys.json > ${tmp} && mv ${tmp} test/didroom_microservices/relying_party/verify.keys.json
+	@jq '.keys_0.firebase_url="http://localhost:3366/verify-credential"' test/didroom_microservices/relying_party/verify.keys.json > ${tmp} && mv ${tmp} test/didroom_microservices/relying_party/verify.keys.json
 	@cp .env.test .env
 	@cp .env.test test/didroom_microservices/
 	@cp ncr test/didroom_microservices/
