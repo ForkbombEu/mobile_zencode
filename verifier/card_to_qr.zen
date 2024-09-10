@@ -14,25 +14,26 @@ and I have a 'string' named 'id'
 Given I have a 'string array' named 'letters'
 and I have a 'float' named '1'
 and I have a 'float' named '5'
+and I have a 'string' named 'intent-url'
 
-When I create the 'string dictionary' named 'qr_json'
+When I create the 'string dictionary' named 'params_json'
 
 # relying party
-When I move 'relying_party' to 'rp' in 'qr_json'
+When I move 'relying_party' to 'rp' in 'params_json'
 
 # t
-When I move 'registrationToken' to 't' in 'qr_json'
+When I move 'registrationToken' to 't' in 'params_json'
 
 # m
-When I move 'm' in 'qr_json'
+When I move 'm' in 'params_json'
 
 # id
-When I move 'id' in 'qr_json'
+When I move 'id' in 'params_json'
 
 # exp
 When I create the timestamp
 and I create the result of 'timestamp' + 'expires_in'
-and I move 'result' to 'exp' in 'qr_json'
+and I move 'result' to 'exp' in 'params_json'
 
 # request uri
 When I set 'filter' to '(id="' as 'string'
@@ -44,7 +45,7 @@ When I append the 'pb_api' to 'pb_url'
 and I create url from 'pb_url'
 and I append percent encoding of 'filter' as http request to 'url'
 and I append percent encoding of 'fields' as http request to 'url'
-and I move 'url' to 'ru' in 'qr_json'
+and I move 'url' to 'ru' in 'params_json'
 
 # sid
 When I write string '' in 'sid'
@@ -53,17 +54,17 @@ When I pick random object in 'letters'
 and I append the 'random object' to 'sid'
 and I remove 'random object'
 EndForEach
-When I copy 'sid' in 'qr_json'
+When I copy 'sid' in 'params_json'
 
-# stringify
-When I create json escaped string of 'qr_json'
-and I rename 'json_escaped_string' to 'qr_text'
+# intent url
+When I create http get parameters from 'params_json' using percent encoding
+and I append 'http get parameters' to 'intent-url'
 
-Then print the 'qr_text'
+Then print the 'intent-url'
 Then print the 'sid'
-Then print the 'ru' from 'qr_json'
-Then print the 'qr_json'
+Then print the 'ru' from 'params_json'
+Then print the 'params_json'
 
-Then I send text 'qr_text' and create qr code and output into 'qrcode'
-Then I manipulate and delete and output into 'qr_text'
+Then I send text 'intent-url' and create qr code and output into 'qrcode'
+Then I manipulate and delete and output into 'intent-url'
 # Then I manipulate and delete and output into 'qr_json'

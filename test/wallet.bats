@@ -114,12 +114,12 @@ load ./bats_utils
 @test "Verifier generate qr [card_to_qr.zen]" {
     zexe $VERIFIER/card_to_qr.zen $VERIFIER/card_to_qr.data.json $VERIFIER/card_to_qr.keys.json
     save_tmp_output card_to_qr.output.json
-    assert_output --regexp '^\{"qr_json":\{"exp":[0-9]{10},"id":"hn20gz30ync7sng","m":"f","rp":"http://localhost:3003/","ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"qr_text":".*,"ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
+    assert_output --regexp '^\{"intent-url":".*,"params_json":\{"exp":[0-9]{10},"id":"hn20gz30ync7sng","m":"f","rp":"http://localhost:3003/","ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
 }
 
 @test "Holder scan qr [ver_qr_to_info.zen]" {
     cred=$(jq ".credential" $BATS_FILE_TMPDIR/post_credential.output.json)
-    jq_extract_raw "qr_json" card_to_qr.output.json > $BATS_FILE_TMPDIR/temp_temp_vp.data.json
+    jq_extract_raw "params_json" card_to_qr.output.json > $BATS_FILE_TMPDIR/temp_temp_vp.data.json
     jq ".credential_array = [$cred]" $BATS_FILE_TMPDIR/temp_temp_vp.data.json > $BATS_FILE_TMPDIR/ver_qr_to_info_test.data.json
     # scan_ver_qr_1
     zexe $WALLET/ver_qr_to_info_1_qr_checks.zen ver_qr_to_info_test.data.json $WALLET/ver_qr_to_info.keys.json
