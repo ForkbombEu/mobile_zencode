@@ -53,7 +53,7 @@ test/didroom_microservices:
 # verifier
 	@jq '.keys_0.firebase_url="http://localhost:3366/verify-credential"' test/didroom_microservices/relying_party/verify.keys.json > ${tmp} && mv ${tmp} test/didroom_microservices/relying_party/verify.keys.json
 	@cp .env.test .env
-	@cp .env.test test/didroom_microservices/
+	@cp test/didroom_microservices/.env.example test/didroom_microservices/.env
 	@cp ncr test/didroom_microservices/
 
 test: api-test unit-test
