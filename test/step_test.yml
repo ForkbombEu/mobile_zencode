@@ -156,16 +156,21 @@ steps:
           - ${{captures.credential}}
       captures:
         post_to_rp:
-          jsonpath: $.post
+          jsonpath: $.post_without_vp
+        vps:
+          jsonpath: $.vps
       check:
         status: 200
         jsonpath:
-          $.post.url:
+          $.post_without_vp.url:
             - isDefined: true
             - isString: true
-          $.post.body:
+          $.post_without_vp.body:
             - isDefined: true
             - isObject: true
+          $.vps:
+            - isDefined: true
+            - isArray: true
           $.info:
             - isDefined: true
             - isObject: true
@@ -180,7 +185,7 @@ steps:
         id: ${{captures.post_to_rp.body.id}}
         m: ${{captures.post_to_rp.body.m}}
         registrationToken: ${{captures.post_to_rp.body.registrationToken}}
-        vp: ${{captures.post_to_rp.body.vp}}
+        vp: ${{captures.vps.0}}
       captures:
         message:
           jsonpath: $.server_response.result.message
