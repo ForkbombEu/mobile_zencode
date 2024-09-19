@@ -7,7 +7,7 @@ steps:
         "!external-qr-code-content":
           credential_configuration_ids:
             - test_credential
-        credential_issuer: http://${{env.ci_host}}
+          credential_issuer: http://${{env.ci_host}}
       captures:
         credential_parameters:
           jsonpath: $.credential_parameters
