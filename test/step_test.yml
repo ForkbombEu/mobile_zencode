@@ -53,13 +53,13 @@ steps:
           $.client_id:
             - isDefined: true
           $.authorization_endpoint:
-            - eq: http://localhost:3000/authorize
+            - eq: http://${{env.as_host}}/authorize
           $.expires_in:
             - eq: 600
 
   - name: Simulate authhorize endpoint pt1 (call /ru_to_toc)
     http:
-      url: http://localhost:3000/ru_to_toc
+      url: http://${{env.as_host}}/ru_to_toc
       method: POST
       json:
         request_uri: ${{captures.request_uri}}
@@ -72,7 +72,7 @@ steps:
 
   - name: Simulate authhorize endpoint pt2 (call /ru_to_ac)
     http:
-      url: http://localhost:3000/ru_to_ac
+      url: http://${{env.as_host}}/ru_to_ac
       method: POST
       json:
         request_uri: ${{captures.request_uri}}

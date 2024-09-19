@@ -4,6 +4,9 @@ env:
   mz_host: localhost:3002
   verifier_host: localhost:3004
   path_to_wallet: ..
+  as_host: localhost:3000
+  ci_host: localhost:3001
+  rp_host: localhost:3003
 tests:
   wallet_api:
     $ref: test/step_test.yml
