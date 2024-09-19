@@ -3,6 +3,6 @@
         "credential_configuration_ids": [
             "test_credential"
         ],
-        "credential_issuer": "http://localhost:3001"
+        "credential_issuer": "http://localhost:3001/credential_issuer"
     }
 }
