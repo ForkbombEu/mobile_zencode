@@ -1,6 +1,6 @@
 {
     "template": "4tusaoh7g5y6wyw",
-    "relying_party": "http://localhost:3003/",
+    "relying_party": "http://localhost:3002/relying_party",
     "pb_url": "https://admin.signroom.io",
     "pb_api": "/api/collections/templates_public_data/records",
     "expires_in": 300,
