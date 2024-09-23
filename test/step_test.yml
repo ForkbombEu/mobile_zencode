@@ -3,8 +3,11 @@ steps:
     http:
       url: http://${{env.mz_host}}/holder_qr_to_well-known
       method: POST
-      body:
-        file: ${{env.path_to_wallet}}/wallet/holder_qr_to_well-known.data.json
+      json:
+        "!external-qr-code-content":
+          credential_configuration_ids:
+            - test_credential
+          credential_issuer: http://${{env.ci_host}}
       captures:
         credential_parameters:
           jsonpath: $.credential_parameters
@@ -53,13 +56,13 @@ steps:
           $.client_id:
             - isDefined: true
           $.authorization_endpoint:
-            - eq: http://localhost:3000/authorize
+            - eq: http://${{env.as_host}}/authorize
           $.expires_in:
             - eq: 600
 
   - name: Simulate authhorize endpoint pt1 (call /ru_to_toc)
     http:
-      url: http://localhost:3000/ru_to_toc
+      url: http://${{env.as_host}}/ru_to_toc
       method: POST
       json:
         request_uri: ${{captures.request_uri}}
@@ -72,7 +75,7 @@ steps:
 
   - name: Simulate authhorize endpoint pt2 (call /ru_to_ac)
     http:
-      url: http://localhost:3000/ru_to_ac
+      url: http://${{env.as_host}}/ru_to_ac
       method: POST
       json:
         request_uri: ${{captures.request_uri}}
@@ -123,8 +126,15 @@ steps:
     http:
       url: http://${{env.verifier_host}}/card_to_qr
       method: POST
-      body:
-        file: ${{env.path_to_wallet}}/verifier/card_to_qr.data.json
+      json:
+        template: 4tusaoh7g5y6wyw
+        relying_party: http://${{env.rp_host}}
+        pb_url: https://admin.signroom.io
+        pb_api: /api/collections/templates_public_data/records
+        expires_in: 300
+        registrationToken: ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281
+        m: f
+        id: hn20gz30ync7sng
       captures:
         params_json:
           jsonpath: $.params_json

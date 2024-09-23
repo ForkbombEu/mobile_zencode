@@ -11,7 +11,7 @@ load ./bats_utils
     url=$(jq_extract_raw "credential_issuer" read_credential_issuer.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output credential_issuer_well-known.output.json
-    assert_output --partial '{"credential_issuer":"http://localhost:3001","credential_endpoint":"http://localhost:3001/credential","authorization_servers":["http://localhost:3000"],"display":[{"name":"DIDroom_Test_Issuer","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial '{"credential_issuer":"http://localhost:3001/credential_issuer","credential_endpoint":"http://localhost:3001/credential_issuer/credential","authorization_servers":["http://localhost:3000/authz_server"],"display":[{"name":"DIDroom_Test_Issuer","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
     assert_output --partial 'es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}},"display":[{"name":"Tested Credential","locale":"en-US","logo":{"url":"https://www.connetweb.com/wp-content/uploads/2021/06/canstockphoto22402523-arcos-creator.com_-1024x1024-1.jpg","alt_text":"Test Logo"},"background_color":"#12107c","text_color":"#FFFFFF"}],"credential_definition":{"type":["test_credential"],"credentialSubject":{"tested":{"mandatory":true,"display":[{"name":"Is tested","locale":"en-US"}]}}}}]}'
     authorization_server=$(jq_extract_raw "authorization_servers" credential_issuer_well-known.output.json| jq -r '.[0]')
     jq_insert "authorization_server" $authorization_server read_credential_issuer.output.json
@@ -27,7 +27,7 @@ load ./bats_utils
     url=$(jq_extract_raw "authorization_server" read_authz_server.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output authz_server_well-known.output.json
-    assert_output --partial '{"authorization_endpoint":"http://localhost:3000/authorize","pushed_authorization_request_endpoint":"http://localhost:3000/par","token_endpoint":"http://localhost:3000/token","introspection_endpoint":"http://localhost:3000/introspection","issuer":"http://localhost:3000","jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial '{"authorization_endpoint":"http://localhost:3000/authz_server/authorize","pushed_authorization_request_endpoint":"http://localhost:3000/authz_server/par","token_endpoint":"http://localhost:3000/authz_server/token","introspection_endpoint":"http://localhost:3000/authz_server/introspection","issuer":"http://localhost:3000/authz_server","jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
     assert_output --partial '#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"scopes_supported":["{{ as_scopes }}"],"dpop_signing_alg_values_supported":["ES256"],"client_registration_types_supported":["automatic"],"code_challenge_methods_supported":["S256"],"authorization_details_types_supported":["openid_credential"],"grant_types_supported":["authorization_code"],"request_parameter_supported":true,"request_uri_parameter_supported":false,"response_types_supported":["code"],"subject_types_supported":["pairwise"],"token_endpoint_auth_methods_supported":["attest_jwt_client_auth"],"token_endpoint_auth_signing_alg_values_supported":["ES256"],"request_object_signing_alg_values_supported":["ES256"]}'
 }
 
@@ -40,8 +40,8 @@ load ./bats_utils
     jq --arg key "credential_issuer_well-known" '.[$key].result = input' $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json $BATS_FILE_TMPDIR/credential_issuer_well-known.output.json > $tmp && mv $tmp  $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json
     zexe $WALLET/holder_qr_to_well-known.zen $WALLET/holder_qr_to_well-known.keys.json holder_qr_to_well-known.data.json
     save_tmp_output holder_qr_to_well-known.output.json
-    assert_output --partial '{"credential_issuer_information":{"authorization_servers":["http://localhost:3000"],"credential_endpoint":"http://localhost:3001/credential","credential_issuer":"http://localhost:3001","display":[{"locale":"en-US","name":"DIDroom_Test_Issuer"}],"jwks":{"keys":[{"alg":"ES256","crv":"P-256","kid":"did:dyne:sandbox.genericissuer:'
-    assert_output --partial 'es256_public_key","kty":"EC"}]}},"credential_parameters":{"authorization_endpoint":"http://localhost:3000/authorize","authorization_server_endpoint_par":"http://localhost:3000/par","code_challenge_method":"S256","credential_endpoint":"http://localhost:3001/credential","credential_issuer":"http://localhost:3001","format":"vc+sd-jwt","grant_type":"authorization_code","response_type":"code","token_endpoint":"http://localhost:3000/token","vct":"test_credential"},"credential_requested":{"credential_definition":{"credentialSubject":{"tested":{"display":[{"locale":"en-US","name":"Is tested"}],"mandatory":true}},"type":["test_credential"]},"credential_signing_alg_values_supported":["ES256"],"cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"display":[{"background_color":"#12107c","locale":"en-US","logo":{"alt_text":"Test Logo","url":"https://www.connetweb.com/wp-content/uploads/2021/06/canstockphoto22402523-arcos-creator.com_-1024x1024-1.jpg"},"name":"Tested Credential","text_color":"#FFFFFF"}],"format":"vc+sd-jwt","proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}}'
+    assert_output --partial '{"credential_issuer_information":{"authorization_servers":["http://localhost:3000/authz_server"],"credential_endpoint":"http://localhost:3001/credential_issuer/credential","credential_issuer":"http://localhost:3001/credential_issuer","display":[{"locale":"en-US","name":"DIDroom_Test_Issuer"}],"jwks":{"keys":[{"alg":"ES256","crv":"P-256","kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial 'es256_public_key","kty":"EC"}]}},"credential_parameters":{"authorization_endpoint":"http://localhost:3000/authz_server/authorize","authorization_server_endpoint_par":"http://localhost:3000/authz_server/par","code_challenge_method":"S256","credential_endpoint":"http://localhost:3001/credential_issuer/credential","credential_issuer":"http://localhost:3001/credential_issuer","format":"vc+sd-jwt","grant_type":"authorization_code","response_type":"code","token_endpoint":"http://localhost:3000/authz_server/token","vct":"test_credential"},"credential_requested":{"credential_definition":{"credentialSubject":{"tested":{"display":[{"locale":"en-US","name":"Is tested"}],"mandatory":true}},"type":["test_credential"]},"credential_signing_alg_values_supported":["ES256"],"cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"display":[{"background_color":"#12107c","locale":"en-US","logo":{"alt_text":"Test Logo","url":"https://www.connetweb.com/wp-content/uploads/2021/06/canstockphoto22402523-arcos-creator.com_-1024x1024-1.jpg"},"name":"Tested Credential","text_color":"#FFFFFF"}],"format":"vc+sd-jwt","proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}}'
 }
 
 @test "Holder post to authz_server/par [call_par.zen]" {
@@ -94,7 +94,7 @@ load ./bats_utils
     assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
     assert_output --partial '","c_nonce":"'
     assert_output --partial '","c_nonce_expires_in":3600,"expires_in":'
-    assert_output --partial ',"authorization_details":[{"credential_configuration_id":"test_credential","locations":["http://localhost:3001"],"type":"openid_credential","claims":{"id":"123456789"}}]}'
+    assert_output --partial ',"authorization_details":[{"credential_configuration_id":"test_credential","locations":["http://localhost:3001/credential_issuer"],"type":"openid_credential","claims":{"id":"123456789"}}]}'
 }
 
 @test "Holder post to credantial_issuer/credential [pre_credential.zen]" {
@@ -114,7 +114,7 @@ load ./bats_utils
 @test "Verifier generate qr [card_to_qr.zen]" {
     zexe $VERIFIER/card_to_qr.zen $VERIFIER/card_to_qr.data.json $VERIFIER/card_to_qr.keys.json
     save_tmp_output card_to_qr.output.json
-    assert_output --regexp '^\{"intent-url":".*,"params_json":\{"exp":[0-9]{10},"id":"hn20gz30ync7sng","m":"f","rp":"http://localhost:3003/","ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
+    assert_output --regexp '^\{"intent-url":".*,"params_json":\{"exp":[0-9]{10},"id":"hn20gz30ync7sng","m":"f","rp":"http://localhost:3002/relying_party","ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
 }
 
 @test "Holder scan qr [ver_qr_to_info.zen]" {
@@ -128,7 +128,7 @@ load ./bats_utils
     url=$(jq_extract_raw "rp_wk_endpoint" ver_qr_to_info_1_qr_checks.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output rp_wk_endpoint_response.json
-    assert_output --partial '{"relying_party":"http://localhost:3003","verification_endpoint":"http://localhost:3003/verify","trusted_credential_issuers":["http://localhost:3001"],"display":[{"name":"DIDroom_Test_RP","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial '{"relying_party":"http://localhost:3002/relying_party","verification_endpoint":"http://localhost:3002/relying_party/verify","trusted_credential_issuers":["http://localhost:3001/credential_issuer"],"display":[{"name":"DIDroom_Test_RP","locale":"en-US"}],"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
     assert_output --partial '#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"credential_configurations_supported":[{"format":"vc+sd-jwt","cryptographic_binding_methods_supported":["jwk","did:dyne:sandbox.signroom"],"credential_signing_alg_values_supported":["ES256"],"proof_types_supported":{"jwt":{"proof_signing_alg_values_supported":["ES256"]}}}]}'
     # get claims
     request_uri=$(jq_extract_raw "ru" ver_qr_to_info_test.data.json)
