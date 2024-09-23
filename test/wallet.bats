@@ -66,7 +66,7 @@ load ./bats_utils
     data_toc="{\"request_uri\": \"${request_uri}\", \"client_id\": \"${client_id}\"}"
     curl -X POST $ru_to_toc -d ''"$(echo $data_toc)"'' 1> $TMP/out
     save_tmp_output ru_to_toc.output.json
-    assert_output '{"credential_configuration_id":"test_credential"}'
+    assert_output '{"auth_details":[{"credential_configuration_id":"test_credential","locations":["http://localhost:3001/credential_issuer"],"type":"openid_credential","claims":[]}],"credential_configuration_id":"test_credential"}'
     cci=$(jq_extract_raw "credential_configuration_id" ru_to_toc.output.json)
     echo '{"email": "email@email.com", "password": "password"}' > $TMP/out
     save_tmp_output form.data.json
