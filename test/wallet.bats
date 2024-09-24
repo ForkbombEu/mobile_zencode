@@ -158,7 +158,7 @@ load ./bats_utils
     json_join_two asked_claims.json ver_qr_to_info_2_vp.output.json
     zexe $WALLET/ver_qr_to_info.zen ver_qr_to_info_2_vp.output.json
     save_tmp_output ver_qr_to_info.output.json
-    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"rp_name":"DIDroom_Test_RP","verifier_name":"didroom microservices ci \(DO NOT DELETE\!\)"\},"post_without_vp":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"url":"http://localhost:3003/verify"\},"vps":\["eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*\]\}$'
+    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"rp_name":"DIDroom_Test_RP","verifier_name":"didroom microservices ci \(DO NOT DELETE\!\)"\},"post_without_vp":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"url":"http://localhost:3002/relying_party/verify"\},"vps":\["eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*\]\}$'
 }
 
 @test "Holder send the vp" {
