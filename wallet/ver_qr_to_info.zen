@@ -20,7 +20,7 @@ Given I send object 'data' and send path 'rp_wk_path' and send value 'rp_wk' and
 Given I send object 'data' and send path 'asked_claims_path' and send value 'asked_claims' and manipulate and set
 
 Given I send keys 'keys' and send data 'data' and send script 'zen_2' and execute zencode and output into 'zen_2_output'
-Given I send object 'zen_2_output' and send path 'vp_path' and manipulate and get and output into 'vp'
+Given I send object 'zen_2_output' and send path 'vps_path' and manipulate and get and output into 'vps'
 
 # rp verification endpoint
 Given I send object 'r.rp_wk' and send path 'result_to_verification_endpoint_path' and manipulate and get and output into 'rp_verification_endpoint'
@@ -38,7 +38,7 @@ Given I have a 'string' named 'rp_name'
 and I have a 'string' named 'verifier_name'
 and I have a 'string dictionary' named 'asked_claims'
 and I have a 'string' named 'rp_verification_endpoint'
-and I have a 'string' named 'vp'
+and I have a 'string array' named 'vps'
 
 # from data
 Given I have a 'string' named 't'
@@ -52,14 +52,14 @@ and I move 'verifier_name' in 'info'
 and I move 'asked_claims' in 'info'
 
 # prepare vp
-When I create the 'string dictionary' named 'post'
-and I move 'rp_verification_endpoint' to 'url' in 'post'
+When I create the 'string dictionary' named 'post_without_vp'
+and I move 'rp_verification_endpoint' to 'url' in 'post_without_vp'
 and I create the 'string dictionary' named 'body'
-and I move 'vp' in 'body'
 and I move 't' to 'registrationToken' in 'body'
 and I move 'sid' to 'id' in 'body'
 and I move 'm' in 'body'
-and I move 'body' in 'post'
+and I move 'body' in 'post_without_vp'
 
 Then print the 'info'
-and print the 'post'
+and print the 'vps'
+and print the 'post_without_vp'

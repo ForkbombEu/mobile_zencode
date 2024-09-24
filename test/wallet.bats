@@ -144,7 +144,7 @@ load ./bats_utils
     # scan_ver_qr_2
     zexe $WALLET/ver_qr_to_info_2_vp.zen ver_qr_to_info_2_vp.data.json
     save_tmp_output ver_qr_to_info_2_vp.output.json
-    assert_output --partial '{"vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.'
+    assert_output --partial '{"vps":["eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9.'
     # prepare input for third script
     json_join_two ver_qr_to_info_test.data.json ver_qr_to_info_2_vp.output.json
     rp_name=$(jq -r '.display[0].name' $BATS_FILE_TMPDIR/rp_wk_endpoint_response.json)
@@ -158,12 +158,16 @@ load ./bats_utils
     json_join_two asked_claims.json ver_qr_to_info_2_vp.output.json
     zexe $WALLET/ver_qr_to_info.zen ver_qr_to_info_2_vp.output.json
     save_tmp_output ver_qr_to_info.output.json
-    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"rp_name":"DIDroom_Test_RP","verifier_name":"didroom microservices ci \(DO NOT DELETE\!\)"\},"post":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281","vp":"eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*$'
+    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"rp_name":"DIDroom_Test_RP","verifier_name":"didroom microservices ci \(DO NOT DELETE\!\)"\},"post_without_vp":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"url":"http://localhost:3003/verify"\},"vps":\["eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*\]\}$'
 }
 
 @test "Holder send the vp" {
-    url=$(jq -r '.post.url' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
-    body=$(jq -r '.post.body' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
+    vp=$(jq -r '.vps[0]' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
+    tmp=$(mktemp)
+    jq --arg value "$vp" '.post_without_vp.body.vp = $value' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/ver_qr_to_info.output.json
+    url=$(jq -r '.post_without_vp.url' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
+    body=$(jq -r '.post_without_vp.body' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
+    echo "$body"
     curl -X POST $url -d "$body" 1> $TMP/out
     save_tmp_output rp_response.json
     assert_output --regexp '\{"server_response":\{"result":\{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyO.*","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"status":"200"\}\}'

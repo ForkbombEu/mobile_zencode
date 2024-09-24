@@ -13,8 +13,7 @@ When I pickup from path 'rp_wk.credential_configurations_supported.1.format'
 When I pickup from path 'rp_wk.credential_configurations_supported.1.credential_signing_alg_values_supported.1'
 and I rename '1' to 'credential_signing_alg_values_supported'
 
-When I create the 'signed selective disclosure array' named 'result_array'
-When I create the 'string array' named 'disclosures_array'
+When I create the 'signed selective disclosure array' named 'vps'
 When I create the timestamp
 Foreach 'ssd' in 'credential_array'
 When I pickup from path 'ssd.jwt.payload'
@@ -30,12 +29,7 @@ and I verify 'iss' is found in 'trusted_credential_issuers'
 and I verify disclosures 'required' are found in signed selective disclosure 'ssd'
 and I verify number 'timestamp' is less than 'exp'
 When I use signed selective disclosure 'ssd' only with disclosures 'required'
-and I rename 'ssd' to 'vp'
-and I remove 'payload'
-and I remove 'header'
-and I remove 'iss'
-and I remove 'exp'
-and I break foreach
+and I copy 'ssd' in 'vps'
 EndIf
 When I remove 'payload'
 and I remove 'header'
@@ -43,8 +37,9 @@ and I remove 'iss'
 and I remove 'exp'
 Endforeach
 
-If I verify 'vp' is not found
+When I set 'zero' to '0' as 'float'
+If I verify the size of 'vps' is less or equal than 'zero'
 When I exit with error message 'no signed selective disclosure found that matched the requested claims'
 EndIf
 
-Then print the 'vp'
+Then print the 'vps'
