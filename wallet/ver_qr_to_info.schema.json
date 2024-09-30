@@ -24,6 +24,9 @@
         },
         "credential_array": {
             "type": "array"
+        },
+        "pb_url": {
+            "type": "string"
         }
     },
     "required": [
@@ -34,6 +37,7 @@
         "ru",
         "sid",
         "id",
-        "credential_array"
+        "credential_array",
+        "pb_url"
     ]
 }

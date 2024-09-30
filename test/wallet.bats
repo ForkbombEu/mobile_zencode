@@ -114,7 +114,7 @@ load ./bats_utils
 @test "Verifier generate qr [card_to_qr.zen]" {
     zexe $VERIFIER/card_to_qr.zen $VERIFIER/card_to_qr.data.json $VERIFIER/card_to_qr.keys.json
     save_tmp_output card_to_qr.output.json
-    assert_output --regexp '^\{"intent-url":".*,"params_json":\{"exp":[0-9]{10},"id":"hn20gz30ync7sng","m":"f","rp":"http://localhost:3002/relying_party","ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"ru":"https://admin\.signroom\.io/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
+    assert_output --regexp '^\{"intent-url":".*,"params_json":\{"exp":[0-9]{10},"id":"hn20gz30ync7sng","m":"f","rp":"http://localhost:3002/relying_party","ru":"https://admin\.didroom\.com/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"ru":"https://admin\.didroom\.com/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
 }
 
 @test "Holder scan qr [ver_qr_to_info.zen]" {
