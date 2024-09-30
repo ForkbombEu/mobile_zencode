@@ -16,7 +16,6 @@
     "show_parameters_temp_path": "show_parameters_temp",
     "result_path": "result",
     "vps_path": "vps",
-    "pb_url": "https://admin.didroom.com",
     "show_parameters_temp": {
         "collection": "users",
         "fields": "name"

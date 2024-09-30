@@ -1,7 +1,7 @@
 {
     "template": "4tusaoh7g5y6wyw",
     "relying_party": "http://localhost:3002/relying_party",
-    "pb_url": "https://admin.signroom.io",
+    "pb_url": "https://admin.didroom.com",
     "pb_api": "/api/collections/templates_public_data/records",
     "expires_in": 300,
     "registrationToken": "ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281",

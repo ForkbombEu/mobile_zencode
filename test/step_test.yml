@@ -129,7 +129,7 @@ steps:
       json:
         template: 4tusaoh7g5y6wyw
         relying_party: http://${{env.rp_host}}
-        pb_url: https://admin.signroom.io
+        pb_url: https://admin.didroom.com
         pb_api: /api/collections/templates_public_data/records
         expires_in: 300
         registrationToken: ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281
@@ -145,7 +145,7 @@ steps:
             - isDefined: true
               isObject: true
           $.params_json.ru:
-            - eq: "https://admin.signroom.io/api/collections/templates_public_data/records?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema"
+            - eq: "https://admin.didroom.com/api/collections/templates_public_data/records?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema"
           $.qrcode:
             - isDefined: true
               isString: true
@@ -164,6 +164,7 @@ steps:
         id: ${{captures.params_json.id}}
         credential_array:
           - ${{captures.credential}}
+        pb_url: https://admin.didroom.com
       captures:
         post_to_rp:
           jsonpath: $.post_without_vp
