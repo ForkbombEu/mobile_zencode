@@ -49,7 +49,7 @@ load ./bats_utils
     save_tmp_output call_par.output.json
     url=$(jq_extract_raw "authorization_server_endpoint_par" call_par.output.json)
     data=$(jq_extract_raw "data" call_par.output.json)
-    curl -X POST $url -d ''"$(echo $data)"'' 1> $TMP/out
+    curl -X POST $url -H 'Content-Type: application/json' -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_par.output.json
     # (Invalid extended regular expression?) assert_output --regexp '{"request_uri":"urn:ietf:params:oauth:request_uri.*","expires_in":600}
     assert_output --partial '{"request_uri":"urn:ietf:params:oauth:request_uri'
@@ -64,7 +64,7 @@ load ./bats_utils
     client_id=$(jq_extract_raw "client_id" call_par.output.json)
     request_uri=$(jq_extract_raw "request_uri" post_par.output.json)
     data_toc="{\"request_uri\": \"${request_uri}\", \"client_id\": \"${client_id}\"}"
-    curl -X POST $ru_to_toc -d ''"$(echo $data_toc)"'' 1> $TMP/out
+    curl -X POST $ru_to_toc -H 'Content-Type: application/json' -d ''"$(echo $data_toc)"'' 1> $TMP/out
     save_tmp_output ru_to_toc.output.json
     assert_output '{"auth_details":[{"credential_configuration_id":"test_credential","locations":["http://localhost:3001/credential_issuer"],"type":"openid_credential","claims":[]}],"credential_configuration_id":"test_credential"}'
     cci=$(jq_extract_raw "credential_configuration_id" ru_to_toc.output.json)
@@ -74,7 +74,7 @@ load ./bats_utils
     save_tmp_output custom_code.output.json
     jq_insert 'request_uri' $request_uri custom_code.output.json
     jq_insert 'client_id' $client_id custom_code.output.json
-    curl -X POST $ru_to_ac -d ''"$(cat $BATS_FILE_TMPDIR/custom_code.output.json)"'' 1> $TMP/out
+    curl -X POST $ru_to_ac -H 'Content-Type: application/json' -d ''"$(cat $BATS_FILE_TMPDIR/custom_code.output.json)"'' 1> $TMP/out
     save_tmp_output ru_to_ac.output.json
 }
 
@@ -88,7 +88,7 @@ load ./bats_utils
     save_tmp_output pre_token.output.json
     url=$(jq_extract_raw "token_endpoint" pre_token.output.json)
     data=$(jq_extract_raw "data" pre_token.output.json)
-    curl -X POST $url -d ''"$(echo $data)"'' 1> $TMP/out
+    curl -X POST $url -H 'Content-Type: application/json' -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_token.output.json
     # if --regexp resolve modify also here
     assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
@@ -104,7 +104,7 @@ load ./bats_utils
     url=$(jq_extract_raw "credential_endpoint" pre_credential.output.json)
     data=$(jq_extract_raw "data" pre_credential.output.json)
     headers=$(jq_extract_raw "headers" pre_credential.output.json)
-    curl -H 'Authorization: '"$(echo $headers | jq -r '.Authorization')"'' -X POST $url -d ''"$(echo $data)"'' 1> $TMP/out
+    curl -H 'Authorization: '"$(echo $headers | jq -r '.Authorization')"'' -H 'Content-Type: application/json' -X POST $url -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_credential.output.json
     # if --regexp resolve modify also here
     assert_output --partial '{"c_nonce":"'
@@ -171,7 +171,7 @@ load ./bats_utils
     url=$(jq -r '.post_without_vp.url' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
     body=$(jq -r '.post_without_vp.body' $BATS_FILE_TMPDIR/ver_qr_to_info.output.json)
     echo "$body"
-    curl -X POST $url -d "$body" 1> $TMP/out
+    curl -X POST $url -H 'Content-Type: application/json' -d "$body" 1> $TMP/out
     save_tmp_output rp_response.json
     assert_output --regexp '\{"server_response":\{"result":\{"message":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJhbGciOiJFUzI1NiIsImNydiI6IlAtMjU2Iiwia2lkIjoiZGlkOmR5bmU6c2FuZGJveC5nZW5lcmljaXNzdWVyO.*","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"status":"200"\}\}'
     message=$(jq -r '.server_response.result.message' $BATS_FILE_TMPDIR/rp_response.json)
