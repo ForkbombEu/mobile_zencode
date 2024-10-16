@@ -114,7 +114,7 @@ load ./bats_utils
 @test "Verifier generate qr [card_to_qr.zen]" {
     zexe $VERIFIER/card_to_qr.zen $VERIFIER/card_to_qr.data.json $VERIFIER/card_to_qr.keys.json
     save_tmp_output card_to_qr.output.json
-    assert_output --regexp '^\{"intent-url":".*,"params_json":\{"exp":[0-9]{10},"id":"hn20gz30ync7sng","m":"f","rp":"http://localhost:3002/relying_party","ru":"https://admin\.didroom\.com/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"ru":"https://admin\.didroom\.com/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema","sid":"[A-Z2-9]{5}"\}'
+    assert_output --regexp '^\{"intent-url":".*,"params_json":\{"exp":[0-9]{10},"id":"hn20gz30ync7sng","m":"f","rp":"http://localhost:3002/relying_party","ru":"https://admin\.didroom\.com/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&expand=organization","sid":"[A-Z2-9]{5}","t":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"ru":"https://admin\.didroom\.com/api/collections/templates_public_data/records\?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&expand=organization","sid":"[A-Z2-9]{5}"\}'
 }
 
 @test "Holder scan qr [ver_qr_to_info.zen]" {
@@ -134,7 +134,7 @@ load ./bats_utils
     request_uri=$(jq_extract_raw "ru" ver_qr_to_info_test.data.json)
     curl -X GET $request_uri | jq -c '.' 1> $TMP/out
     save_tmp_output request_uri_response.json
-    assert_output '{"items":[{"schema":{"properties":{"tested":{"title":"Is tested","type":"string"}},"required":["tested"],"type":"object"}}],"page":1,"perPage":30,"totalItems":1,"totalPages":1}'
+    assert_output '{"page":1,"perPage":30,"totalItems":1,"totalPages":1,"items":[{"collectionId":"pnlj0s6ft78lewd","collectionName":"templates_public_data","description":"DO NOT DELETE!!! Used in test in DIDRoom_microservices and mobile_zencode","expand":{"organization":{"avatar":"canstockphoto22402523_arcos_creator_ugyRxVNFPN.com_-1024x1024-1.jpg","collectionId":"aako88kt3br4npt","collectionName":"organizations","created":"2024-06-13 12:27:25.636Z","description":"DO NOT DELETE! Used ot host test_credetial templates for tests on mobile_zencodde and DIDRoom_microservices","id":"2gxhjxdoonw8qjk","name":"Test credential organzation","updated":"2024-06-13 12:28:13.984Z"}},"id":"4tusaoh7g5y6wyw","name":"test_template","organization":"2gxhjxdoonw8qjk","public":false,"schema":{"type":"object","required":["tested"],"properties":{"tested":{"type":"string","title":"Is tested"}}},"type":"issuance"}]}'
     # prepare input for second script
     cat $BATS_FILE_TMPDIR/request_uri_response.json | jq '{"asked_claims": .items[0].schema}' > $TMP/out
     save_tmp_output asked_claims.json
@@ -152,13 +152,16 @@ load ./bats_utils
     rp_verification_endpoint=$(jq -r '.verification_endpoint' $BATS_FILE_TMPDIR/rp_wk_endpoint_response.json)
     jq_insert "rp_verification_endpoint" $rp_verification_endpoint ver_qr_to_info_2_vp.output.json
     verifier_name="didroom microservices ci (DO NOT DELETE!)"
-    cat $BATS_FILE_TMPDIR/ver_qr_to_info_2_vp.output.json
     jq_insert "verifier_name" "$verifier_name" ver_qr_to_info_2_vp.output.json
-    cat $BATS_FILE_TMPDIR/ver_qr_to_info_2_vp.output.json
+    org_avatar=$(jq -r '.items[0].expand.organization.avatar' $BATS_FILE_TMPDIR/request_uri_response.json)
+    jq_insert "org_avatar" $org_avatar ver_qr_to_info_2_vp.output.json
+    org_id=$(jq -r '.items[0].expand.organization.id' $BATS_FILE_TMPDIR/request_uri_response.json)
+    jq_insert "org_id" $org_id ver_qr_to_info_2_vp.output.json
+    jq_insert "pb_url" "https://admin.didroom.com" ver_qr_to_info_2_vp.output.json
     json_join_two asked_claims.json ver_qr_to_info_2_vp.output.json
     zexe $WALLET/ver_qr_to_info.zen ver_qr_to_info_2_vp.output.json
     save_tmp_output ver_qr_to_info.output.json
-    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"rp_name":"DIDroom_Test_RP","verifier_name":"didroom microservices ci \(DO NOT DELETE\!\)"\},"post_without_vp":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"url":"http://localhost:3002/relying_party/verify"\},"vps":\["eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*\]\}$'
+    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"org_avatar_url":"https://admin\.didroom.com/api/files/organizations/2gxhjxdoonw8qjk/canstockphoto22402523_arcos_creator_ugyRxVNFPN.com_-1024x1024-1\.jpg","rp_name":"DIDroom_Test_RP","verifier_name":"didroom microservices ci \(DO NOT DELETE\!\)"\},"post_without_vp":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"url":"http://localhost:3002/relying_party/verify"\},"vps":\["eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*\]\}$'
 }
 
 @test "Holder send the vp" {

@@ -40,14 +40,7 @@ test/didroom_microservices: tmp := $(shell mktemp)
 test/didroom_microservices:
 	git clone https://github.com/forkbombeu/didroom_microservices test/didroom_microservices
 # custom code
-	@for f in test/didroom_microservices/authz_server/custom_code/*.example; do \
-		name=$$(echo $$f | rev | cut -d'.' -f2- | rev); \
-		cp $$f $${name}; \
-	done;
-	@for f in test/didroom_microservices/credential_issuer/custom_code/*.example; do \
-		name=$$(echo $$f | rev | cut -d'.' -f2- | rev); \
-		cp $$f $${name}; \
-	done;
+	@cd test/didroom_microservices; make test_custom_code; cd -
 	@cd test/didroom_microservices; make authorize AUTHZ_FILE=public/authz_server/authorize; cd -
 # verifier
 	@jq '.keys_0.firebase_url="http://localhost:3366/verify-credential"' test/didroom_microservices/relying_party/verify.keys.json > ${tmp} && mv ${tmp} test/didroom_microservices/relying_party/verify.keys.json
