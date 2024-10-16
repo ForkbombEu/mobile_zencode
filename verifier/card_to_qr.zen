@@ -39,12 +39,12 @@ and I move 'result' to 'exp' in 'params_json'
 When I set 'filter' to '(id="' as 'string'
 and I append 'template' to 'filter'
 and I append the string  '")' to 'filter'
-When I set 'fields' to 'schema' as 'string'
+When I set 'expand' to 'organization' as 'string'
 
 When I append the 'pb_api' to 'pb_url'
 and I create url from 'pb_url'
 and I append percent encoding of 'filter' as http request to 'url'
-and I append percent encoding of 'fields' as http request to 'url'
+and I append percent encoding of 'expand' as http request to 'url'
 and I move 'url' to 'ru' in 'params_json'
 
 # sid

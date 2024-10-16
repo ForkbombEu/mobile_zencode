@@ -3,7 +3,7 @@
     "t": "ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281",
     "m": "f",
     "exp": "2012669299",
-    "ru": "https://apiroom.net/api/DIDroom/didroom_verification_request_mock2",
+    "ru": "https://admin.didroom.com/api/collections/templates_public_data/records?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&expand=organization",
     "sid": "abCDe",
     "id": "25gfc77ab67w7ib",
     "credential_array": [

@@ -14,6 +14,10 @@ Given I send object 'r.rp_wk' and send path 'result_path' and manipulate and get
 Given I connect to 'ru' and do get and output into 'claims'
 # info.required_claims
 Given I send object 'claims' and send path 'result_to_schema_path' and manipulate and get and output into 'asked_claims'
+# info.avatar
+Given I send object 'claims' and send path 'result_to_org_avatar_path' and manipulate and get and output into 'org_avatar'
+Given I send object 'claims' and send path 'result_to_org_id_path' and manipulate and get and output into 'org_id'
+Given I send object 'claims' and send path 'result_to_org_collection_id_path' and manipulate and get and output into 'org_collection_id'
 
 Given I send object 'data' and send path 'credential_array_path' and send value 'credential_array' and manipulate and set
 Given I send object 'data' and send path 'rp_wk_path' and send value 'rp_wk' and manipulate and set
@@ -37,6 +41,9 @@ Given I send object 'output' and send path 'name_path' and manipulate and get an
 Given I have a 'string' named 'rp_name'
 and I have a 'string' named 'verifier_name'
 and I have a 'string dictionary' named 'asked_claims'
+and I have a 'string' named 'org_avatar'
+and I have a 'string' named 'org_id'
+and I have a 'string' named 'org_collection_id'
 and I have a 'string' named 'rp_verification_endpoint'
 and I have a 'string array' named 'vps'
 
@@ -45,11 +52,17 @@ Given I have a 'string' named 't'
 and I have a 'string' named 'sid'
 and I have a 'string' named 'm'
 
+When I create the 'string dictionary' named 'avatar'
+and I move 'org_collection_id' to 'collection' in 'avatar'
+and I move 'org_id' to 'id' in 'avatar'
+and I move 'org_avatar' to 'fileName' in 'avatar'
+
 # info
 When I create the 'string dictionary' named 'info'
 and I move 'rp_name' in 'info'
 and I move 'verifier_name' in 'info'
 and I move 'asked_claims' in 'info'
+and I move 'avatar' in 'info'
 
 # prepare vp
 When I create the 'string dictionary' named 'post_without_vp'
