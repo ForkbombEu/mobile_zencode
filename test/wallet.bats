@@ -157,11 +157,12 @@ load ./bats_utils
     jq_insert "org_avatar" $org_avatar ver_qr_to_info_2_vp.output.json
     org_id=$(jq -r '.items[0].expand.organization.id' $BATS_FILE_TMPDIR/request_uri_response.json)
     jq_insert "org_id" $org_id ver_qr_to_info_2_vp.output.json
-    jq_insert "pb_url" "https://admin.didroom.com" ver_qr_to_info_2_vp.output.json
+    org_collection_id=$(jq -r '.items[0].expand.organization.collectionId' $BATS_FILE_TMPDIR/request_uri_response.json)
+    jq_insert "org_collection_id" $org_collection_id ver_qr_to_info_2_vp.output.json
     json_join_two asked_claims.json ver_qr_to_info_2_vp.output.json
     zexe $WALLET/ver_qr_to_info.zen ver_qr_to_info_2_vp.output.json
     save_tmp_output ver_qr_to_info.output.json
-    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"org_avatar_url":"https://admin\.didroom.com/api/files/organizations/2gxhjxdoonw8qjk/canstockphoto22402523_arcos_creator_ugyRxVNFPN.com_-1024x1024-1\.jpg","rp_name":"DIDroom_Test_RP","verifier_name":"didroom microservices ci \(DO NOT DELETE\!\)"\},"post_without_vp":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"url":"http://localhost:3002/relying_party/verify"\},"vps":\["eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*\]\}$'
+    assert_output --regexp '\{"info":\{"asked_claims":\{"properties":\{"tested":\{"title":"Is tested","type":"string"\}\},"required":\["tested"\],"type":"object"\},"avatar":\{"collection":"aako88kt3br4npt","fileName":"canstockphoto22402523_arcos_creator_ugyRxVNFPN\.com_-1024x1024-1\.jpg","id":"2gxhjxdoonw8qjk"\},"rp_name":"DIDroom_Test_RP","verifier_name":"didroom microservices ci \(DO NOT DELETE\!\)"\},"post_without_vp":\{"body":\{"id":"[A-Z2-9]{5}","m":"f","registrationToken":"ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67\-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281"\},"url":"http://localhost:3002/relying_party/verify"\},"vps":\["eyJhbGciOiAiRVMyNTYiLCAidHlwIjogInZjK3NkLWp3dCJ9\..*\]\}$'
 }
 
 @test "Holder send the vp" {

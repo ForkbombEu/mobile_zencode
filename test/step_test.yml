@@ -185,6 +185,9 @@ steps:
           $.info:
             - isDefined: true
             - isObject: true
+          $.info.avatar:
+            - isDefined: true
+            - isObject: true
           $.info.verifier_name:
             - eq: "didroom microservices ci (DO NOT DELETE!)"
 
