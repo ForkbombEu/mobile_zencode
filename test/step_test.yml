@@ -145,7 +145,7 @@ steps:
             - isDefined: true
               isObject: true
           $.params_json.ru:
-            - eq: "https://admin.didroom.com/api/collections/templates_public_data/records?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&fields=schema"
+            - eq: "https://admin.didroom.com/api/collections/templates_public_data/records?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&expand=organization"
           $.qrcode:
             - isDefined: true
               isString: true
