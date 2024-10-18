@@ -84,7 +84,7 @@ When I create http get parameters from 'data' using percent encoding
 and I rename the 'http_get_parameters' to 'url_encoded_data'
 
 Then print the 'authorization_server_endpoint_par'
-and print the 'data'
+and print the 'url_encoded_data'
 and print the 'authorization_endpoint'
 and print the 'client_id'
 
@@ -97,7 +97,7 @@ Then I send object 'par_response' and send path 'r.request_uri_path' and manipul
 Then I send object 'par_response' and send path 'r.expires_in_path' and manipulate and get and output into 'expires_in'
 
 Then I manipulate and delete and output into 'par_response'
-Then I manipulate and delete and output into 'data'
+Then I manipulate and delete and output into 'url_encoded_data'
 Then I manipulate and delete and output into 'authorization_server_endpoint_par'
 
 # at this point visit : ${authorization_endpoint}?request_uri=${request_uri}&client_id=${client_id}
