@@ -34,6 +34,11 @@ and I move 'locations' in 'dict_details'
 
 When I move 'dict_details' in 'authorization_details'
 
+# string to be able to create url encoded data
+When I create the json escaped string of 'authorization_details'
+and I remove 'authorization_details'
+and I rename the 'json escaped string' to 'authorization_details'
+
 #- create Code Verifier (rng in url64) (used in step 7)
 When I create the random object of '256' bits
 When I write the string '' in 'code_verifier'
@@ -75,8 +80,11 @@ and I move 'code_challenge_method' in 'data'
 and I move 'state' in 'data'
 and I move 'authorization_details' in 'data'
 
+When I create http get parameters from 'data' using percent encoding
+and I rename the 'http_get_parameters' to 'url_encoded_data'
+
 Then print the 'authorization_server_endpoint_par'
-and print the 'data'
+and print the 'url_encoded_data'
 and print the 'authorization_endpoint'
 and print the 'client_id'
 
@@ -84,12 +92,12 @@ and print the 'client_id'
 # code verifier will be sent authz server in a later stage
 Then print the 'code_verifier'
 
-Then I connect to 'authorization_server_endpoint_par' and send object 'data' and do post and output into 'par_response' 
+Then I connect to 'authorization_server_endpoint_par' and send object 'url_encoded_data' and send headers 'headers' and do post and output into 'par_response' 
 Then I send object 'par_response' and send path 'r.request_uri_path' and manipulate and get and output into 'request_uri'
 Then I send object 'par_response' and send path 'r.expires_in_path' and manipulate and get and output into 'expires_in'
 
 Then I manipulate and delete and output into 'par_response'
-Then I manipulate and delete and output into 'data'
+Then I manipulate and delete and output into 'url_encoded_data'
 Then I manipulate and delete and output into 'authorization_server_endpoint_par'
 
 # at this point visit : ${authorization_endpoint}?request_uri=${request_uri}&client_id=${client_id}
