@@ -48,8 +48,8 @@ load ./bats_utils
     zexe $WALLET/call_par.zen $WALLET/call_par.keys.json holder_qr_to_well-known.output.json
     save_tmp_output call_par.output.json
     url=$(jq_extract_raw "authorization_server_endpoint_par" call_par.output.json)
-    data=$(jq_extract_raw "data" call_par.output.json)
-    curl -X POST $url -H 'Content-Type: application/json' -d ''"$(echo $data)"'' 1> $TMP/out
+    data=$(jq_extract_raw "url_encoded_data" call_par.output.json)
+    curl -X POST $url -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_par.output.json
     # (Invalid extended regular expression?) assert_output --regexp '{"request_uri":"urn:ietf:params:oauth:request_uri.*","expires_in":600}
     assert_output --partial '{"request_uri":"urn:ietf:params:oauth:request_uri'
@@ -88,7 +88,7 @@ load ./bats_utils
     save_tmp_output pre_token.output.json
     url=$(jq_extract_raw "token_endpoint" pre_token.output.json)
     data=$(jq_extract_raw "data" pre_token.output.json)
-    curl -X POST $url -H 'Content-Type: application/json' -d ''"$(echo $data)"'' 1> $TMP/out
+    curl -X POST $url -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_token.output.json
     # if --regexp resolve modify also here
     assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
