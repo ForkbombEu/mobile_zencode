@@ -45,6 +45,7 @@ load ./bats_utils
 }
 
 @test "Holder post to authz_server/par [call_par.zen]" {
+    jq_insert "redirect_uri" "openid-credential-offer://example.com/" holder_qr_to_well-known.output.json
     zexe $WALLET/call_par.zen $WALLET/call_par.keys.json holder_qr_to_well-known.output.json
     save_tmp_output call_par.output.json
     url=$(jq_extract_raw "authorization_server_endpoint_par" call_par.output.json)
@@ -73,14 +74,14 @@ load ./bats_utils
     curl -sS -D - -X POST $authorize_backend -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(cat $BATS_FILE_TMPDIR/form.data.json)"'' -o /dev/null 1> $TMP/out
     save_tmp_output authorize.output.json
     assert_output --partial 'HTTP/1.1 302'
-    assert_output --partial 'Location: https://didroom.com/?code='
+    assert_output --partial 'Location: openid-credential-offer://example.com/?code='
 }
 
 @test "Holder post to authz_server/token [pre_token.zen]" {
     credential_parameters=$(jq_extract_raw "credential_parameters" holder_qr_to_well-known.output.json)
-    code=$(grep -oP '(?<=Location: https://didroom.com/\?code=)[^\s]+' $BATS_FILE_TMPDIR/authorize.output.json)
+    code=$(grep -oP '(?<=Location: openid-credential-offer://example.com/\?code=)[^\s]+' $BATS_FILE_TMPDIR/authorize.output.json)
     code_verifier=$(jq_extract_raw "code_verifier" call_par.output.json)
-    echo "{\"credential_parameters\": ${credential_parameters}, \"code\": \"$code\", \"code_verifier\": \"$code_verifier\"}" > $TMP/out
+    echo "{\"credential_parameters\": ${credential_parameters}, \"code\": \"$code\", \"code_verifier\": \"$code_verifier\", \"redirect_uri\": \"openid-credential-offer://example.com/\"}" > $TMP/out
     save_tmp_output pre_token.data.json
     zexe $WALLET/pre_token.zen $WALLET/call_token_and_credential.keys.json pre_token.data.json 
     save_tmp_output pre_token.output.json

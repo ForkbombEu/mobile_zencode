@@ -37,6 +37,7 @@ steps:
           response_type: ${{captures.credential_parameters.response_type}}
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
           vct: ${{captures.credential_parameters.vct}}
+        redirect_uri: openid-credential-issuer://example.com/
       captures:
         code_verifier:
           jsonpath: $.code_verifier
@@ -87,7 +88,7 @@ steps:
           header: location
       check:
         headers:
-          Location: /^https:\/\/didroom\.com\/\?code=.*$/
+          Location: /^openid-credential-issuer:\/\/example\.com\/\?code=.*$/
         status: 302
 
   - name: Call token and credential endpoints
@@ -106,8 +107,9 @@ steps:
           response_type: ${{captures.credential_parameters.response_type}}
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
           vct: ${{captures.credential_parameters.vct}}
-        code: "${{captures.code | url_encode | remove_first: 'https%3A%2F%2Fdidroom.com%2F%3Fcode%3D' | url_decode}}"
+        code: "${{captures.code | url_encode | remove_first: 'openid-credential-issuer%3A%2F%2Fexample.com%2F%3Fcode%3D' | url_decode}}"
         code_verifier: ${{captures.code_verifier}}
+        redirect_uri: openid-credential-issuer://example.com/
       captures:
         credential:
           jsonpath: $.result.credential
