@@ -44,7 +44,6 @@ Given I connect to 'authorization_server' and do get and output into 'authorizat
 Given I have a 'string dictionary' named 'credential_issuer_well-known'
 Given I have a 'string' in path 'credential_issuer_well-known.result.credential_endpoint'
 Given I have a 'string' in path 'credential_issuer_well-known.result.credential_issuer'
-Given I have a 'string array' in path 'credential_issuer_well-known.result.credential_configurations_supported'
 
 # authz_server well-known
 Given I have a 'string' in path 'authorization_server_well-known.result.token_endpoint'
@@ -79,6 +78,7 @@ When I create the copy of element '1' from array 'code_challenge_methods_support
 When I move the 'copy' to 'code_challenge_method' inside 'credential_parameters'
 
 When I pickup from path 'credential_issuer_well-known.result'
+When I set 'credential_configurations_supported' to 'credential_configurations_supported' as 'string'
 When I remove the 'credential_configurations_supported' from 'result'
 When I rename the 'result' to 'credential_issuer_information'
 
