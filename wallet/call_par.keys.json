@@ -16,5 +16,8 @@
         }
     },
     "r.request_uri_path": "result.request_uri",
-    "r.expires_in_path": "result.expires_in"
+    "r.expires_in_path": "result.expires_in",
+    "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
 }
