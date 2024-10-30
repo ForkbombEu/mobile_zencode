@@ -1,16 +1,11 @@
 Rule unknown ignore
 
-Given I have a 'string array' named 'credential_configurations_supported'
+Given I have a 'string dictionary' named 'credential_configurations_supported'
 Given I have a 'string' named 'credential_configuration_id'
 Given I have a 'string' named 'authorization_server'
 
-Foreach 'credential' in 'credential_configurations_supported'
-    When I pickup from path 'credential.credential_definition.type'
-    If I verify 'credential_configuration_id' is found in 'type'
-        When I rename the 'credential' to 'credential_requested'
-    Endif
-    When I remove the 'type'
-Endforeach
+When I create copy of object named by 'credential_configuration_id' from dictionary 'credential_configurations_supported'
+and I rename 'copy' to 'credential_requested'
 
 When I copy 'credential_configuration_id' to 'vct'
 When I append the string '/.well-known/oauth-authorization-server' to 'authorization_server'

@@ -26,7 +26,7 @@ help: ## 🛟 Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-7s\033[0m %s\n", $$1, $$2}'
 
 ncr: ## 📦 Install and setup the server
-	@wget -q --show-progress https://github.com/ForkbombEu/ncr/releases/download/v1.39.5/ncr;
+	@wget -q --show-progress https://github.com/ForkbombEu/ncr/releases/download/v1.39.6/ncr;
 	@chmod +x ./ncr
 	@echo "📦 Setup is done!"
 
