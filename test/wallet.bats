@@ -27,7 +27,7 @@ load ./bats_utils
     url=$(jq_extract_raw "authorization_server" read_authz_server.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output authz_server_well-known.output.json
-    assert_output --partial '{"authorization_endpoint":"http://localhost:3000/authz_server/authorize","pushed_authorization_request_endpoint":"http://localhost:3000/authz_server/par","token_endpoint":"http://localhost:3000/authz_server/token","introspection_endpoint":"http://localhost:3000/authz_server/introspection","issuer":"http://localhost:3000/authz_server","jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
+    assert_output --partial '{"authorization_endpoint":"http://localhost:3000/authz_server/authorize","pushed_authorization_request_endpoint":"http://localhost:3000/authz_server/par","token_endpoint":"http://localhost:3000/authz_server/token","introspection_endpoint":"http://localhost:3000/authz_server/introspection","issuer":"http://localhost:3000/authz_server","require_pushed_authorization_requests":true,"jwks":{"keys":[{"kid":"did:dyne:sandbox.genericissuer:'
     assert_output --partial '#es256_public_key","crv":"P-256","alg":"ES256","kty":"EC"}]},"scopes_supported":["{{ as_scopes }}"],"dpop_signing_alg_values_supported":["ES256"],"client_registration_types_supported":["automatic"],"code_challenge_methods_supported":["S256"],"authorization_details_types_supported":["openid_credential"],"grant_types_supported":["authorization_code"],"request_parameter_supported":true,"request_uri_parameter_supported":false,"response_types_supported":["code"],"subject_types_supported":["pairwise"],"token_endpoint_auth_methods_supported":["attest_jwt_client_auth"],"token_endpoint_auth_signing_alg_values_supported":["ES256"],"request_object_signing_alg_values_supported":["ES256"]}'
 }
 
@@ -48,8 +48,8 @@ load ./bats_utils
     zexe $WALLET/call_par.zen $WALLET/call_par.keys.json holder_qr_to_well-known.output.json
     save_tmp_output call_par.output.json
     url=$(jq_extract_raw "authorization_server_endpoint_par" call_par.output.json)
-    data=$(jq_extract_raw "data" call_par.output.json)
-    curl -X POST $url -H 'Content-Type: application/json' -d ''"$(echo $data)"'' 1> $TMP/out
+    data=$(jq_extract_raw "url_encoded_data" call_par.output.json)
+    curl -X POST $url -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_par.output.json
     # (Invalid extended regular expression?) assert_output --regexp '{"request_uri":"urn:ietf:params:oauth:request_uri.*","expires_in":600}
     assert_output --partial '{"request_uri":"urn:ietf:params:oauth:request_uri'
@@ -88,7 +88,7 @@ load ./bats_utils
     save_tmp_output pre_token.output.json
     url=$(jq_extract_raw "token_endpoint" pre_token.output.json)
     data=$(jq_extract_raw "data" pre_token.output.json)
-    curl -X POST $url -H 'Content-Type: application/json' -d ''"$(echo $data)"'' 1> $TMP/out
+    curl -X POST $url -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_token.output.json
     # if --regexp resolve modify also here
     assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
