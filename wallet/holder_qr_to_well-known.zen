@@ -44,7 +44,6 @@ Given I connect to 'authorization_server' and do get and output into 'authorizat
 Given I have a 'string dictionary' named 'credential_issuer_well-known'
 Given I have a 'string' in path 'credential_issuer_well-known.result.credential_endpoint'
 Given I have a 'string' in path 'credential_issuer_well-known.result.credential_issuer'
-Given I have a 'string array' in path 'credential_issuer_well-known.result.credential_configurations_supported'
 
 # authz_server well-known
 Given I have a 'string' in path 'authorization_server_well-known.result.token_endpoint'
