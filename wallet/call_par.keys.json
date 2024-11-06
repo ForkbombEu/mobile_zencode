@@ -12,10 +12,7 @@
     "oauth_flow_parameters": {
         "Authorization": "BEARER ",
         "jwt-body-params": {
-            "state": "xyz",
-            "redirectUris": [
-                "https://didroom.com/"
-            ]
+            "state": "xyz"
         }
     },
     "r.request_uri_path": "result.request_uri",

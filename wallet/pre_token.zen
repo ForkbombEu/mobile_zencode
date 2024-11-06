@@ -2,7 +2,7 @@ scenario 'w3c': DPoP
 Scenario 'http': application/x-www-form-urlencoded
 
 # keys
-Given I have a 'keyring' 
+Given I have a 'keyring'
 Given I have a 'string' named 'client_id'
 Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
 
@@ -11,12 +11,9 @@ Given I have a 'string' named 'grant_type' inside 'credential_parameters'
 Given I have a 'string' named 'token_endpoint' inside 'credential_parameters'
 Given I have a 'string' named 'code_verifier'
 Given I have a 'string' named 'code'
+Given I have a 'string' named 'redirect_uri'
 
-When I pickup from path 'jwt-body-params.redirectUris'
-When I create the copy of element '1' from array 'redirectUris'
-When I rename the 'copy' to 'redirect_uri'
-
-When I create jwk of es256 public key 
+When I create jwk of es256 public key
 
 When I create the random 'ramdom_jti'
 When I write the string '' in 'jti'

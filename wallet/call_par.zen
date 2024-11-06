@@ -5,6 +5,7 @@ Scenario 'w3c' : create JWS
 
 # data
 Given I have a 'string dictionary' named 'credential_parameters'
+Given I have a 'string' named 'redirect_uri'
 
 # keys
 Given I have a 'string dictionary' named 'jwt-body-params' inside 'oauth_flow_parameters'
@@ -61,13 +62,7 @@ When I rename the 'jws signature' to 'client_secret'
 
 
 # - pickup stuff from jwt-body
-When I pickup from path 'jwt-body-params.redirectUris'
 When I pickup from path 'jwt-body-params.state'
-
-# - fix redirectUris
-When I create the copy of element '1' from array 'redirectUris'
-When I rename the 'copy' to 'redirect_uri'
-
 
 # - create par post body
 When I create the 'string dictionary' named 'data'

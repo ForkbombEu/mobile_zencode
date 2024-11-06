@@ -37,6 +37,7 @@ steps:
           response_type: ${{captures.credential_parameters.response_type}}
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
           vct: ${{captures.credential_parameters.vct}}
+        redirect_uri: openid-credential-issuer://example.com/
       captures:
         code_verifier:
           jsonpath: $.code_verifier
@@ -73,23 +74,22 @@ steps:
           $.credential_configuration_id:
             - eq: test_credential
 
-  - name: Simulate authhorize endpoint pt2 (call /ru_to_ac)
+  - name: Simulate authhorize endpoint pt2 (call /auhtorize_backend)
     http:
-      url: http://${{env.as_host}}/ru_to_ac
+      url: http://${{env.as_host}}/authorize_backend
       method: POST
-      json:
-        request_uri: ${{captures.request_uri}}
-        client_id: ${{captures.client_id}}
-        data:
-          id: "123456789"
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      followRedirects: false
+      body:
+        form_input_and_params=%7B%22params%22%3A%7B%22request_uri%22%3A%22${{captures.request_uri}}%22%2C%22client_id%22%3A%22${{captures.client_id}}%22%7D%2C%22data%22%3A%7B%22email%22%3A%22test%40email.com%22%2C%22password%22%3A%22password%22%7D%2C%22custom_code%22%3A%22test_credential%22%7D
       captures:
         code:
-          jsonpath: $.code
+          header: location
       check:
-        status: 200
-        jsonpath:
-          $.code:
-            - isDefined: true
+        headers:
+          Location: /^openid-credential-issuer:\/\/example\.com\/\?code=.*$/
+        status: 302
 
   - name: Call token and credential endpoints
     http:
@@ -107,8 +107,9 @@ steps:
           response_type: ${{captures.credential_parameters.response_type}}
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
           vct: ${{captures.credential_parameters.vct}}
-        code: ${{captures.code}}
+        code: "${{captures.code | url_encode | remove_first: 'openid-credential-issuer%3A%2F%2Fexample.com%2F%3Fcode%3D' | url_decode}}"
         code_verifier: ${{captures.code_verifier}}
+        redirect_uri: openid-credential-issuer://example.com/
       captures:
         credential:
           jsonpath: $.result.credential
