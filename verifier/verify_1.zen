@@ -16,6 +16,7 @@ When I pickup from path 'message.payload.result'
 When I rename 'result' to 'input_to_custom_code'
 When I create flat array of keys in 'input_to_custom_code'
 Foreach 'claim' in 'flat array'
+When done
 If I verify 'claim' is found in 'required'
 When I remove 'claim' from 'required'
 EndIf
