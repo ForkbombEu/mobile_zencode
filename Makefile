@@ -1,6 +1,9 @@
 .DEFAULT_GOAL := up
 .PHONY: help
 
+NCR_VERSION := 1.42.13
+NCR_URL := https://github.com/ForkbombEu/ncr/releases/download/v$(NCR_VERSION)/ncr
+
 hn=$(shell hostname)
 
 # detect the operating system
@@ -26,9 +29,11 @@ help: ## 🛟 Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-7s\033[0m %s\n", $$1, $$2}'
 
 ncr: ## 📦 Install and setup the server
-	@wget -q --show-progress https://github.com/ForkbombEu/ncr/releases/download/v1.39.8/ncr;
-	@chmod +x ./ncr
-	@echo "📦 Setup is done!"
+	@if [ ! -x ./ncr ] || [ "$$(./ncr -v)" != "${NCR_VERSION}" ]; then \
+		wget -q --show-progress $(NCR_URL) -O ncr; \
+		chmod +x ./ncr; \
+	fi
+	@echo "📦 Setup is done! Ncr version ${NCR_VERSION} installed"
 
 up: ncr ## 🚀 Up & run the project
 	./ncr -p 3000 --hostname $(hn) -z wallet

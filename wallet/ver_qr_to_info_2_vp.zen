@@ -31,6 +31,10 @@ and I verify number 'timestamp' is less than 'exp'
 When I use signed selective disclosure 'ssd' only with disclosures 'required'
 and I copy 'ssd' in 'vps'
 EndIf
+EndIf
+EndIf
+EndIf
+EndIf
 When I remove 'payload'
 and I remove 'header'
 and I remove 'iss'
