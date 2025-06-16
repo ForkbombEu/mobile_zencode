@@ -44,6 +44,7 @@ Given I connect to 'authorization_server' and do get and output into 'authorizat
 Given I have a 'string dictionary' named 'credential_issuer_well-known'
 Given I have a 'string' in path 'credential_issuer_well-known.result.credential_endpoint'
 Given I have a 'string' in path 'credential_issuer_well-known.result.credential_issuer'
+Given I have a 'string' in path 'credential_issuer_well-known.result.nonce_endpoint'
 
 # authz_server well-known
 Given I have a 'string' in path 'authorization_server_well-known.result.token_endpoint'
@@ -61,6 +62,7 @@ Given I have a 'string' named 'vct' inside 'zen_2_output'
 When I create the 'string dictionary' named 'credential_parameters'
 When I move the 'credential_issuer' inside 'credential_parameters'
 When I move the 'credential_endpoint' inside 'credential_parameters'
+When I move the 'nonce_endpoint' inside 'credential_parameters'
 When I move the 'format' inside 'credential_parameters'
 When I move the 'vct' inside 'credential_parameters'
 When I move the 'token_endpoint' inside 'credential_parameters'
