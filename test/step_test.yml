@@ -113,16 +113,12 @@ steps:
         redirect_uri: openid-credential-issuer://example.com/
       captures:
         credential:
-          jsonpath: $.result.credential
+          jsonpath: $.result.credentials[0].credential
       check:
         status: 200
         jsonpath:
-          $.result.credential:
+          $.result.credentials[0].credential:
             - isDefined: true
-          $.result.c_nonce:
-            - isDefined: true
-          $.result.c_nonce_expires_in:
-            - eq: 600
 
   - name: verifier produce qr_code
     http:
