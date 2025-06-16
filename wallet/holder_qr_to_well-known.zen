@@ -57,14 +57,14 @@ Given I have a 'string array' in path 'authorization_server_well-known.result.co
 # credential-requested, fromat and vct
 Given I have a 'string dictionary' named 'credential_requested' inside 'zen_2_output'
 Given I have a 'string' named 'format' inside 'zen_2_output'
-Given I have a 'string' named 'vct' inside 'zen_2_output'
+Given I have a 'string' named 'credential_configuration_id' inside 'zen_2_output'
 
 When I create the 'string dictionary' named 'credential_parameters'
 When I move the 'credential_issuer' inside 'credential_parameters'
 When I move the 'credential_endpoint' inside 'credential_parameters'
 When I move the 'nonce_endpoint' inside 'credential_parameters'
 When I move the 'format' inside 'credential_parameters'
-When I move the 'vct' inside 'credential_parameters'
+When I move the 'credential_configuration_id' inside 'credential_parameters'
 When I move the 'token_endpoint' inside 'credential_parameters'
 When I move the 'authorization_endpoint' inside 'credential_parameters'
 

@@ -36,7 +36,7 @@ steps:
           grant_type: ${{captures.credential_parameters.grant_type}}
           response_type: ${{captures.credential_parameters.response_type}}
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
-          vct: ${{captures.credential_parameters.vct}}
+          credential_configuration_id: ${{captures.credential_parameters.credential_configuration_id}}
         redirect_uri: openid-credential-issuer://example.com/
       captures:
         code_verifier:
@@ -104,9 +104,10 @@ steps:
           credential_issuer: ${{captures.credential_parameters.credential_issuer}}
           format: ${{captures.credential_parameters.format}}
           grant_type: ${{captures.credential_parameters.grant_type}}
+          nonce_endpoint: ${{captures.credential_parameters.nonce_endpoint}}
           response_type: ${{captures.credential_parameters.response_type}}
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
-          vct: ${{captures.credential_parameters.vct}}
+          credential_configuration_id: ${{captures.credential_parameters.credential_configuration_id}}
         code: "${{captures.code | url_encode | remove_first: 'openid-credential-issuer%3A%2F%2Fexample.com%2F%3Fcode%3D' | url_decode}}"
         code_verifier: ${{captures.code_verifier}}
         redirect_uri: openid-credential-issuer://example.com/
