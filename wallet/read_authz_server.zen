@@ -7,11 +7,11 @@ Given I have a 'string' named 'authorization_server'
 When I create copy of object named by 'credential_configuration_id' from dictionary 'credential_configurations_supported'
 and I rename 'copy' to 'credential_requested'
 
-When I copy 'credential_configuration_id' to 'vct'
+# When I copy 'credential_configuration_id' to 'vct'
 When I append the string '/.well-known/oauth-authorization-server' to 'authorization_server'
 When I pickup from path 'credential_requested.format'
 
 Then print the 'authorization_server'
 Then print the 'credential_requested'
 Then print the 'format'
-Then print the 'vct'
+Then print the 'credential_configuration_id'
