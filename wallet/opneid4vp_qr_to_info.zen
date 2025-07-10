@@ -17,7 +17,7 @@ Scenario 'es256': sign
 #   * "presentation" the presentation to submit if this credential is choosen
 # * post_url the url where to send the choosen credential under the field "vp_token"
 
-# Prepare 'request': connect to 'request_uri' and do get
+Prepare 'request': connect to 'request_uri' and do get
 
 Prepare: manipulate and set with object 'request', path 'credentials_path', value 'credentials'
 Prepare: manipulate and set with object 'request', path 'did_path', value 'did'
@@ -115,7 +115,7 @@ EndIf
 
 # prepare post
 When I pickup a 'string' from path 'jwt.payload.response_uri'
-When I rename 'post_uri' to 'post_url'
+When I rename 'response_uri' to 'post_url'
 
 # When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.0.id'
 
