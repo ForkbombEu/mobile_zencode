@@ -17,15 +17,17 @@ Scenario 'es256': sign
 #   * "presentation" the presentation to submit if this credential is choosen
 # * post_url the url where to send the choosen credential under the field "vp_token"
 
-Prepare 'request': connect to 'request_uri' and do get
+# Prepare 'request': connect to 'request_uri' and do get
 
 Prepare: manipulate and set with object 'request', path 'credentials_path', value 'credentials'
 Prepare: manipulate and set with object 'request', path 'did_path', value 'did'
+Prepare: manipulate and set with object 'request', path 'rdf_api_path', value 'rdf_api'
 Prepare 'pre_canon_out': execute zencode with script 'pre_canon_zen', data 'request', keys 'pre_canon_keys'
 
 Prepare 'obj': manipulate and get with object 'pre_canon_out', path 'objects_path'
+Prepare 'rdf_apis': manipulate and get with object 'pre_canon_out', path 'rdf_apis_path'
 
-Prepare 'rdfs': connect to 'rdf_api' and do parallel post with object 'obj'
+Prepare 'rdfs': connect to 'rdf_apis' and do parallel post with object 'obj'
 
 # from slangroom
 Given I have a 'string' in path 'request.result'
@@ -109,6 +111,7 @@ When I create the 'string dictionary' named 'presentation'
 When I move 'vp_token' in 'presentation'
 When I move 'presentation' in 'loop_vps_card'
 When I move 'loop_vps_card' in 'vps'
+When I remove 'id'
 EndIf
 If I verify 'exit' is found
 When I remove 'exit'
@@ -127,10 +130,5 @@ When I rename 'response_uri' to 'post_url'
 
 # When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.0.id'
 
-# Then print the 'jwt' as 'string'
-# Then print the 'claims'
 Then print the 'post_url'
 Then print the 'vps'
-# Then print the 'nonce'
-# Then print the 'matching_credentials'
-# Then print the 'rdfs'

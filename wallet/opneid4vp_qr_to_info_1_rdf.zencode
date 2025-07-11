@@ -3,6 +3,7 @@ Scenario 'w3c': jwt
 Given I have a 'string array' in path 'credentials.ldp_vc'
 Given I have a 'jwt' named 'result'
 Given I have a 'string' named 'did'
+Given I have a 'string' named 'rdf_api'
 
 Given I have a 'string dictionary' named 'proof_config'
 Given I have a 'string array' named '@context'
@@ -32,7 +33,9 @@ When I copy 'type' in 'template_document'
 When I copy 'did' to 'holder' in 'template_document'
 
 When I create the 'string array' named 'objects'
+When I create the 'string array' named 'rdf_apis'
 Foreach 'vc' in 'ldp_vc'
+When I copy 'rdf_api' in 'rdf_apis'
 When I create the 'string dictionary' named 'object'
 When I copy 'proof_config' in 'object'
 When I copy 'template_document' to 'document'
@@ -47,3 +50,4 @@ When I move 'object' in 'objects'
 EndForeach
 
 Then print the 'objects'
+Then print the 'rdf_apis'
