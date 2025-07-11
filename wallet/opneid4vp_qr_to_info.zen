@@ -2,7 +2,7 @@
 Scenario 'w3c': jwt
 Scenario 'es256': sign
 
-# data is composed of 
+# data is composed of
 # * request_uri           (from intent)
 # * request_uri_method    (from intent)
 # * client_id             (from intent)
@@ -99,7 +99,13 @@ When I move the 'es256 signature' as 'base58' to 'proofValue'
 When I prepend string 'z' to 'proofValue'
 When I move 'proofValue' in 'proof_config'
 When I move 'proof_config' to 'proof' in 'document'
-When I move 'document' to 'presentation' in 'loop_vps_card'
+When I create the 'string dictionary' named 'vp_token'
+When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.id'
+When I rename 'document' to named by 'id'
+When I move named by 'id' in 'vp_token'
+When I create the 'string dictionary' named 'presentation'
+When I move 'vp_token' in 'presentation'
+When I move 'presentation' in 'loop_vps_card'
 When I move 'loop_vps_card' in 'vps'
 EndIf
 If I verify 'exit' is found
