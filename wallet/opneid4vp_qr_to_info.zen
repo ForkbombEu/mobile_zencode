@@ -17,7 +17,7 @@ Scenario 'es256': sign
 #   * "presentation" the presentation to submit if this credential is choosen
 # * post_url the url where to send the choosen credential under the field "vp_token"
 
-# Prepare 'request': connect to 'request_uri' and do get
+Prepare 'request': connect to 'request_uri' and do get
 
 Prepare: manipulate and set with object 'request', path 'credentials_path', value 'credentials'
 Prepare: manipulate and set with object 'request', path 'did_path', value 'did'
