@@ -49,5 +49,14 @@ When I move 'document' in 'object'
 When I move 'object' in 'objects'
 EndForeach
 
+When I set '1' to '1' as 'float'
+If I verify size of 'rdf_apis' is less than '1'
+When I copy 'rdf_api' in 'rdf_apis'
+When I create the 'string dictionary' named 'object'
+When I move 'proof_config' in 'object'
+When I move 'template_document' to 'document' in 'object'
+When I move 'object' in 'objects'
+Endif
+
 Then print the 'objects'
 Then print the 'rdf_apis'

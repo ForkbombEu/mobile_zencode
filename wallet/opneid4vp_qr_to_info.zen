@@ -1,6 +1,7 @@
 
 Scenario 'w3c': jwt
 Scenario 'es256': sign
+Scenario 'sd_jwt': signed selective disclosure
 
 # data is composed of
 # * request_uri           (from intent)
@@ -65,58 +66,58 @@ When I create the 'string array' named 'vps'
 When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.claims'
 
 ## ldp_vc
-When I set 'ldp_vc' to 'ldp_vc' as 'string'
-If I verify 'format' is equal to 'ldp_vc'
-Foreach value prefix 'loop_' at same position in arrays 'loop_arrays'
-Foreach 'c' in 'claims'
-When I copy 'path' from 'c' to 'path_array'
-When I copy 'loop_matching_credentials' to 'root'
-Foreach 'p' in 'path_array'
-If I verify 'p' is not found in 'root'
-When I set 'exit' to 'exit' as 'string'
-When I exit the foreach
-EndIf
-If I verify 'p' is found in 'root'
-When I copy 'p' from 'root' to 'tmp'
-When I remove 'root'
-When I rename 'tmp' to 'root'
-EndIf
-EndForeach
-When I remove 'root'
-When I remove 'path_array'
-If I verify 'exit' is found
-When I exit the foreach
-EndIf
-EndForeach
-If I verify 'exit' is not found
-When I create the 'string dictionary' named 'loop_vps_card'
-When I copy 'loop_matching_credentials' to 'card' in 'loop_vps_card'
-When I pickup from path 'loop_obj.document'
-When I pickup from path 'loop_obj.proof_config'
-When I remove '@context' from 'proof_config'
-When I pickup from path 'loop_rdfs.result.serialization'
-When I create the es256 signature of 'serialization'
-When I remove 'serialization'
-When I move the 'es256 signature' as 'base58' to 'proofValue'
-When I prepend string 'z' to 'proofValue'
-When I move 'proofValue' in 'proof_config'
-When I move 'proof_config' to 'proof' in 'document'
-When I create the 'string dictionary' named 'vp_token'
-When I create the 'string array' named 'array_of_documents'
-When I move 'document' in 'array_of_documents'
-When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.id'
-When I rename 'array_of_documents' to named by 'id'
-When I move named by 'id' in 'vp_token'
-When I create the 'string dictionary' named 'presentation'
-When I move 'vp_token' in 'presentation'
-When I move 'presentation' in 'loop_vps_card'
-When I move 'loop_vps_card' in 'vps'
-When I remove 'id'
-EndIf
-If I verify 'exit' is found
-When I remove 'exit'
-EndIf
-EndForeach
+When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
+If I verify 'format' is equal to 'ldp_vc_string'
+    Foreach value prefix 'loop_' at same position in arrays 'loop_arrays'
+        Foreach 'c' in 'claims'
+            When I copy 'path' from 'c' to 'path_array'
+            When I copy 'loop_matching_credentials' to 'root'
+            Foreach 'p' in 'path_array'
+                If I verify 'p' is not found in 'root'
+                    When I set 'exit' to 'exit' as 'string'
+                    When I exit the foreach
+                EndIf
+                If I verify 'p' is found in 'root'
+                    When I copy 'p' from 'root' to 'tmp'
+                    When I remove 'root'
+                    When I rename 'tmp' to 'root'
+                EndIf
+            EndForeach
+            When I remove 'root'
+            When I remove 'path_array'
+            If I verify 'exit' is found
+                When I exit the foreach
+            EndIf
+        EndForeach
+        If I verify 'exit' is not found
+            When I create the 'string dictionary' named 'loop_vps_card'
+            When I copy 'loop_matching_credentials' to 'card' in 'loop_vps_card'
+            When I pickup from path 'loop_obj.document'
+            When I pickup from path 'loop_obj.proof_config'
+            When I remove '@context' from 'proof_config'
+            When I pickup from path 'loop_rdfs.result.serialization'
+            When I create the es256 signature of 'serialization'
+            When I remove 'serialization'
+            When I move the 'es256 signature' as 'base58' to 'proofValue'
+            When I prepend string 'z' to 'proofValue'
+            When I move 'proofValue' in 'proof_config'
+            When I move 'proof_config' to 'proof' in 'document'
+            When I create the 'string dictionary' named 'vp_token'
+            When I create the 'string array' named 'array_of_documents'
+            When I move 'document' in 'array_of_documents'
+            When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.id'
+            When I rename 'array_of_documents' to named by 'id'
+            When I move named by 'id' in 'vp_token'
+            When I create the 'string dictionary' named 'presentation'
+            When I move 'vp_token' in 'presentation'
+            When I move 'presentation' in 'loop_vps_card'
+            When I move 'loop_vps_card' in 'vps'
+            When I remove 'id'
+        EndIf
+        If I verify 'exit' is found
+            When I remove 'exit'
+        EndIf
+    EndForeach
 EndIf
 
 When I set 'dc+sd-jwt_string' to 'dc+sd-jwt' as 'string'
