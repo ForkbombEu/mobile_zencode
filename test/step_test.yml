@@ -122,72 +122,63 @@ steps:
 
   - name: verifier produce qr_code
     http:
-      url: http://${{env.verifier_host}}/card_to_qr
+      url: http://${{env.verifier_host}}/generate_authorization_request
       method: POST
       json:
-        template: 4tusaoh7g5y6wyw
-        relying_party: http://${{env.rp_host}}
-        pb_url: https://admin.didroom.com
-        pb_api: /api/collections/templates_public_data/records
-        expires_in: 300
-        registrationToken: ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281
-        m: f
-        id: hn20gz30ync7sng
+        response_mode: direct_post
+        response_type: vp_token
+        url: http://${{env.verifier_host}}/
+        dcql_query:
+          credentials:
+            - id: test_presentation
+              format: dc+sd-jwt
+              meta:
+                vct_values:
+                  - test_credential
+              claims:
+                - path:
+                  - "tested"
       captures:
+        intent_url:
+          jsonpath: $.intent_url
         params_json:
           jsonpath: $.params_json
       check:
         status: 200
         jsonpath:
-          $.params_json:
+          $.intent_url:
             - isDefined: true
-              isObject: true
-          $.params_json.ru:
-            - eq: "https://admin.didroom.com/api/collections/templates_public_data/records?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&expand=organization"
-          $.qrcode:
+              isString: true
+          $.qr_code:
             - isDefined: true
               isString: true
 
   - name: scan qr and produce vp
     http:
-      url: http://${{env.mz_host}}/temp_ver_qr_to_info
+      url: http://${{env.mz_host}}/opneid4vp_qr_to_info
       method: POST
       json:
-        rp: ${{captures.params_json.rp}}
-        t: ${{captures.params_json.t}}
-        m: ${{captures.params_json.m}}
-        exp: ${{captures.params_json.exp}}
-        ru: ${{captures.params_json.ru}}
-        sid: ${{captures.params_json.sid}}
-        id: ${{captures.params_json.id}}
-        credential_array:
-          - ${{captures.credential}}
-        pb_url: https://admin.didroom.com
+        request_uri: ${{captures.params_json.request_uri}}
+        request_uri_method: ${{captures.params_json.request_uri_method}}
+        client_id: ${{captures.params_json.client_id}}
+        credentials:
+          ldp_vc: []
+          "dc+sd-jwt":
+            - ${{captures.credential}}
       captures:
-        post_to_rp:
-          jsonpath: $.post_without_vp
+        post_url:
+          jsonpath: $.post_url
         vps:
           jsonpath: $.vps
       check:
         status: 200
         jsonpath:
-          $.post_without_vp.url:
+          $.post_url:
             - isDefined: true
             - isString: true
-          $.post_without_vp.body:
-            - isDefined: true
-            - isObject: true
           $.vps:
             - isDefined: true
             - isArray: true
-          $.info:
-            - isDefined: true
-            - isObject: true
-          $.info.avatar:
-            - isDefined: true
-            - isObject: true
-          $.info.verifier_name:
-            - eq: "didroom microservices ci (DO NOT DELETE!)"
 
   - name: send vp to rp
     http:
