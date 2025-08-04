@@ -43,10 +43,13 @@ Given I have a 'string array' named 'obj'
 Given I have a 'string' named 'client_id'
 Given I rename 'client_id' to 'data_client_id'
 Given I have a 'string array' in path 'credentials.ldp_vc'
+Given I have a 'string array' in path 'credentials.dc+sd-jwt'
+Given I rename 'dc+sd-jwt' to 'dc+sd-jwt_as_string'
 Given I have a 'signed selective disclosure array' in path 'credentials.dc+sd-jwt'
 
 # keys
 Given I have a 'string array' named 'loop_arrays'
+Given I have a 'string array' named 'loop_arrays_dc+sd-jwt'
 Given I have a 'keyring'
 
 # verify request
@@ -59,7 +62,7 @@ When I verify 'data_client_id' is equal to 'client_id'
 When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.format'
 When I rename object named by 'format' to 'matching_credentials'
 When I create size of 'matching_credentials'
-When I set '1' to '1' as 'float'
+# When I set '1' to '1' as 'float'
 
 # select the credentials with matching claims
 When I create the 'string array' named 'vps'
@@ -68,7 +71,10 @@ When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.claims'
 ## ldp_vc
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
 If I verify 'format' is equal to 'ldp_vc_string'
+    When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.type_values'
     Foreach value prefix 'loop_' at same position in arrays 'loop_arrays'
+        # TODO: check type
+        # TODO: check credential is not expired
         Foreach 'c' in 'claims'
             When I copy 'path' from 'c' to 'path_array'
             When I copy 'loop_matching_credentials' to 'root'
@@ -120,9 +126,98 @@ If I verify 'format' is equal to 'ldp_vc_string'
     EndForeach
 EndIf
 
+## dc+sd-jwt
+When I pickup from path 'jwt.payload.nonce'
+When I set 'true' to 'true' as 'string'
 When I set 'dc+sd-jwt_string' to 'dc+sd-jwt' as 'string'
 If I verify 'format' is equal to 'dc+sd-jwt_string'
-When done
+    When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.meta.vct_values.1'
+    When I rename '1' to 'vct_value'
+    Foreach value prefix 'loop_' at same position in arrays 'loop_arrays_dc+sd-jwt'
+        When I pickup from path 'loop_matching_credentials.jwt.payload.type'
+        If I verify 'valid_credential' is found
+            When I remove 'valid_credential'
+        EndIf
+        When I set 'valid_credential' to 'true' as 'string'
+        If I verify 'type' is not equal to 'vct_value'
+            When I remove 'valid_credential'
+            When I set 'valid_credential' to 'false' as 'string'
+        EndIf
+        If I verify 'type' is equal to 'vct_value'
+            Foreach 'c' in 'claims'
+                If I verify 'claims_matched' is found
+                    When I remove 'claims_matched'
+                EndIf
+                When I set 'claims_matched' to 'false' as 'string'
+                When I copy 'path' from 'c' to 'path_array'
+                When I copy '1' from 'path_array' to 'first_element_in_path'
+                When I remove 'first_element_in_path' from 'path_array'
+                When I pickup from path 'loop_matching_credentials.disclosures'
+                Foreach 'd' in 'disclosures'
+                    When I copy '2' from 'd' to 'd_name'
+                    If I verify 'first_element_in_path' is equal to 'd_name'
+                        When I copy '3' from 'd' to 'root'
+                        Foreach 'p' in 'path_array'
+                            If I verify 'p' is not found in 'root'
+                                When I set 'exit' to 'exit' as 'string'
+                                When I exit the foreach
+                            EndIf
+                            If I verify 'p' is found in 'root'
+                                When I copy 'p' from 'root' to 'tmp'
+                                When I remove 'root'
+                                When I rename 'tmp' to 'root'
+                            EndIf
+                        EndForeach
+                        When I remove 'root'
+                        If I verify 'exit' is not found
+                            When I remove 'claims_matched'
+                            When I set 'claims_matched' to 'true' as 'string'
+                            When I exit the foreach
+                        EndIf
+                        When I remove 'exit'
+                    EndIf
+                EndForeach
+                When I remove 'disclosures'
+                When I remove 'first_element_in_path'
+                When I remove 'path_array'
+                If I verify 'claims_matched' is not equal to 'true'
+                    When I remove 'valid_credential'
+                    When I set 'valid_credential' to 'false' as 'string'
+                EndIf
+            Endforeach
+        EndIf
+        When I remove 'type'
+        If I verify 'valid_credential' is equal to 'true'
+            When I create the 'string dictionary' named 'loop_vps_card'
+            When I copy 'loop_dc+sd-jwt_as_string' to 'card' in 'loop_vps_card'
+            When I create jws header for p256 signature
+            When I set 'typ' to 'kb+jwt' as 'string'
+            When I move 'typ' in 'jws_header'
+
+            When I create the 'string dictionary' named 'jws payload'
+            When I copy 'nonce' in 'jws payload'
+            When I create the timestamp
+            When I move 'timestamp' to 'iat' in 'jws payload'
+            When I create the hash of 'loop_dc+sd-jwt_as_string'
+            When I move 'hash' as 'hex' to 'sd_hash'
+            When I move 'sd_hash' in 'jws payload'
+
+            When I create jws signature of header 'jws header' and payload 'jws payload'
+            When I append 'jws_signature' to 'loop_dc+sd-jwt_as_string'
+
+            When I create the 'string dictionary' named 'vp_token'
+            When I create the 'string array' named 'array_sd-jwt-kb'
+            When I copy 'loop_dc+sd-jwt_as_string' in 'array_sd-jwt-kb'
+            When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.id'
+            When I rename 'array_sd-jwt-kb' to named by 'id'
+            When I move named by 'id' in 'vp_token'
+            When I create the 'string dictionary' named 'presentation'
+            When I move 'vp_token' in 'presentation'
+            When I move 'presentation' in 'loop_vps_card'
+            When I move 'loop_vps_card' in 'vps'
+            When I remove 'id'
+        EndIf
+    EndForeach
 EndIf
 
 # prepare post

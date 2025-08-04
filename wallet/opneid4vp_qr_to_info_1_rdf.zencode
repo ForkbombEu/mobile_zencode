@@ -1,7 +1,7 @@
 Scenario 'w3c': jwt
 
 Given I have a 'string array' in path 'credentials.ldp_vc'
-Given I have a 'jwt' named 'result'
+Given I have a 'json web token' named 'result'
 Given I have a 'string' named 'did'
 Given I have a 'string' named 'rdf_api'
 
