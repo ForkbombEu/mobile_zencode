@@ -373,3 +373,56 @@ steps:
           $.qr_code:
             - isDefined: true
               isString: true
+
+  - name: scan qr and produce vp (LDPVC flow)
+    http:
+      url: http://${{env.mz_host}}/opneid4vp_qr_to_info
+      method: POST
+      json:
+        request_uri: ${{captures.params_json.request_uri}}
+        request_uri_method: ${{captures.params_json.request_uri_method}}
+        client_id: ${{captures.params_json.client_id}}
+        credentials:
+          ldp_vc:
+            - ${{captures.credential}}
+          "dc+sd-jwt": []
+      captures:
+        post_url:
+          jsonpath: $.post_url
+        vps:
+          jsonpath: $.vps
+      check:
+        status: 200
+        jsonpath:
+          $.post_url:
+            - isDefined: true
+            - isString: true
+          $.vps:
+            - isDefined: true
+            - isArray: true
+
+  - name: send vp to rp (LDPVC flow)
+    http:
+      url: ${{captures.post_url}}
+      method: POST
+      json:
+        vp_token:
+          test_presentation_ldp_vc:
+            - ${{captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0}}
+      check:
+        status: 200
+        jsonpath:
+          $.output[0]:
+            - eq: OK
+
+  - name: verifier checks transaction id (LDPVC flow)
+    http:
+      url: http://${{env.verifier_host}}/${{captures.transaction_id}}
+      method: GET
+      check:
+        status: 200
+        jsonpath:
+          $.[0].path[0]:
+            - eq: tested
+          $.[0].value:
+            - eq: "true"
