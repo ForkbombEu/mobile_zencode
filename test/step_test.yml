@@ -203,8 +203,10 @@ steps:
       check:
         status: 200
         jsonpath:
-          $.[0]:
-            - eq: ${{captures.vps.0}}
+          $.[0].path[0]:
+            - eq: tested
+          $.[0].value:
+            - eq: true
 
   - name: holder_qr_to_well-known (LDPVC flow)
     http:
@@ -326,3 +328,48 @@ steps:
         jsonpath:
           $.result.credentials[0].credential:
             - isDefined: true
+
+  - name: verifier produce qr_code (LDPVC flow)
+    http:
+      url: http://${{env.verifier_host}}/generate_authorization_request
+      method: POST
+      json:
+        response_mode: direct_post
+        response_type: vp_token
+        url: http://${{env.verifier_host}}/
+        dcql_query:
+          credentials:
+            - id: test_presentation_ldp_vc
+              format: ldp_vc
+              meta:
+                type_values:
+                  - UniversityDegreeCredential
+              claims:
+                - path:
+                  - credentialSubject
+                  - given_name
+                - path:
+                  - credentialSubject
+                  - family_name
+                - path:
+                  - credentialSubject
+                  - degree
+                - path:
+                  - credentialSubject
+                  - gpa
+      captures:
+        intent_url:
+          jsonpath: $.intent_url
+        params_json:
+          jsonpath: $.params_json
+        transaction_id:
+          jsonpath: $.transaction_id
+      check:
+        status: 200
+        jsonpath:
+          $.intent_url:
+            - isDefined: true
+              isString: true
+          $.qr_code:
+            - isDefined: true
+              isString: true
