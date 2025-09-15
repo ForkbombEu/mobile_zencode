@@ -206,7 +206,7 @@ steps:
           $.[0].path[0]:
             - eq: tested
           $.[0].value:
-            - eq: true
+            - eq: "true"
 
   - name: holder_qr_to_well-known (LDPVC flow)
     http:
