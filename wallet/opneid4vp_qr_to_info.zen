@@ -1,3 +1,4 @@
+Rule unknown ignore
 
 Scenario 'w3c': jwt
 Scenario 'es256': sign
