@@ -71,7 +71,7 @@ When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.claims'
 ## ldp_vc
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
 If I verify 'format' is equal to 'ldp_vc_string'
-    When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.type_values'
+    When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.meta.type_values'
     Foreach value prefix 'loop_' at same position in arrays 'loop_arrays'
         # TODO: check type
         # TODO: check credential is not expired
