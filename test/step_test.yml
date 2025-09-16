@@ -384,7 +384,25 @@ steps:
         client_id: ${{captures.params_json.client_id}}
         credentials:
           ldp_vc:
-            - ${{captures.credential}}
+            - "@context":
+              - ${{captures.credential."@context".0}}
+              - ${{captures.credential."@context".1}}
+              credentialSubject:
+                degree: ${{captures.credential.credentialSubject.degree}}
+                family_name: ${{captures.credential.credentialSubject.family_name}}
+                given_name: ${{captures.credential.credentialSubject.given_name}}
+              issuer: ${{captures.credential.issuer}}
+              proof:
+                created: ${{captures.credential.proof.created}}
+                cryptosuite: ${{captures.credential.proof.cryptosuite}}
+                proofPurpose: ${{captures.credential.proof.proofPurpose}}
+                proofValue: ${{captures.credential.proof.proofValue}}
+                type: ${{captures.credential.proof.type}}
+                verificationMethod: ${{captures.credential.proof.verificationMethod}}
+              type:
+              - ${{captures.credential.type.0}}
+              - ${{captures.credential.type.1}}
+              validUntil: ${{captures.credential.validUntil}}
           "dc+sd-jwt": []
       captures:
         post_url:
