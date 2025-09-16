@@ -2,11 +2,10 @@ version: '1.1'
 name: Status Check
 env:
   mz_host: localhost:3003
-  verifier_host: localhost:3004
+  verifier_host: localhost:3002/verifier
   path_to_wallet: ..
   as_host: localhost:3000/authz_server
   ci_host: localhost:3001/credential_issuer
-  rp_host: localhost:3002/relying_party
 tests:
   wallet_api:
     $ref: test/step_test.yml

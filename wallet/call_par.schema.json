@@ -31,7 +31,7 @@
         "token_endpoint": {
           "type": "string"
         },
-        "vct": {
+        "credential_configuration_id": {
           "type": "string"
         }
       },
@@ -45,7 +45,7 @@
         "grant_type",
         "response_type",
         "token_endpoint",
-        "vct"
+        "credential_configuration_id"
       ]
     }
   },

@@ -1,0 +1,14 @@
+{
+    "proof_config": {
+        "type": "DataIntegrityProof",
+        "cryptosuite": "ecdsa-rdfc-2019",
+        "proofPurpose": "authentication"
+    },
+    "@context": [
+        "https://www.w3.org/ns/credentials/v2",
+        "https://w3id.org/security/data-integrity/v2"
+    ],
+    "type": [
+        "VerifiablePresentation"
+    ]
+}

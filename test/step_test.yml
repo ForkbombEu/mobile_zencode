@@ -36,7 +36,7 @@ steps:
           grant_type: ${{captures.credential_parameters.grant_type}}
           response_type: ${{captures.credential_parameters.response_type}}
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
-          vct: ${{captures.credential_parameters.vct}}
+          credential_configuration_id: ${{captures.credential_parameters.credential_configuration_id}}
         redirect_uri: openid-credential-issuer://example.com/
       captures:
         code_verifier:
@@ -104,136 +104,389 @@ steps:
           credential_issuer: ${{captures.credential_parameters.credential_issuer}}
           format: ${{captures.credential_parameters.format}}
           grant_type: ${{captures.credential_parameters.grant_type}}
+          nonce_endpoint: ${{captures.credential_parameters.nonce_endpoint}}
           response_type: ${{captures.credential_parameters.response_type}}
           token_endpoint: ${{captures.credential_parameters.token_endpoint}}
-          vct: ${{captures.credential_parameters.vct}}
+          credential_configuration_id: ${{captures.credential_parameters.credential_configuration_id}}
         code: "${{captures.code | url_encode | remove_first: 'openid-credential-issuer%3A%2F%2Fexample.com%2F%3Fcode%3D' | url_decode}}"
         code_verifier: ${{captures.code_verifier}}
         redirect_uri: openid-credential-issuer://example.com/
       captures:
         credential:
-          jsonpath: $.result.credential
+          jsonpath: $.result.credentials[0].credential
       check:
         status: 200
         jsonpath:
-          $.result.credential:
+          $.result.credentials[0].credential:
             - isDefined: true
-          $.result.c_nonce:
-            - isDefined: true
-          $.result.c_nonce_expires_in:
-            - eq: 600
 
   - name: verifier produce qr_code
     http:
-      url: http://${{env.verifier_host}}/card_to_qr
+      url: http://${{env.verifier_host}}/generate_authorization_request
       method: POST
       json:
-        template: 4tusaoh7g5y6wyw
-        relying_party: http://${{env.rp_host}}
-        pb_url: https://admin.didroom.com
-        pb_api: /api/collections/templates_public_data/records
-        expires_in: 300
-        registrationToken: ehUYkktwQVWy_v9MXeTaf9:APA91bG28isX0dJJEzW6K5qA8N67-V7bZjYhEXYsWNyL_7xiJsBVTuKgEalgK_ajlK_6u2hY3tFlq0e649F4lhb909VHVfHGKrWFVb0uBdY61RmnLcxhwkltm2yyxxdXje1qWCavb281
-        m: f
-        id: hn20gz30ync7sng
+        response_mode: direct_post
+        response_type: vp_token
+        url: http://${{env.verifier_host}}/
+        dcql_query:
+          credentials:
+            - id: test_presentation
+              format: dc+sd-jwt
+              meta:
+                vct_values:
+                  - test_credential
+              claims:
+                - path:
+                  - "tested"
       captures:
+        intent_url:
+          jsonpath: $.intent_url
         params_json:
           jsonpath: $.params_json
+        transaction_id:
+          jsonpath: $.transaction_id
       check:
         status: 200
         jsonpath:
-          $.params_json:
+          $.intent_url:
             - isDefined: true
-              isObject: true
-          $.params_json.ru:
-            - eq: "https://admin.didroom.com/api/collections/templates_public_data/records?filter=%28id%3D%224tusaoh7g5y6wyw%22%29&expand=organization"
-          $.qrcode:
+              isString: true
+          $.qr_code:
             - isDefined: true
               isString: true
 
   - name: scan qr and produce vp
     http:
-      url: http://${{env.mz_host}}/temp_ver_qr_to_info
+      url: http://${{env.mz_host}}/opneid4vp_qr_to_info
       method: POST
       json:
-        rp: ${{captures.params_json.rp}}
-        t: ${{captures.params_json.t}}
-        m: ${{captures.params_json.m}}
-        exp: ${{captures.params_json.exp}}
-        ru: ${{captures.params_json.ru}}
-        sid: ${{captures.params_json.sid}}
-        id: ${{captures.params_json.id}}
-        credential_array:
-          - ${{captures.credential}}
-        pb_url: https://admin.didroom.com
+        request_uri: ${{captures.params_json.request_uri}}
+        request_uri_method: ${{captures.params_json.request_uri_method}}
+        client_id: ${{captures.params_json.client_id}}
+        credentials:
+          ldp_vc: []
+          "dc+sd-jwt":
+            - ${{captures.credential}}
       captures:
-        post_to_rp:
-          jsonpath: $.post_without_vp
+        post_url:
+          jsonpath: $.post_url
         vps:
           jsonpath: $.vps
       check:
         status: 200
         jsonpath:
-          $.post_without_vp.url:
+          $.post_url:
             - isDefined: true
             - isString: true
-          $.post_without_vp.body:
-            - isDefined: true
-            - isObject: true
           $.vps:
             - isDefined: true
             - isArray: true
-          $.info:
-            - isDefined: true
-            - isObject: true
-          $.info.avatar:
-            - isDefined: true
-            - isObject: true
-          $.info.verifier_name:
-            - eq: "didroom microservices ci (DO NOT DELETE!)"
 
   - name: send vp to rp
     http:
-      url: ${{captures.post_to_rp.url}}
+      url: ${{captures.post_url}}
       method: POST
       json:
-        id: ${{captures.post_to_rp.body.id}}
-        m: ${{captures.post_to_rp.body.m}}
-        registrationToken: ${{captures.post_to_rp.body.registrationToken}}
-        vp: ${{captures.vps.0}}
-      captures:
-        message:
-          jsonpath: $.server_response.result.message
+        vp_token:
+          test_presentation:
+            - ${{captures.vps.0.presentation.vp_token.test_presentation.0}}
       check:
         status: 200
         jsonpath:
-          $.server_response.result.message:
+          $.output[0]:
+            - eq: OK
+
+  - name: verifier checks transaction id
+    http:
+      url: http://${{env.verifier_host}}/${{captures.transaction_id}}
+      method: GET
+      check:
+        status: 200
+        jsonpath:
+          $.[0].path[0]:
+            - eq: tested
+          $.[0].value:
+            - eq: "true"
+
+  - name: holder_qr_to_well-known (LDPVC flow)
+    http:
+      url: http://${{env.mz_host}}/holder_qr_to_well-known
+      method: POST
+      json:
+        "!external-qr-code-content":
+          credential_configuration_ids:
+            - UniversityDegree_LDP_VC
+          credential_issuer: http://${{env.ci_host}}
+      captures:
+        credential_parameters:
+          jsonpath: $.credential_parameters
+      check:
+        status: 200
+        jsonpath:
+          $.credential_parameters:
+            - isDefined: true
+              isObject: true
+          $.credential_requested:
+            - isDefined: true
+              isObject: true
+
+  - name: Call par endpoint (LDPVC flow)
+    http:
+      url: http://${{env.mz_host}}/call_par
+      method: POST
+      json:
+        credential_parameters:
+          authorization_endpoint: ${{captures.credential_parameters.authorization_endpoint}}
+          authorization_server_endpoint_par: ${{captures.credential_parameters.authorization_server_endpoint_par}}
+          code_challenge_method: ${{captures.credential_parameters.code_challenge_method}}
+          credential_endpoint: ${{captures.credential_parameters.credential_endpoint}}
+          credential_issuer: ${{captures.credential_parameters.credential_issuer}}
+          format: ${{captures.credential_parameters.format}}
+          grant_type: ${{captures.credential_parameters.grant_type}}
+          response_type: ${{captures.credential_parameters.response_type}}
+          token_endpoint: ${{captures.credential_parameters.token_endpoint}}
+          credential_configuration_id: ${{captures.credential_parameters.credential_configuration_id}}
+        redirect_uri: openid-credential-issuer://example.com/
+      captures:
+        code_verifier:
+          jsonpath: $.code_verifier
+        request_uri:
+          jsonpath: $.request_uri
+        client_id:
+          jsonpath: $.client_id
+        authorization_endpoint:
+          jsonpath: $.authorization_endpoint
+      check:
+        status: 200
+        jsonpath:
+          $.code_verifier:
+            - isDefined: true
+          $.request_uri:
+            - isDefined: true
+          $.client_id:
+            - isDefined: true
+          $.authorization_endpoint:
+            - eq: http://${{env.as_host}}/authorize
+          $.expires_in:
+            - eq: 600
+
+  - name: Simulate authhorize endpoint pt1 (call /ru_to_toc) (LDPVC flow)
+    http:
+      url: http://${{env.as_host}}/ru_to_toc
+      method: POST
+      json:
+        request_uri: ${{captures.request_uri}}
+        client_id: ${{captures.client_id}}
+      check:
+        status: 200
+        jsonpath:
+          $.credential_configuration_id:
+            - eq: UniversityDegree_LDP_VC
+
+  - name: Simulate authhorize endpoint pt2 (call /auhtorize_backend) (LDPVC flow)
+    http:
+      url: http://${{env.as_host}}/authorize_backend
+      method: POST
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      followRedirects: false
+      body:
+        form_input_and_params=%7B%22params%22%3A%7B%22request_uri%22%3A%22${{captures.request_uri}}%22%2C%22client_id%22%3A%22${{captures.client_id}}%22%7D%2C%22data%22%3A%7B%22email%22%3A%22test%40email.com%22%2C%22password%22%3A%22password%22%7D%2C%22custom_code%22%3A%22test_credential%22%7D
+      captures:
+        code:
+          header: location
+      check:
+        headers:
+          Location: /^openid-credential-issuer:\/\/example\.com\/\?code=.*$/
+        status: 302
+
+  - name: Call token and credential endpoints (LDPVC flow)
+    http:
+      url: http://${{env.mz_host}}/call_token_and_credential
+      method: POST
+      json:
+        credential_parameters:
+          authorization_endpoint: ${{captures.credential_parameters.authorization_endpoint}}
+          authorization_server_endpoint_par: ${{captures.credential_parameters.authorization_server_endpoint_par}}
+          code_challenge_method: ${{captures.credential_parameters.code_challenge_method}}
+          credential_endpoint: ${{captures.credential_parameters.credential_endpoint}}
+          credential_issuer: ${{captures.credential_parameters.credential_issuer}}
+          format: ${{captures.credential_parameters.format}}
+          grant_type: ${{captures.credential_parameters.grant_type}}
+          nonce_endpoint: ${{captures.credential_parameters.nonce_endpoint}}
+          response_type: ${{captures.credential_parameters.response_type}}
+          token_endpoint: ${{captures.credential_parameters.token_endpoint}}
+          credential_configuration_id: ${{captures.credential_parameters.credential_configuration_id}}
+        code: "${{captures.code | url_encode | remove_first: 'openid-credential-issuer%3A%2F%2Fexample.com%2F%3Fcode%3D' | url_decode}}"
+        code_verifier: ${{captures.code_verifier}}
+        redirect_uri: openid-credential-issuer://example.com/
+      captures:
+        credential:
+          jsonpath: $.result.credentials[0].credential
+      check:
+        status: 200
+        jsonpath:
+          $.result.credentials[0].credential:
+            - isDefined: true
+
+  - name: verifier produce qr_code (LDPVC flow)
+    http:
+      url: http://${{env.verifier_host}}/generate_authorization_request
+      method: POST
+      json:
+        response_mode: direct_post
+        response_type: vp_token
+        url: http://${{env.verifier_host}}/
+        dcql_query:
+          credentials:
+            - id: test_presentation_ldp_vc
+              format: ldp_vc
+              meta:
+                type_values:
+                  - - UniversityDegreeCredential
+              claims:
+                - path:
+                  - credentialSubject
+                  - given_name
+                - path:
+                  - credentialSubject
+                  - family_name
+                - path:
+                  - credentialSubject
+                  - degree
+      captures:
+        intent_url:
+          jsonpath: $.intent_url
+        params_json:
+          jsonpath: $.params_json
+        transaction_id:
+          jsonpath: $.transaction_id
+      check:
+        status: 200
+        jsonpath:
+          $.intent_url:
+            - isDefined: true
+              isString: true
+          $.qr_code:
+            - isDefined: true
+              isString: true
+
+  - name: scan qr and produce vp (LDPVC flow)
+    http:
+      url: http://${{env.mz_host}}/opneid4vp_qr_to_info
+      method: POST
+      json:
+        request_uri: ${{captures.params_json.request_uri}}
+        request_uri_method: ${{captures.params_json.request_uri_method}}
+        client_id: ${{captures.params_json.client_id}}
+        credentials:
+          ldp_vc:
+            - "@context":
+              - ${{captures.credential.@context.0}}
+              - ${{captures.credential.@context.1}}
+              credentialSubject:
+                degree: ${{captures.credential.credentialSubject.degree}}
+                family_name: ${{captures.credential.credentialSubject.family_name}}
+                given_name: ${{captures.credential.credentialSubject.given_name}}
+              issuer: ${{captures.credential.issuer}}
+              proof:
+                created: ${{captures.credential.proof.created}}
+                cryptosuite: ${{captures.credential.proof.cryptosuite}}
+                proofPurpose: ${{captures.credential.proof.proofPurpose}}
+                proofValue: ${{captures.credential.proof.proofValue}}
+                type: ${{captures.credential.proof.type}}
+                verificationMethod: ${{captures.credential.proof.verificationMethod}}
+              type:
+              - ${{captures.credential.type.0}}
+              - ${{captures.credential.type.1}}
+              validUntil: ${{captures.credential.validUntil}}
+          "dc+sd-jwt": []
+      captures:
+        post_url:
+          jsonpath: $.post_url
+        vps:
+          jsonpath: $.vps
+      check:
+        status: 200
+        jsonpath:
+          $.post_url:
             - isDefined: true
             - isString: true
+          $.vps:
+            - isDefined: true
+            - isArray: true
 
-  - name: verifier extract id from rp response
+  - name: send vp to rp (LDPVC flow)
     http:
-      url: http://${{env.verifier_host}}/jws_to_id
+      url: ${{captures.post_url}}
       method: POST
       json:
-        message: ${{captures.message}}
+        vp_token:
+          test_presentation_ldp_vc:
+            - "@context":
+              - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.@context.0 }}
+              - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.@context.1 }}
+              holder: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.holder }}
+              id: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.id }}
+              proof:
+                challenge: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.challenge }}
+                created: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.created }}
+                cryptosuite: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.cryptosuite }}
+                domain: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.domain }}
+                proofPurpose: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.proofPurpose }}
+                proofValue: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.proofValue }}
+                type: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.type }}
+                verificationMethod: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.verificationMethod }}
+              type:
+              - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.type.0 }}
+              verifiableCredential:
+              - "@context":
+                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.@context.0 }}
+                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.@context.1 }}
+                credentialSubject:
+                  degree: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.degree }}
+                  family_name: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.family_name }}
+                  given_name: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.given_name }}
+                issuer: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.issuer }}
+                proof:
+                  created: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.created }}
+                  cryptosuite: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.cryptosuite }}
+                  proofPurpose: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.proofPurpose }}
+                  proofValue: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.proofValue }}
+                  type: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.type }}
+                  verificationMethod: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.verificationMethod }}
+                type:
+                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.type.0 }}
+                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.type.1 }}
+                validUntil: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.validUntil }}
       check:
         status: 200
         jsonpath:
-          $.id:
-            - eq: ${{captures.params_json.sid}}
+          $.output[0]:
+            - eq: OK
 
-  - name: verifier checks rp response
+  - name: verifier checks transaction id (LDPVC flow)
     http:
-      url: http://${{env.verifier_host}}/verify
-      method: POST
-      json:
-        message: ${{captures.message}}
-        claims_url: ${{captures.params_json.ru}}
+      url: http://${{env.verifier_host}}/${{captures.transaction_id}}
+      method: GET
       check:
         status: 200
         jsonpath:
-          $.result:
-            - eq: Signature_verification_successful
-          $.input_to_custom_code:
-            - eq: { "tested" : "true" }
+          $.[0].path[0]:
+            - eq: credentialSubject
+          $.[0].path[1]:
+            - eq: given_name
+          $.[0].value:
+            - eq: Mario
+          $.[1].path[0]:
+            - eq: credentialSubject
+          $.[1].path[1]:
+            - eq: family_name
+          $.[1].value:
+            - eq: Rossi
+          $.[2].path[0]:
+            - eq: credentialSubject
+          $.[2].path[1]:
+            - eq: degree
+          $.[2].value:
+            - eq: Math

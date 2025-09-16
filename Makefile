@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := up
 .PHONY: help
 
-NCR_VERSION := 1.42.13
+NCR_VERSION := 1.43.1
 NCR_URL := https://github.com/ForkbombEu/ncr/releases/download/v$(NCR_VERSION)/ncr
 
 hn=$(shell hostname)
@@ -57,9 +57,8 @@ test: api-test unit-test
 
 unit-test: ncr test/didroom_microservices tests-well-known
 	$(MAKE) -C test/didroom_microservices up --no-print-directory
-	$(MAKE) -C test/didroom_microservices push_server_up --no-print-directory
 	@./ncr -p 3003 -z ./wallet & echo $$! > .test.mobile_zencode.pid
-	@for port in 3000 3001 3002 3003 3366; do \
+	@for port in 3000 3001 3002 3003; do \
 		timeout --foreground 30s bash -c 'port=$$1; until nc -z localhost $$port; do \
 			echo "Port $$port is not yet reachable, waiting..."; \
 			sleep 1; \
@@ -72,8 +71,7 @@ unit-test: ncr test/didroom_microservices tests-well-known
 	@./test/bats/bin/bats test/wallet.bats
 	@kill `cat test/didroom_microservices/.credential_issuer.pid` && rm test/didroom_microservices/.credential_issuer.pid
 	@kill `cat test/didroom_microservices/.authz_server.pid` && rm test/didroom_microservices/.authz_server.pid
-	@kill `cat test/didroom_microservices/.relying_party.pid` && rm test/didroom_microservices/.relying_party.pid
-	@kill `cat test/didroom_microservices/.test.push_server.pid` && rm test/didroom_microservices/.test.push_server.pid
+	@kill `cat test/didroom_microservices/.verifier.pid` && rm test/didroom_microservices/.verifier.pid
 	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
 
 api-test: ncr test/didroom_microservices tests-well-known
@@ -83,10 +81,8 @@ api-test: ncr test/didroom_microservices tests-well-known
 	@cp wallet/ver_qr_to_info.schema.json wallet/temp_ver_qr_to_info.schema.json
 # start tests
 	$(MAKE) -C test/didroom_microservices up --no-print-directory
-	$(MAKE) -C test/didroom_microservices push_server_up --no-print-directory
 	@./ncr -p 3003 -z ./wallet & echo $$! > .test.mobile_zencode.pid
-	@./ncr -p 3004 -z ./verifier & echo $$! > .test.verifier.pid
-	@for port in 3000 3001 3002 3003 3004 3366; do \
+	@for port in 3000 3001 3002 3003; do \
 		timeout --foreground 30s bash -c 'port=$$1; until nc -z localhost $$port; do \
 			echo "Port $$port is not yet reachable, waiting..."; \
 			sleep 1; \
@@ -98,10 +94,8 @@ api-test: ncr test/didroom_microservices tests-well-known
 	@npx stepci run test/test_api.yml
 	@kill `cat test/didroom_microservices/.credential_issuer.pid` && rm test/didroom_microservices/.credential_issuer.pid
 	@kill `cat test/didroom_microservices/.authz_server.pid` && rm test/didroom_microservices/.authz_server.pid
-	@kill `cat test/didroom_microservices/.relying_party.pid` && rm test/didroom_microservices/.relying_party.pid
-	@kill `cat test/didroom_microservices/.test.push_server.pid` && rm test/didroom_microservices/.test.push_server.pid
+	@kill `cat test/didroom_microservices/.verifier.pid` && rm test/didroom_microservices/.verifier.pid
 	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
-	@kill `cat .test.verifier.pid` && rm .test.verifier.pid
 	@rm wallet/temp_ver_qr_to_info.zen wallet/temp_ver_qr_to_info.keys.json wallet/temp_ver_qr_to_info.schema.json
 
 clean:
