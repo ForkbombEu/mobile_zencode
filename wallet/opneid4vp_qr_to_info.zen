@@ -161,6 +161,7 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
                         Foreach 'p' in 'path_array'
                             If I verify 'p' is not found in 'root'
                                 When I set 'exit' to 'exit' as 'string'
+                                When I remove 'd_name'
                                 When I exit the foreach
                             EndIf
                             If I verify 'p' is found in 'root'
@@ -173,10 +174,12 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
                         If I verify 'exit' is not found
                             When I remove 'claims_matched'
                             When I set 'claims_matched' to 'true' as 'string'
+                            When I remove 'd_name'
                             When I exit the foreach
                         EndIf
                         When I remove 'exit'
                     EndIf
+                    When I remove 'd_name'
                 EndForeach
                 When I remove 'disclosures'
                 When I remove 'first_element_in_path'
@@ -204,7 +207,10 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
             When I move 'sd_hash' in 'jws payload'
 
             When I create jws signature of header 'jws header' and payload 'jws payload'
+            When I remove 'jws_header'
+            When I remove 'jws payload'
             When I append 'jws_signature' to 'loop_dc+sd-jwt_as_string'
+            When I remove 'jws_signature'
 
             When I create the 'string dictionary' named 'vp_token'
             When I create the 'string array' named 'array_sd-jwt-kb'
