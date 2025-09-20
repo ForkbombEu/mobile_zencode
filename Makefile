@@ -47,9 +47,6 @@ test/didroom_microservices:
 	@git clone https://github.com/forkbombeu/didroom_microservices test/didroom_microservices --quiet
 # custom code
 	$(MAKE) -C test/didroom_microservices test_custom_code --no-print-directory
-	$(MAKE) -C test/didroom_microservices authorize AUTHZ_FILE=public/authz_server/authorize --no-print-directory
-# verifier
-	@jq '.keys_0.firebase_url="http://localhost:3366/verify-credential"' test/didroom_microservices/relying_party/verify.keys.json > ${tmp} && mv ${tmp} test/didroom_microservices/relying_party/verify.keys.json
 	@cp .env.test .env
 	@cp ncr test/didroom_microservices/
 
