@@ -143,7 +143,7 @@ load ./bats_utils
     url=$(jq_extract_raw "post_url" opneid4vp_qr_to_info.output.json)
     curl -H 'Content-Type: application/json' -X POST $url -d ''"$(echo $vp)"'' 1> $TMP/out
     save_tmp_output verifier_response.output.json
-    assert_output --regexp '\{"complete_transaction_id":"public/verifier/transaction/.*","output":\["OK"\],"transaction_result":\[\{"path":\["tested"\],"value":"true"\}\]\}'
+    assert_output '{"output":["OK"],"transaction_result":[{"path":["tested"],"value":"true"}]}'
 }
 
 @test "checks transaction id" {
