@@ -161,6 +161,7 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
                         Foreach 'p' in 'path_array'
                             If I verify 'p' is not found in 'root'
                                 When I set 'exit' to 'exit' as 'string'
+                                When I remove 'd_name'
                                 When I exit the foreach
                             EndIf
                             If I verify 'p' is found in 'root'
@@ -173,6 +174,7 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
                         If I verify 'exit' is not found
                             When I remove 'claims_matched'
                             When I set 'claims_matched' to 'true' as 'string'
+                            When I remove 'd_name'
                             When I exit the foreach
                         EndIf
                         When I remove 'exit'
