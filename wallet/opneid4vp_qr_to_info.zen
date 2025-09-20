@@ -177,6 +177,7 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
                         EndIf
                         When I remove 'exit'
                     EndIf
+                    When I remove 'd_name'
                 EndForeach
                 When I remove 'disclosures'
                 When I remove 'first_element_in_path'
