@@ -1,0 +1,18 @@
+Scenario 'w3c': jwt
+
+Given I have a 'json web token' named 'result'
+When I pickup from path 'result.payload.client_id'
+
+When I set ':' to ':' as 'string'
+When I create array by splitting 'client_id' at ':'
+When I copy '1' from 'array' to 'client_id_prefix'
+When I remove 'client_id_prefix' from 'array'
+When I write string '' in 'id'
+Foreach 'e' in 'array'
+When I append 'e' to 'id'
+When I append the string ':' to 'id'
+EndForeach
+When I split rightmost '1' bytes of 'id'
+
+Then print the 'client_id_prefix'
+Then print the 'id'

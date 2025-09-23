@@ -28,6 +28,8 @@
     "rdf_api_path": "rdf_api",
     "rdf_apis_path": "rdf_apis",
     "pre_canon_zen": "Scenario 'w3c': jwt\nGiven I have a 'string array' in path 'credentials.ldp_vc'\nGiven I have a 'json web token' named 'result'\nGiven I have a 'string' named 'did'\nGiven I have a 'string' named 'rdf_api'\nGiven I have a 'string dictionary' named 'proof_config'\nGiven I have a 'string array' named '@context'\nGiven I have a 'string array' named 'type'\n# proof config\n## nonce\nWhen I pickup a 'string' from path 'result.payload.nonce'\nWhen I copy 'nonce' to 'challenge' in 'proof_config'\n## created\nWhen I create UTC timestamp of now\nWhen I copy 'UTC_timestamp' to 'created' in 'proof_config'\n## domain\nWhen I pickup a 'string' from path 'result.payload.client_id'\nWhen I copy 'client_id' to 'domain' in 'proof_config'\n## verificationMethod\nWhen I copy 'did' to 'verificationMethod'\nWhen I append the string '#es256_public_key' to 'verificationMethod'\nWhen I move 'verificationMethod' in 'proof_config'\n## @context\nWhen I copy '@context' in 'proof_config'\n# document\nWhen I create the 'string dictionary' named 'template_document'\nWhen I copy '@context' in 'template_document'\nWhen I copy 'type' in 'template_document'\nWhen I copy 'did' to 'holder' in 'template_document'\nWhen I create the 'string array' named 'objects'\nWhen I create the 'string array' named 'rdf_apis'\nForeach 'vc' in 'ldp_vc'\nWhen I copy 'rdf_api' in 'rdf_apis'\nWhen I create the 'string dictionary' named 'object'\nWhen I copy 'proof_config' in 'object'\nWhen I copy 'template_document' to 'document'\nWhen I create the 'string array' named 'verifiableCredential'\nWhen I copy 'vc' in 'verifiableCredential'\nWhen I move 'verifiableCredential' in 'document'\nWhen I create random of '6' bytes\nWhen I move 'random' as 'hex' to 'id'\nWhen I move 'id' in 'document'\nWhen I move 'document' in 'object'\nWhen I move 'object' in 'objects'\nEndForeach\nWhen I set '1' to '1' as 'float'\nIf I verify size of 'rdf_apis' is less than '1'\nWhen I copy 'rdf_api' in 'rdf_apis'\nWhen I create the 'string dictionary' named 'object'\nWhen I move 'proof_config' in 'object'\nWhen I move 'template_document' to 'document' in 'object'\nWhen I move 'object' in 'objects'\nEndif\nThen print the 'objects'\nThen print the 'rdf_apis'",
+    "client_id_zen": "Scenario 'w3c': jwt\nGiven I have a 'json web token' named 'result'\nWhen I pickup from path 'result.payload.client_id'\nWhen I set ':' to ':' as 'string'\nWhen I create array by splitting 'client_id' at ':'\nWhen I copy '1' from 'array' to 'client_id_prefix'\nWhen I remove 'client_id_prefix' from 'array'\nWhen I write string '' in 'id'\nForeach 'e' in 'array'\nWhen I append 'e' to 'id'\nWhen I append the string ':' to 'id'\nEndForeach\nWhen I split rightmost '1' bytes of 'id'\nThen print the 'client_id_prefix'\nThen print the 'id'",
+    "client_id_path": "id",
     "objects_path": "objects",
     "rdf_api": "https://ghisa.forkbomb.eu/?url=https%3A%2F%2Frdfcanon.forkbomb.eu%2Fserialize",
     "loop_arrays": [
@@ -38,5 +40,6 @@
     "loop_arrays_dc+sd-jwt": [
         "matching_credentials",
         "dc+sd-jwt_as_string"
-    ]
+    ],
+    "client_id_keys": {}
 }

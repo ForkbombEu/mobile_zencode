@@ -21,6 +21,10 @@ Scenario 'sd_jwt': signed selective disclosure
 
 Prepare 'request': connect to 'request_uri' and do get
 
+Prepare 'client_id_out': execute zencode with script 'client_id_zen', data 'request', keys 'client_id_keys'
+Prepare 'client_id_jwt': manipulate and get with object 'client_id_out', path 'client_id_path'
+Prepare 'client_id_did': resolve the did with did 'client_id_jwt'
+
 Prepare: manipulate and set with object 'request', path 'credentials_path', value 'credentials'
 Prepare: manipulate and set with object 'request', path 'did_path', value 'did'
 Prepare: manipulate and set with object 'request', path 'rdf_api_path', value 'rdf_api'
@@ -39,6 +43,8 @@ Given I rename 'result' to 'jwt'
 
 Given I have a 'base64 array' named 'rdfs'
 Given I have a 'string array' named 'obj'
+Given I have a 'did document' in path 'client_id_did.didDocument'
+Given I rename 'didDocument' to 'client_id_did'
 
 # data
 Given I have a 'string' named 'client_id'
@@ -54,6 +60,7 @@ Given I have a 'string array' named 'loop_arrays_dc+sd-jwt'
 Given I have a 'keyring'
 
 # verify request
+When I create the 'es256' public key from did document 'client_id_did'
 When I verify the jws signature in 'string_jwt'
 # verify issuer
 When I pickup a 'string' from path 'jwt.payload.client_id'
