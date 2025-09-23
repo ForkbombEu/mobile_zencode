@@ -72,10 +72,6 @@ unit-test: ncr test/didroom_microservices tests-well-known
 	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
 
 api-test: ncr test/didroom_microservices tests-well-known
-# modify wallet contract to not use capacitor
-	@cat wallet/ver_qr_to_info.zen | sed "s/.*Given I connect to 'pb_url' and start capacitor pb client.*/Given I connect to 'pb_url' and start pb client\nGiven I send my_credentials 'my_credentials' and login/" > wallet/temp_ver_qr_to_info.zen
-	@cp wallet/ver_qr_to_info.keys.json wallet/temp_ver_qr_to_info.keys.json
-	@cp wallet/ver_qr_to_info.schema.json wallet/temp_ver_qr_to_info.schema.json
 # start tests
 	$(MAKE) -C test/didroom_microservices up --no-print-directory
 	@./ncr -p 3003 -z ./wallet & echo $$! > .test.mobile_zencode.pid
@@ -93,7 +89,6 @@ api-test: ncr test/didroom_microservices tests-well-known
 	@kill `cat test/didroom_microservices/.authz_server.pid` && rm test/didroom_microservices/.authz_server.pid
 	@kill `cat test/didroom_microservices/.verifier.pid` && rm test/didroom_microservices/.verifier.pid
 	@kill `cat .test.mobile_zencode.pid` && rm .test.mobile_zencode.pid
-	@rm wallet/temp_ver_qr_to_info.zen wallet/temp_ver_qr_to_info.keys.json wallet/temp_ver_qr_to_info.schema.json
 
 clean:
 	rm -rf test/didroom_microservices
