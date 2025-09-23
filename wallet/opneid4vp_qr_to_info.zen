@@ -72,11 +72,37 @@ When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.claims'
 ## ldp_vc
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
 If I verify 'format' is equal to 'ldp_vc_string'
-    When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.meta.type_values'
+    When I set 'VerifiableCredential' to 'VerifiableCredential' as 'string'
+    When I pickup a 'string array' from path 'jwt.payload.dcql_query.credentials.1.meta.type_values'
     Foreach value prefix 'loop_' at same position in arrays 'loop_arrays'
-        # TODO: check type
-        # TODO: check credential is not expired
+        # match type
+        When I set 'no_matched_type' to 'no_matched_type' as 'string'
+        Foreach 'type_array' in 'type_values'
+            When I pickup from path 'loop_matching_credentials.type'
+            When I remove 'VerifiableCredential' from 'type'
+            If I verify 'type' is equal to 'type_array'
+                When I remove 'no_matched_type'
+                When I exit the foreach
+            EndIf
+        EndForeach
+        If I verify 'no_matched_type' is found
+            When I remove 'no_matched_type'
+            When I set 'exit' to 'exit' as 'string'
+        EndIf
+        # not expired
+        If I verify 'exit' is not found
+            When I pickup from path 'loop_matching_credentials.validUntil'
+            When I create timestamp of UTC timestamp 'validUntil'
+            When I rename 'timestamp' to 'validUntil_unix'
+            When I create the timestamp
+            If I verify number 'timestamp' is more than 'validUntil_unix'
+                When I set 'exit' to 'exit' as 'string'
+            EndIf
+        EndIf
         Foreach 'c' in 'claims'
+            If I verify 'exit' is found
+                When I exit the foreach
+            EndIf
             When I copy 'path' from 'c' to 'path_array'
             When I copy 'loop_matching_credentials' to 'root'
             Foreach 'p' in 'path_array'
@@ -92,9 +118,6 @@ If I verify 'format' is equal to 'ldp_vc_string'
             EndForeach
             When I remove 'root'
             When I remove 'path_array'
-            If I verify 'exit' is found
-                When I exit the foreach
-            EndIf
         EndForeach
         If I verify 'exit' is not found
             When I create the 'string dictionary' named 'loop_vps_card'
