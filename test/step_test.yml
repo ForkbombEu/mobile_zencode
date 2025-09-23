@@ -197,7 +197,7 @@ steps:
       check:
         status: 200
         jsonpath:
-          $.output[0]:
+          $.result.result.output[0]:
             - eq: OK
 
   - name: verifier checks transaction id
@@ -474,7 +474,7 @@ steps:
       check:
         status: 200
         jsonpath:
-          $.output[0]:
+          $.result.result.output[0]:
             - eq: OK
 
   - name: verifier checks transaction id (LDPVC flow)
