@@ -137,7 +137,9 @@ steps:
                   - test_credential
               claims:
                 - path:
-                  - "tested"
+                  - tested
+                  values:
+                  - "true"
       captures:
         intent_url:
           jsonpath: $.intent_url
@@ -178,9 +180,9 @@ steps:
           $.post_url:
             - isDefined: true
             - isString: true
-          $.vps:
+          $.vps[0]:
             - isDefined: true
-            - isArray: true
+            - isObject: true
 
   - name: send vp to rp
     http:
@@ -348,9 +350,15 @@ steps:
                 - path:
                   - credentialSubject
                   - given_name
+                  values:
+                  - Mario
+                  - Maria
                 - path:
                   - credentialSubject
                   - family_name
+                  values:
+                  - Rossi
+                  - Verdi
                 - path:
                   - credentialSubject
                   - degree
