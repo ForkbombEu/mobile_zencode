@@ -3,14 +3,19 @@ Scenario 'w3c': jwt
 Given I have a 'json web token' named 'result'
 When I pickup from path 'result.payload.client_id'
 
+When I set '1' to '1' as 'number'
+When I set '2' to '2' as 'number'
 When I set ':' to ':' as 'string'
+
 When I create array by splitting 'client_id' at ':'
 When I copy '1' from 'array' to 'client_id_prefix'
-When I remove 'client_id_prefix' from 'array'
+When I create the size of 'array'
 When I write string '' in 'id'
-Foreach 'e' in 'array'
-When I append 'e' to 'id'
-When I append the string ':' to 'id'
+Foreach 'i' in sequence from '2' to 'size' with step '1'
+    When I create copy of  element 'i' from array 'array'
+    When I append 'copy' to 'id'
+    When I append the string ':' to 'id'
+    When I remove 'copy'
 EndForeach
 When I split rightmost '1' bytes of 'id'
 
