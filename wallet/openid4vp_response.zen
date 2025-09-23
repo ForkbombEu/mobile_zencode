@@ -11,4 +11,4 @@ When I create http get parameters from 'body_params' using percent encoding
 Then print the 'http get parameters'
 Then print the 'url'
 
-Compute 'result': connect to 'url' and do post with objec 'http_get_parameters', headers 'headers'
+Compute 'result': connect to 'url' and do post with object 'http_get_parameters', headers 'headers'
