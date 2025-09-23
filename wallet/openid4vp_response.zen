@@ -1,3 +1,5 @@
+Rule unknown ignore
+
 Scenario 'http': params
 
 Given I have a 'string dictionary' in path 'body.vp_token'
