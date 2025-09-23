@@ -72,16 +72,42 @@ When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.claims'
 ## ldp_vc
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
 If I verify 'format' is equal to 'ldp_vc_string'
-    When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.meta.type_values'
+    When I set 'VerifiableCredential' to 'VerifiableCredential' as 'string'
+    When I pickup a 'string array' from path 'jwt.payload.dcql_query.credentials.1.meta.type_values'
     Foreach value prefix 'loop_' at same position in arrays 'loop_arrays'
-        # TODO: check type
-        # TODO: check credential is not expired
+        # match type
+        When I set 'no_matched_type' to 'no_matched_type' as 'string'
+        Foreach 'type_array' in 'type_values'
+            When I pickup from path 'loop_matching_credentials.type'
+            When I remove 'VerifiableCredential' from 'type'
+            If I verify 'type' is equal to 'type_array'
+                When I remove 'no_matched_type'
+                When I exit the foreach
+            EndIf
+        EndForeach
+        If I verify 'no_matched_type' is found
+            When I remove 'no_matched_type'
+            When I set 'skip_credential' to 'skip_credential' as 'string'
+        EndIf
+        # not expired
+        If I verify 'skip_credential' is not found
+            When I pickup from path 'loop_matching_credentials.validUntil'
+            When I create timestamp of UTC timestamp 'validUntil'
+            When I rename 'timestamp' to 'validUntil_unix'
+            When I create the timestamp
+            If I verify number 'timestamp' is more than 'validUntil_unix'
+                When I set 'skip_credential' to 'skip_credential' as 'string'
+            EndIf
+        EndIf
         Foreach 'c' in 'claims'
+            If I verify 'skip_credential' is found
+                When I exit the foreach
+            EndIf
             When I copy 'path' from 'c' to 'path_array'
             When I copy 'loop_matching_credentials' to 'root'
             Foreach 'p' in 'path_array'
                 If I verify 'p' is not found in 'root'
-                    When I set 'exit' to 'exit' as 'string'
+                    When I set 'skip_credential' to 'skip_credential' as 'string'
                     When I exit the foreach
                 EndIf
                 If I verify 'p' is found in 'root'
@@ -90,13 +116,19 @@ If I verify 'format' is equal to 'ldp_vc_string'
                     When I rename 'tmp' to 'root'
                 EndIf
             EndForeach
+            If I verify 'skip_credential' is not found
+                If I verify 'values' is found in 'c'
+                    When I copy 'values' from 'c' to 'values_array'
+                    If I verify 'root' is not found in 'values_array'
+                        When I set 'skip_credential' to 'skip_credential' as 'string'
+                    EndIf
+                    When I remove 'values_array'
+                EndIf
+            EndIf
             When I remove 'root'
             When I remove 'path_array'
-            If I verify 'exit' is found
-                When I exit the foreach
-            EndIf
         EndForeach
-        If I verify 'exit' is not found
+        If I verify 'skip_credential' is not found
             When I create the 'string dictionary' named 'loop_vps_card'
             When I copy 'loop_matching_credentials' to 'card' in 'loop_vps_card'
             When I pickup from path 'loop_obj.document'
@@ -121,77 +153,75 @@ If I verify 'format' is equal to 'ldp_vc_string'
             When I move 'loop_vps_card' in 'vps'
             When I remove 'id'
         EndIf
-        If I verify 'exit' is found
-            When I remove 'exit'
+        If I verify 'skip_credential' is found
+            When I remove 'skip_credential'
         EndIf
     EndForeach
 EndIf
 
 ## dc+sd-jwt
 When I pickup from path 'jwt.payload.nonce'
-When I set 'true' to 'true' as 'string'
 When I set 'dc+sd-jwt_string' to 'dc+sd-jwt' as 'string'
 If I verify 'format' is equal to 'dc+sd-jwt_string'
     When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.meta.vct_values.1'
     When I rename '1' to 'vct_value'
     Foreach value prefix 'loop_' at same position in arrays 'loop_arrays_dc+sd-jwt'
         When I pickup from path 'loop_matching_credentials.jwt.payload.type'
-        If I verify 'valid_credential' is found
-            When I remove 'valid_credential'
-        EndIf
-        When I set 'valid_credential' to 'true' as 'string'
         If I verify 'type' is not equal to 'vct_value'
-            When I remove 'valid_credential'
-            When I set 'valid_credential' to 'false' as 'string'
+            When I set 'skip_credential' to 'skip_credential' as 'string'
         EndIf
-        If I verify 'type' is equal to 'vct_value'
-            Foreach 'c' in 'claims'
-                If I verify 'claims_matched' is found
-                    When I remove 'claims_matched'
+        Foreach 'c' in 'claims'
+            If I verify 'skip_credential' is found
+                When I exit the foreach
+            EndIf
+            When I copy 'path' from 'c' to 'path_array'
+            When I copy '1' from 'path_array' to 'first_element_in_path'
+            When I remove 'first_element_in_path' from 'path_array'
+            When I pickup from path 'loop_matching_credentials.disclosures'
+            Foreach 'd' in 'disclosures'
+                If I verify 'skip_credential' is found
+                    When I remove 'skip_credential'
                 EndIf
-                When I set 'claims_matched' to 'false' as 'string'
-                When I copy 'path' from 'c' to 'path_array'
-                When I copy '1' from 'path_array' to 'first_element_in_path'
-                When I remove 'first_element_in_path' from 'path_array'
-                When I pickup from path 'loop_matching_credentials.disclosures'
-                Foreach 'd' in 'disclosures'
-                    When I copy '2' from 'd' to 'd_name'
-                    If I verify 'first_element_in_path' is equal to 'd_name'
-                        When I copy '3' from 'd' to 'root'
-                        Foreach 'p' in 'path_array'
-                            If I verify 'p' is not found in 'root'
-                                When I set 'exit' to 'exit' as 'string'
-                                When I remove 'd_name'
-                                When I exit the foreach
-                            EndIf
-                            If I verify 'p' is found in 'root'
-                                When I copy 'p' from 'root' to 'tmp'
-                                When I remove 'root'
-                                When I rename 'tmp' to 'root'
-                            EndIf
-                        EndForeach
-                        When I remove 'root'
-                        If I verify 'exit' is not found
-                            When I remove 'claims_matched'
-                            When I set 'claims_matched' to 'true' as 'string'
+                When I copy '2' from 'd' to 'd_name'
+                If I verify 'first_element_in_path' is equal to 'd_name'
+                    When I copy '3' from 'd' to 'root'
+                    Foreach 'p' in 'path_array'
+                        If I verify 'p' is not found in 'root'
+                            When I set 'skip_credential' to 'skip_credential' as 'string'
                             When I remove 'd_name'
                             When I exit the foreach
                         EndIf
-                        When I remove 'exit'
+                        If I verify 'p' is found in 'root'
+                            When I copy 'p' from 'root' to 'tmp'
+                            When I remove 'root'
+                            When I rename 'tmp' to 'root'
+                        EndIf
+                    EndForeach
+                    If I verify 'skip_credential' is not found
+                        If I verify 'values' is found in 'c'
+                            When I copy 'values' from 'c' to 'values_array'
+                            If I verify 'root' is not found in 'values_array'
+                                When I set 'skip_credential' to 'skip_credential' as 'string'
+                            EndIf
+                            When I remove 'values_array'
+                        EndIf
+                        When I remove 'd_name'
+                        When I remove 'root'
+                        When I exit the foreach
                     EndIf
-                    When I remove 'd_name'
-                EndForeach
-                When I remove 'disclosures'
-                When I remove 'first_element_in_path'
-                When I remove 'path_array'
-                If I verify 'claims_matched' is not equal to 'true'
-                    When I remove 'valid_credential'
-                    When I set 'valid_credential' to 'false' as 'string'
+                    When I remove 'root'
                 EndIf
-            Endforeach
-        EndIf
+                When I remove 'd_name'
+            EndForeach
+            When I remove 'disclosures'
+            When I remove 'first_element_in_path'
+            When I remove 'path_array'
+            If I verify 'skip_credential' is found
+                When I exit the foreach
+            EndIf
+        Endforeach
         When I remove 'type'
-        If I verify 'valid_credential' is equal to 'true'
+        If I verify 'skip_credential' is not found
             When I create the 'string dictionary' named 'loop_vps_card'
             When I copy 'loop_dc+sd-jwt_as_string' to 'card' in 'loop_vps_card'
             When I create jws header for p256 signature
