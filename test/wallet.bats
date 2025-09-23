@@ -125,6 +125,7 @@ load ./bats_utils
     request=$(curl -X GET "$request_url")
     cred=$(jq -r ".credentials[0].credential" $BATS_FILE_TMPDIR/post_credential.output.json)
     jq_extract_raw "params_json" qr.output.json > $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
+
     tmp=$(mktemp)
     jq ".credentials.ldp_vc = []" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
     jq --arg cred $cred '.credentials["dc+sd-jwt"] = [$cred]' $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
@@ -132,6 +133,13 @@ load ./bats_utils
     jq ".rdfs = []" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
     jq ".obj = []" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
     # scan_ver_qr_1
+    echo "{}" > $BATS_FILE_TMPDIR/opneid4vp_qr_to_info_2_did.data.json
+    jq ".result = \"$request\"" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info_2_did.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info_2_did.data.json
+    zexe $WALLET/opneid4vp_qr_to_info_2_did.zencode opneid4vp_qr_to_info_2_did.data.json
+    save_tmp_output opneid4vp_qr_to_info_2_did.output.json
+    id=$(jq_extract_raw "id" opneid4vp_qr_to_info_2_did.output.json)
+    did=$(curl -X GET "https://did.dyne.org/dids/${id}")
+    jq --arg did $did ".client_id_did = $did" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
     zexe $WALLET/opneid4vp_qr_to_info.zen opneid4vp_qr_to_info.data.json $WALLET/opneid4vp_qr_to_info.keys.json
     save_tmp_output opneid4vp_qr_to_info.output.json
     assert_output --regexp '\{"post_url":"http://localhost:3002/verifier/response/.*","vps":\[\{"card":".*","presentation":\{"vp_token":\{"test_presentation":\[".*"\]\}\}\}\]\}'
@@ -141,7 +149,11 @@ load ./bats_utils
     sleep 2
     vp=$(jq -r '.vps[0].presentation' $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.output.json)
     url=$(jq_extract_raw "post_url" opneid4vp_qr_to_info.output.json)
-    curl -H 'Content-Type: application/json' -X POST $url -d ''"$(echo $vp)"'' 1> $TMP/out
+    echo "{\"body\": ${vp}, \"url\": \"${url}\"}" > $BATS_FILE_TMPDIR/openid4vp_response.data.json
+    zexe $WALLET/openid4vp_response.zen $WALLET/openid4vp_response.keys.json openid4vp_response.data.json
+    save_tmp_output openid4vp_response.output.json
+    body=$(jq_extract_raw "http_get_parameters" openid4vp_response.output.json)
+    curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST $url -d "${body}" 1> $TMP/out
     save_tmp_output verifier_response.output.json
     assert_output '{"output":["OK"],"transaction_result":[{"path":["tested"],"value":"true"}]}'
 }
