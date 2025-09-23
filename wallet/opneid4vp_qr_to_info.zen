@@ -240,8 +240,9 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
             When I create the timestamp
             When I move 'timestamp' to 'iat' in 'jws payload'
             When I create the hash of 'loop_dc+sd-jwt_as_string'
-            When I move 'hash' as 'hex' to 'sd_hash'
+            When I move 'hash' as 'url64' to 'sd_hash'
             When I move 'sd_hash' in 'jws payload'
+            When I copy 'client_id' to 'aud' in 'jws payload'
 
             When I create jws signature of header 'jws header' and payload 'jws payload'
             When I remove 'jws_header'
