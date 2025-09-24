@@ -76,6 +76,12 @@ When I create size of 'matching_credentials'
 When I create the 'string array' named 'vps'
 When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.claims'
 
+# state?
+When I pickup from path 'jwt.payload'
+If I verify 'state' is found in 'payload'
+    When I pickup from path 'payload.state'
+EndIf
+
 ## ldp_vc
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
 If I verify 'format' is equal to 'ldp_vc_string'
@@ -255,6 +261,9 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
             When I move named by 'id' in 'vp_token'
             When I create the 'string dictionary' named 'presentation'
             When I move 'vp_token' in 'presentation'
+            If I verify 'state' is found
+                When I copy 'state' in 'presentation'
+            EndIf
             When I move 'presentation' in 'loop_vps_card'
             When I move 'loop_vps_card' in 'vps'
             When I remove 'id'
