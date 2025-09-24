@@ -1,0 +1,16 @@
+Rule unknown ignore
+
+Scenario 'http': params
+
+Given I have a 'string dictionary' in path 'body.vp_token'
+Given I have a 'string' named 'url'
+
+When I create 'string dictionary' named 'body_params'
+When I create json escaped string of 'vp_token'
+When I move 'json escaped string' to 'vp_token' in 'body_params'
+When I create http get parameters from 'body_params' using percent encoding
+
+Then print the 'http get parameters'
+Then print the 'url'
+
+Compute 'result': connect to 'url' and do post with object 'http_get_parameters', headers 'headers'
