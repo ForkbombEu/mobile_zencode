@@ -2,12 +2,17 @@ Rule unknown ignore
 
 Scenario 'http': params
 
-Given I have a 'string dictionary' in path 'body.vp_token'
+Given I have a 'string dictionary' named 'body'
 Given I have a 'string' named 'url'
 
 When I create 'string dictionary' named 'body_params'
+When I pickup from path 'body.vp_token'
 When I create json escaped string of 'vp_token'
 When I move 'json escaped string' to 'vp_token' in 'body_params'
+If I verify 'state' is found in 'body'
+    When I pickup from path 'body.state'
+    When I move 'state' in 'body_params'
+EndIf
 When I create http get parameters from 'body_params' using percent encoding
 
 Then print the 'http get parameters'
