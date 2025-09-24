@@ -159,7 +159,7 @@ steps:
 
   - name: scan qr and produce vp
     http:
-      url: http://${{env.mz_host}}/opneid4vp_qr_to_info
+      url: http://${{env.mz_host}}/openid4vp_qr_to_info
       method: POST
       json:
         request_uri: ${{captures.params_json.request_uri}}
@@ -383,7 +383,7 @@ steps:
 
   - name: scan qr and produce vp (LDPVC flow)
     http:
-      url: http://${{env.mz_host}}/opneid4vp_qr_to_info
+      url: http://${{env.mz_host}}/openid4vp_qr_to_info
       method: POST
       json:
         request_uri: ${{captures.params_json.request_uri}}

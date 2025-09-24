@@ -223,9 +223,6 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
             When I remove 'disclosures'
             When I remove 'first_element_in_path'
             When I remove 'path_array'
-            If I verify 'skip_credential' is found
-                When I exit the foreach
-            EndIf
         Endforeach
         When I remove 'type'
         If I verify 'skip_credential' is not found
@@ -261,6 +258,9 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
             When I move 'presentation' in 'loop_vps_card'
             When I move 'loop_vps_card' in 'vps'
             When I remove 'id'
+        EndIf
+        If I verify 'skip_credential' is found
+            When I remove 'skip_credential'
         EndIf
     EndForeach
 EndIf

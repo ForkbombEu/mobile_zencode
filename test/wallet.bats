@@ -120,35 +120,35 @@ load ./bats_utils
     save_tmp_output qr.output.json
 }
 
-@test "Holder scan qr [opneid4vp_qr_to_info.zen]" {
+@test "Holder scan qr [openid4vp_qr_to_info.zen]" {
     request_url=$(jq -r ".params_json.request_uri" $BATS_FILE_TMPDIR/qr.output.json)
     request=$(curl -X GET "$request_url")
     cred=$(jq -r ".credentials[0].credential" $BATS_FILE_TMPDIR/post_credential.output.json)
-    jq_extract_raw "params_json" qr.output.json > $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
+    jq_extract_raw "params_json" qr.output.json > $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
 
     tmp=$(mktemp)
-    jq ".credentials.ldp_vc = []" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
-    jq --arg cred $cred '.credentials["dc+sd-jwt"] = [$cred]' $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
-    jq ".request.result = \"$request\"" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
-    jq ".rdfs = []" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
-    jq ".obj = []" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
+    jq ".credentials.ldp_vc = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    jq --arg cred $cred '.credentials["dc+sd-jwt"] = [$cred]' $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    jq ".request.result = \"$request\"" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    jq ".rdfs = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    jq ".obj = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     # scan_ver_qr_1
-    echo "{}" > $BATS_FILE_TMPDIR/opneid4vp_qr_to_info_2_did.data.json
-    jq ".result = \"$request\"" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info_2_did.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info_2_did.data.json
-    zexe $WALLET/opneid4vp_qr_to_info_2_did.zencode opneid4vp_qr_to_info_2_did.data.json
-    save_tmp_output opneid4vp_qr_to_info_2_did.output.json
-    id=$(jq_extract_raw "id" opneid4vp_qr_to_info_2_did.output.json)
+    echo "{}" > $BATS_FILE_TMPDIR/openid4vp_qr_to_info_2_did.data.json
+    jq ".result = \"$request\"" $BATS_FILE_TMPDIR/openid4vp_qr_to_info_2_did.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info_2_did.data.json
+    zexe $WALLET/openid4vp_qr_to_info_2_did.zencode openid4vp_qr_to_info_2_did.data.json
+    save_tmp_output openid4vp_qr_to_info_2_did.output.json
+    id=$(jq_extract_raw "id" openid4vp_qr_to_info_2_did.output.json)
     did=$(curl -X GET "https://did.dyne.org/dids/${id}")
-    jq --arg did $did ".client_id_did = $did" $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.data.json
-    zexe $WALLET/opneid4vp_qr_to_info.zen opneid4vp_qr_to_info.data.json $WALLET/opneid4vp_qr_to_info.keys.json
-    save_tmp_output opneid4vp_qr_to_info.output.json
+    jq --arg did $did ".client_id_did = $did" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    zexe $WALLET/openid4vp_qr_to_info.zen openid4vp_qr_to_info.data.json $WALLET/openid4vp_qr_to_info.keys.json
+    save_tmp_output openid4vp_qr_to_info.output.json
     assert_output --regexp '\{"post_url":"http://localhost:3002/verifier/response/.*","vps":\[\{"card":".*","presentation":\{"vp_token":\{"test_presentation":\[".*"\]\}\}\}\]\}'
 }
 
 @test "Holder present the vp" {
     sleep 2
-    vp=$(jq -r '.vps[0].presentation' $BATS_FILE_TMPDIR/opneid4vp_qr_to_info.output.json)
-    url=$(jq_extract_raw "post_url" opneid4vp_qr_to_info.output.json)
+    vp=$(jq -r '.vps[0].presentation' $BATS_FILE_TMPDIR/openid4vp_qr_to_info.output.json)
+    url=$(jq_extract_raw "post_url" openid4vp_qr_to_info.output.json)
     echo "{\"body\": ${vp}, \"url\": \"${url}\"}" > $BATS_FILE_TMPDIR/openid4vp_response.data.json
     zexe $WALLET/openid4vp_response.zen $WALLET/openid4vp_response.keys.json openid4vp_response.data.json
     save_tmp_output openid4vp_response.output.json
