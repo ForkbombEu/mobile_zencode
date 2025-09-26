@@ -155,7 +155,7 @@ load ./bats_utils
     body=$(jq_extract_raw "http_get_parameters" openid4vp_response.output.json)
     curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST $url -d "${body}" 1> $TMP/out
     save_tmp_output verifier_response.output.json
-    assert_output '{"output":["OK"],"transaction_result":[{"path":["tested"],"value":"true"}]}'
+    assert_output '{"redirect_uri":"https://redirect.example.org/path","transaction_result":[{"path":["tested"],"value":"true"}]}'
 }
 
 @test "checks transaction id" {

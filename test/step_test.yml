@@ -502,3 +502,155 @@ steps:
             - eq: degree
           $.[2].value:
             - eq: Math
+
+  - name: verifier produce qr_code (wrong LDPVC flow)
+    http:
+      url: http://${{env.verifier_host}}/generate_authorization_request
+      method: POST
+      json:
+        response_mode: direct_post
+        response_type: vp_token
+        url: http://${{env.verifier_host}}/
+        dcql_query:
+          credentials:
+            - id: test_presentation_ldp_vc
+              format: ldp_vc
+              meta:
+                type_values:
+                  - - UniversityDegreeCredential
+              claims:
+                - path:
+                  - credentialSubject
+                  - given_name
+                  values:
+                  - Mario
+                  - Maria
+                - path:
+                  - credentialSubject
+                  - family_name
+                  values:
+                  - Rossi
+                  - Verdi
+                - path:
+                  - credentialSubject
+                  - degree
+      captures:
+        intent_url:
+          jsonpath: $.intent_url
+        params_json:
+          jsonpath: $.params_json
+        transaction_id:
+          jsonpath: $.transaction_id
+      check:
+        status: 200
+        jsonpath:
+          $.intent_url:
+            - isDefined: true
+              isString: true
+          $.qr_code:
+            - isDefined: true
+              isString: true
+
+  - name: scan qr and produce vp (wrong LDPVC flow)
+    http:
+      url: http://${{env.mz_host}}/openid4vp_qr_to_info
+      method: POST
+      json:
+        request_uri: ${{captures.params_json.request_uri}}
+        request_uri_method: ${{captures.params_json.request_uri_method}}
+        client_id: ${{captures.params_json.client_id}}
+        credentials:
+          ldp_vc:
+            - "@context":
+              - ${{captures.credential.@context.0}}
+              - ${{captures.credential.@context.1}}
+              credentialSubject:
+                degree: ${{captures.credential.credentialSubject.degree}}
+                family_name: ${{captures.credential.credentialSubject.family_name}}
+                given_name: ${{captures.credential.credentialSubject.given_name}}
+              issuer: ${{captures.credential.issuer}}
+              proof:
+                created: ${{captures.credential.proof.created}}
+                cryptosuite: ${{captures.credential.proof.cryptosuite}}
+                proofPurpose: ${{captures.credential.proof.proofPurpose}}
+                proofValue: ${{captures.credential.proof.proofValue}}
+                type: ${{captures.credential.proof.type}}
+                verificationMethod: ${{captures.credential.proof.verificationMethod}}
+              type:
+              - ${{captures.credential.type.0}}
+              - ${{captures.credential.type.1}}
+              validUntil: ${{captures.credential.validUntil}}
+          "dc+sd-jwt": []
+      captures:
+        post_url:
+          jsonpath: $.post_url
+        vps:
+          jsonpath: $.vps
+      check:
+        status: 200
+        jsonpath:
+          $.post_url:
+            - isDefined: true
+            - isString: true
+          $.vps:
+            - isDefined: true
+            - isArray: true
+
+  - name: send wrong vp to rp (wrong LDPVC flow)
+    http:
+      url: http://${{env.mz_host}}/openid4vp_response
+      method: POST
+      json:
+        body:
+          vp_token:
+            test_presentation_ldp_vc:
+            - "@context":
+              - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.@context.0 }}
+              - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.@context.1 }}
+              holder: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.holder }}
+              id: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.id }}
+              proof:
+                challenge: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.challenge }}
+                created: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.created }}
+                cryptosuite: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.cryptosuite }}
+                domain: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.domain }}
+                proofPurpose: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.proofPurpose }}
+                proofValue: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.proofValue }}
+                type: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.type }}
+                verificationMethod: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.verificationMethod }}
+              type:
+              - wrongType
+              verifiableCredential:
+              - "@context":
+                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.@context.0 }}
+                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.@context.1 }}
+                credentialSubject:
+                  degree: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.degree }}
+                  family_name: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.family_name }}
+                  given_name: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.given_name }}
+                issuer: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.issuer }}
+                proof:
+                  created: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.created }}
+                  cryptosuite: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.cryptosuite }}
+                  proofPurpose: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.proofPurpose }}
+                  proofValue: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.proofValue }}
+                  type: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.type }}
+                  verificationMethod: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.verificationMethod }}
+                type:
+                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.type.0 }}
+                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.type.1 }}
+                validUntil: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.validUntil }}
+        url: ${{captures.post_url}}
+      check:
+        status: 200
+        jsonpath:
+          $.result.status:
+            - eq: "500"
+
+  - name: verifier checks transaction id (wrong LDPVC flow)
+    http:
+      url: http://${{env.verifier_host}}/${{captures.transaction_id}}
+      method: GET
+      check:
+        status: 200
+        body: Cryptographic verification of ldp_vc failed
