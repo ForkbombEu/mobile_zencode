@@ -88,5 +88,5 @@ steps:
           header: location
       check:
         headers:
-          Location: /^openid-credential-issuer:\/\/example\.com\/\?error=.*$/
+          Location: /^openid-credential-issuer:\/\/example\.com\/\?error_description=.*&error=server_error$/
         status: 302
