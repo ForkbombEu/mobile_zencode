@@ -69,7 +69,7 @@ load ./bats_utils
     save_tmp_output ru_to_toc.output.json
     assert_output '{"auth_details":[{"credential_configuration_id":"test_credential","locations":["http://localhost:3001/credential_issuer"],"type":"openid_credential","claims":[]}],"credential_configuration_id":"test_credential"}'
     cci=$(jq_extract_raw "credential_configuration_id" ru_to_toc.output.json)
-    echo "form_input_and_params=$(urlencode '{"params":{"request_uri":"'"${request_uri}"'","client_id":"'"${client_id}"'"},"data":{"email":"email@email.com","password":"password"},"custom_code":"'"${cci}"'"}')" > $TMP/out
+    echo "form_input_and_params=$(urlencode '{"params":{"request_uri":"'"${request_uri}"'","client_id":"'"${client_id}"'"},"data":{"email":"test@email.com","password":"password"},"custom_code":"'"${cci}"'"}')" > $TMP/out
     save_tmp_output form.data.json
     curl -sS -D - -X POST $authorize_backend -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(cat $BATS_FILE_TMPDIR/form.data.json)"'' -o /dev/null 1> $TMP/out
     save_tmp_output authorize.output.json

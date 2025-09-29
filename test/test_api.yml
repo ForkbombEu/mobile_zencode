@@ -6,6 +6,14 @@ env:
   path_to_wallet: ..
   as_host: localhost:3000/authz_server
   ci_host: localhost:3001/credential_issuer
+config:
+  concurrency: 1
 tests:
-  wallet_api:
-    $ref: test/step_test.yml
+  happy_flow_dc+sd-jwt:
+    $ref: test/happy_flow_dc+sd-jwt.yml
+  happy_flow_ldp_vc:
+    $ref: test/happy_flow_ldp_vc.yml
+  failing_presentation:
+    $ref: test/failing_presentation.yml
+  failing_authorize:
+    $ref: test/failing_authorize.yml
