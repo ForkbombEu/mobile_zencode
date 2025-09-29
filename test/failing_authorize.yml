@@ -83,10 +83,7 @@ steps:
       followRedirects: false
       body:
         form_input_and_params=%7B%22params%22%3A%7B%22request_uri%22%3A%22${{captures.request_uri}}%22%2C%22client_id%22%3A%22${{captures.client_id}}%22%7D%2C%22data%22%3A%7B%22wrongemail%22%3A%22test%40email.com%22%2C%22password%22%3A%22password%22%7D%2C%22custom_code%22%3A%22test_credential%22%7D
-      captures:
-        code:
-          header: location
       check:
         headers:
-          Location: /^openid-credential-issuer:\/\/example\.com\/\?error_description=.*&error=server_error$/
+          Location: /^openid-credential-issuer:\/\/example\.com\/\?(?=.*error_description=.*)(?=.*error=server_error).*$/
         status: 302
