@@ -6,6 +6,8 @@ env:
   path_to_wallet: ..
   as_host: localhost:3000/authz_server
   ci_host: localhost:3001/credential_issuer
+config:
+  concurrency: 1
 tests:
   happy_flow_dc+sd-jwt:
     $ref: test/happy_flow_dc+sd-jwt.yml
