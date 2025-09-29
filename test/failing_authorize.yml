@@ -1,0 +1,92 @@
+steps:
+  - name: holder_qr_to_well-known
+    http:
+      url: http://${{env.mz_host}}/holder_qr_to_well-known
+      method: POST
+      json:
+        "!external-qr-code-content":
+          credential_configuration_ids:
+            - test_credential
+          credential_issuer: http://${{env.ci_host}}
+      captures:
+        credential_parameters:
+          jsonpath: $.credential_parameters
+      check:
+        status: 200
+        jsonpath:
+          $.credential_parameters:
+            - isDefined: true
+              isObject: true
+          $.credential_requested:
+            - isDefined: true
+              isObject: true
+
+  - name: Call par endpoint
+    http:
+      url: http://${{env.mz_host}}/call_par
+      method: POST
+      json:
+        credential_parameters:
+          authorization_endpoint: ${{captures.credential_parameters.authorization_endpoint}}
+          authorization_server_endpoint_par: ${{captures.credential_parameters.authorization_server_endpoint_par}}
+          code_challenge_method: ${{captures.credential_parameters.code_challenge_method}}
+          credential_endpoint: ${{captures.credential_parameters.credential_endpoint}}
+          credential_issuer: ${{captures.credential_parameters.credential_issuer}}
+          format: ${{captures.credential_parameters.format}}
+          grant_type: ${{captures.credential_parameters.grant_type}}
+          response_type: ${{captures.credential_parameters.response_type}}
+          token_endpoint: ${{captures.credential_parameters.token_endpoint}}
+          credential_configuration_id: ${{captures.credential_parameters.credential_configuration_id}}
+        redirect_uri: openid-credential-issuer://example.com/
+      captures:
+        code_verifier:
+          jsonpath: $.code_verifier
+        request_uri:
+          jsonpath: $.request_uri
+        client_id:
+          jsonpath: $.client_id
+        authorization_endpoint:
+          jsonpath: $.authorization_endpoint
+      check:
+        status: 200
+        jsonpath:
+          $.code_verifier:
+            - isDefined: true
+          $.request_uri:
+            - isDefined: true
+          $.client_id:
+            - isDefined: true
+          $.authorization_endpoint:
+            - eq: http://${{env.as_host}}/authorize
+          $.expires_in:
+            - eq: 600
+
+  - name: Simulate authhorize endpoint pt1 (call /ru_to_toc)
+    http:
+      url: http://${{env.as_host}}/ru_to_toc
+      method: POST
+      json:
+        request_uri: ${{captures.request_uri}}
+        client_id: ${{captures.client_id}}
+      check:
+        status: 200
+        jsonpath:
+          $.credential_configuration_id:
+            - eq: test_credential
+
+  - name: Simulate authhorize endpoint pt2 (call /auhtorize_backend)
+    http:
+      url: http://${{env.as_host}}/authorize_backend
+      method: POST
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      followRedirects: false
+      body:
+        form_input_and_params=%7B%22params%22%3A%7B%22request_uri%22%3A%22${{captures.request_uri}}%22%2C%22client_id%22%3A%22${{captures.client_id}}%22%7D%2C%22data%22%3A%7B%22wrongemail%22%3A%22test%40email.com%22%2C%22password%22%3A%22password%22%7D%2C%22custom_code%22%3A%22test_credential%22%7D
+      captures:
+        code:
+          header: location
+      check:
+        headers:
+          Location: /^openid-credential-issuer:\/\/example\.com\/\?error=.*$/
+        status: 302
