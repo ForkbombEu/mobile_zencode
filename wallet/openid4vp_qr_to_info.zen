@@ -70,7 +70,7 @@ When I verify 'data_client_id' is equal to 'client_id'
 When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.format'
 When I rename object named by 'format' to 'matching_credentials'
 When I create size of 'matching_credentials'
-# When I set '1' to '1' as 'float'
+When I set 'one_number' to '1' as 'float'
 
 # select the credentials with matching claims
 When I create the 'string array' named 'vps'
@@ -132,8 +132,10 @@ If I verify 'format' is equal to 'ldp_vc_string'
             If I verify 'skip_credential' is not found
                 If I verify 'values' is found in 'c'
                     When I copy 'values' from 'c' to 'values_array'
-                    If I verify 'root' is not found in 'values_array'
-                        When I set 'skip_credential' to 'skip_credential' as 'string'
+                    If I verify size of 'values_array' is more or equal than 'one_number'
+                        If I verify 'root' is not found in 'values_array'
+                            When I set 'skip_credential' to 'skip_credential' as 'string'
+                        EndIf
                     EndIf
                     When I remove 'values_array'
                 EndIf
@@ -213,8 +215,10 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
                     If I verify 'skip_credential' is not found
                         If I verify 'values' is found in 'c'
                             When I copy 'values' from 'c' to 'values_array'
-                            If I verify 'root' is not found in 'values_array'
-                                When I set 'skip_credential' to 'skip_credential' as 'string'
+                            If I verify size of 'values_array' is more or equal than 'one_number'
+                                If I verify 'root' is not found in 'values_array'
+                                    When I set 'skip_credential' to 'skip_credential' as 'string'
+                                EndIf
                             EndIf
                             When I remove 'values_array'
                         EndIf
