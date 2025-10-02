@@ -112,6 +112,9 @@ If I verify 'format' is equal to 'ldp_vc_string'
             If I verify number 'timestamp' is more than 'validUntil_unix'
                 When I set 'skip_credential' to 'skip_credential' as 'string'
             EndIf
+            When I remove 'validUntil'
+            When I remove 'validUntil_unix'
+            When I remove 'timestamp'
         EndIf
         Foreach 'c' in 'claims'
             If I verify 'skip_credential' is found
