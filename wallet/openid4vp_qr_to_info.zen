@@ -90,14 +90,15 @@ If I verify 'format' is equal to 'ldp_vc_string'
     Foreach value prefix 'loop_' at same position in arrays 'loop_arrays'
         # match type
         When I set 'no_matched_type' to 'no_matched_type' as 'string'
+        When I pickup from path 'loop_matching_credentials.type'
+        When I remove 'VerifiableCredential' from 'type'
         Foreach 'type_array' in 'type_values'
-            When I pickup from path 'loop_matching_credentials.type'
-            When I remove 'VerifiableCredential' from 'type'
             If I verify 'type' is equal to 'type_array'
                 When I remove 'no_matched_type'
                 When I exit the foreach
             EndIf
         EndForeach
+        When I remove 'type'
         If I verify 'no_matched_type' is found
             When I remove 'no_matched_type'
             When I set 'skip_credential' to 'skip_credential' as 'string'
