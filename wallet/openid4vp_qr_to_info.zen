@@ -80,8 +80,8 @@ When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.claims'
 When I pickup from path 'jwt.payload'
 If I verify 'state' is found in 'payload'
     When I pickup from path 'payload.state'
-    When I remove 'payload'
 EndIf
+When I remove 'payload'
 
 ## ldp_vc
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
