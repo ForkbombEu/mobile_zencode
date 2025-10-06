@@ -151,6 +151,10 @@ steps:
                 - path:
                   - credentialSubject
                   - degree
+                - path:
+                  - issuer
+                  values:
+                  - http://${{env.ci_host}}
       captures:
         intent_url:
           jsonpath: $.intent_url
@@ -308,3 +312,7 @@ steps:
             - eq: degree
           $.[2].value:
             - eq: Math
+          $.[3].path[0]:
+            - eq: issuer
+          $.[3].value:
+            - eq: http://${{env.ci_host}}

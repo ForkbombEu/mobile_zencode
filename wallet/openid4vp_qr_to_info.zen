@@ -81,6 +81,7 @@ When I pickup from path 'jwt.payload'
 If I verify 'state' is found in 'payload'
     When I pickup from path 'payload.state'
 EndIf
+When I remove 'payload'
 
 ## ldp_vc
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
@@ -185,7 +186,8 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
     When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.meta.vct_values.1'
     When I rename '1' to 'vct_value'
     Foreach value prefix 'loop_' at same position in arrays 'loop_arrays_dc+sd-jwt'
-        When I pickup from path 'loop_matching_credentials.jwt.payload.type'
+        When I pickup from path 'loop_matching_credentials.jwt.payload'
+        When I pickup from path 'payload.type'
         If I verify 'type' is not equal to 'vct_value'
             When I set 'skip_credential' to 'skip_credential' as 'string'
         EndIf
@@ -234,6 +236,11 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
                 EndIf
                 When I remove 'd_name'
             EndForeach
+            If I verify 'skip_credential' is found
+                If I verify 'first_element_in_path' is found in 'payload'
+                    When I remove 'skip_credential'
+                EndIf
+            EndIf
             When I remove 'disclosures'
             When I remove 'first_element_in_path'
             When I remove 'path_array'
@@ -279,6 +286,7 @@ If I verify 'format' is equal to 'dc+sd-jwt_string'
         If I verify 'skip_credential' is found
             When I remove 'skip_credential'
         EndIf
+        When I remove 'payload'
     EndForeach
 EndIf
 

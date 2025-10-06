@@ -139,6 +139,10 @@ steps:
                 - path:
                   - tested
                   values: []
+                - path:
+                  - iss
+                  values:
+                  - http://${{env.ci_host}}
       captures:
         intent_url:
           jsonpath: $.intent_url
@@ -210,3 +214,7 @@ steps:
             - eq: tested
           $.[0].value:
             - eq: "true"
+          $.[1].path[0]:
+            - eq: iss
+          $.[1].value:
+            - eq: http://${{env.ci_host}}
