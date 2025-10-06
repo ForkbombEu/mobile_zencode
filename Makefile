@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := up
 .PHONY: help
 
-NCR_VERSION := 1.44.3
+NCR_VERSION := 1.45.0
 NCR_URL := https://github.com/ForkbombEu/ncr/releases/download/v$(NCR_VERSION)/ncr
 
 hn=$(shell hostname)
