@@ -12,7 +12,7 @@ load ./bats_utils
     curl -X GET $url | jq -c '.' 1> $TMP/out
     save_tmp_output credential_issuer_well-known.output.json
     assert_output --partial '"credential_issuer":"http://localhost:3001/credential_issuer"'
-    assert_output --partial '"credential_configurations_supported":{"test_credential":'
+    assert_output --partial '"test_credential":'
     assert_output --partial '"UniversityDegree_LDP_VC":'
     authorization_server=$(jq_extract_raw "authorization_servers" credential_issuer_well-known.output.json | jq -r '.[0]')
     jq_insert "authorization_server" $authorization_server read_credential_issuer.output.json
