@@ -1,0 +1,172 @@
+steps:
+  # dc+sd-jwt
+  - name: holder_qr_to_well-known
+    http:
+      url: http://${{env.mz_host}}/holder_qr_to_well-known
+      method: POST
+      json:
+        "!external-qr-code-content":
+          credential_configuration_ids:
+            - test_credential
+          credential_issuer: http://${{env.ci_host}}
+      captures:
+        credential_parameters:
+          jsonpath: $.credential_parameters
+      check:
+        status: 200
+        jsonpath:
+          $.credential_parameters:
+            - isDefined: true
+              isObject: true
+          $.credential_requested:
+            - isDefined: true
+              isObject: true
+  - $ref: steps/par.yml
+  - $ref: steps/auth_1.yml
+  - $ref: steps/auth_2.yml
+  - $ref: steps/credential_dc+sd-jwt.yml
+
+  # ldp_vc
+  - name: holder_qr_to_well-known
+    http:
+      url: http://${{env.mz_host}}/holder_qr_to_well-known
+      method: POST
+      json:
+        "!external-qr-code-content":
+          credential_configuration_ids:
+            - UniversityDegree_LDP_VC
+          credential_issuer: http://${{env.ci_host}}
+      captures:
+        credential_parameters:
+          jsonpath: $.credential_parameters
+      check:
+        status: 200
+        jsonpath:
+          $.credential_parameters:
+            - isDefined: true
+              isObject: true
+          $.credential_requested:
+            - isDefined: true
+              isObject: true
+  - $ref: steps/par.yml
+  - $ref: steps/auth_1.yml
+  - $ref: steps/auth_2.yml
+  - $ref: steps/credential_ldp_vc.yml
+
+  # verifier
+  - name: verifier produce qr_code
+    http:
+      url: http://${{env.verifier_host}}/generate_authorization_request
+      method: POST
+      json:
+        response_mode: direct_post
+        response_type: vp_token
+        url: http://${{env.verifier_host}}/
+        dcql_query:
+          credentials:
+            - id: test_presentation_ldp_vc
+              format: ldp_vc
+              meta:
+                type_values:
+                  - - UniversityDegreeCredential
+              claims:
+                - path:
+                  - credentialSubject
+                  - given_name
+                  values:
+                  - Mario
+                  - Maria
+                - path:
+                  - credentialSubject
+                  - family_name
+                  values:
+                  - Rossi
+                  - Verdi
+                - path:
+                  - credentialSubject
+                  - degree
+                - path:
+                  - issuer
+                  values:
+                  - http://${{env.ci_host}}
+            - id: test_presentation_dcsdjwt
+              format: dc+sd-jwt
+              meta:
+                vct_values:
+                  - test_credential
+              claims:
+                - path:
+                  - tested
+                - path:
+                  - iss
+                  values:
+                  - http://${{env.ci_host}}
+      captures:
+        intent_url:
+          jsonpath: $.intent_url
+        params_json:
+          jsonpath: $.params_json
+        transaction_id:
+          jsonpath: $.transaction_id
+      check:
+        status: 200
+        jsonpath:
+          $.intent_url:
+            - isDefined: true
+              isString: true
+          $.qr_code:
+            - isDefined: true
+              isString: true
+  - $ref: steps/scan_qr.yml
+  - name: send vp to rp
+    http:
+      url: http://${{env.mz_host}}/openid4vp_response
+      method: POST
+      json:
+        body:
+          vp_token:
+            test_presentation_ldp_vc:
+              - "@context":
+                - ${{ captures.vps.test_presentation_ldp_vc.0.signed.@context.0 }}
+                - ${{ captures.vps.test_presentation_ldp_vc.0.signed.@context.1 }}
+                holder: ${{ captures.vps.test_presentation_ldp_vc.0.signed.holder }}
+                id: ${{ captures.vps.test_presentation_ldp_vc.0.signed.id }}
+                proof:
+                  challenge: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.challenge }}
+                  created: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.created }}
+                  cryptosuite: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.cryptosuite }}
+                  domain: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.domain }}
+                  proofPurpose: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.proofPurpose }}
+                  proofValue: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.proofValue }}
+                  type: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.type }}
+                  verificationMethod: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.verificationMethod }}
+                type:
+                - ${{ captures.vps.test_presentation_ldp_vc.0.signed.type.0 }}
+                verifiableCredential:
+                - "@context":
+                  - ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.@context.0 }}
+                  - ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.@context.1 }}
+                  credentialSubject:
+                    degree: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.credentialSubject.degree }}
+                    family_name: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.credentialSubject.family_name }}
+                    given_name: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.credentialSubject.given_name }}
+                  issuer: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.issuer }}
+                  proof:
+                    created: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.created }}
+                    cryptosuite: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.cryptosuite }}
+                    proofPurpose: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.proofPurpose }}
+                    proofValue: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.proofValue }}
+                    type: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.type }}
+                    verificationMethod: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.verificationMethod }}
+                  type:
+                  - ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.type.0 }}
+                  - ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.type.1 }}
+                  validUntil: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.validUntil }}
+            test_presentation_dcsdjwt:
+              - ${{captures.vps.test_presentation_dcsdjwt.0.signed}}
+        url: ${{captures.post_url}}
+      check:
+        status: 200
+        jsonpath:
+          $.result.status:
+            - eq: "200"

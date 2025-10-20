@@ -6,9 +6,9 @@ steps:
   - $ref: steps/par.yml
   - $ref: steps/auth_1.yml
   - $ref: steps/auth_2.yml
-  - $ref: steps/credential.yml
+  - $ref: steps/credential_ldp_vc.yml
   - $ref: steps/ver_qr_ldp_vc.yml
-  - $ref: steps/scan_qr_ldp_vc.yml
+  - $ref: steps/scan_qr.yml
   - name: send wrong vp to rp
     http:
       url: http://${{env.mz_host}}/openid4vp_response

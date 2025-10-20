@@ -7,8 +7,8 @@ steps:
   - $ref: steps/par.yml
   - $ref: steps/auth_1.yml
   - $ref: steps/auth_2.yml
-  - $ref: steps/credential.yml
+  - $ref: steps/credential_dc+sd-jwt.yml
   - $ref: steps/ver_qr_dc+sd-jwt.yml
-  - $ref: steps/scan_qr_dc+sd-jwt.yml
+  - $ref: steps/scan_qr.yml
   - $ref: steps/send_vp_dc+sd-jwt.yml
   - $ref: steps/tx_id.yml

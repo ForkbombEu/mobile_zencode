@@ -1,0 +1,64 @@
+name: scan qr and produce vp
+http:
+  url: http://${{env.mz_host}}/openid4vp_qr_to_info
+  method: POST
+  json:
+    request_uri: ${{captures.params_json.request_uri}}
+    request_uri_method: ${{captures.params_json.request_uri_method}}
+    client_id: ${{captures.params_json.client_id}}
+    credentials:
+      ldp_vc:
+        - "@context":
+          - ${{captures.credential_ldp_vc.@context.0}}
+          - ${{captures.credential_ldp_vc.@context.1}}
+          credentialSubject:
+            degree: ${{captures.credential_ldp_vc.credentialSubject.degree}}
+            family_name: ${{captures.credential_ldp_vc.credentialSubject.family_name}}
+            given_name: ${{captures.credential_ldp_vc.credentialSubject.given_name}}
+          issuer: ${{captures.credential_ldp_vc.issuer}}
+          proof:
+            created: ${{captures.credential_ldp_vc.proof.created}}
+            cryptosuite: ${{captures.credential_ldp_vc.proof.cryptosuite}}
+            proofPurpose: ${{captures.credential_ldp_vc.proof.proofPurpose}}
+            proofValue: ${{captures.credential_ldp_vc.proof.proofValue}}
+            type: ${{captures.credential_ldp_vc.proof.type}}
+            verificationMethod: ${{captures.credential_ldp_vc.proof.verificationMethod}}
+          type:
+          - ${{captures.credential_ldp_vc.type.0}}
+          - ${{captures.credential_ldp_vc.type.1}}
+          validUntil: ${{captures.credential_ldp_vc.validUntil}}
+        - "@context":
+          - ${{captures.credential_ldp_vc.@context.0}}
+          - ${{captures.credential_ldp_vc.@context.1}}
+          credentialSubject:
+            degree: ${{captures.credential_ldp_vc.credentialSubject.degree}}
+            family_name: ${{captures.credential_ldp_vc.credentialSubject.family_name}}
+            given_name: ${{captures.credential_ldp_vc.credentialSubject.given_name}}
+          issuer: ${{captures.credential_ldp_vc.issuer}}
+          proof:
+            created: ${{captures.credential_ldp_vc.proof.created}}
+            cryptosuite: ${{captures.credential_ldp_vc.proof.cryptosuite}}
+            proofPurpose: ${{captures.credential_ldp_vc.proof.proofPurpose}}
+            proofValue: ${{captures.credential_ldp_vc.proof.proofValue}}
+            type: ${{captures.credential_ldp_vc.proof.type}}
+            verificationMethod: ${{captures.credential_ldp_vc.proof.verificationMethod}}
+          type:
+          - ${{captures.credential_ldp_vc.type.0}}
+          - ${{captures.credential_ldp_vc.type.1}}
+          validUntil: ${{captures.credential_ldp_vc.validUntil}}
+      "dc+sd-jwt":
+        - ${{captures.credential_dc+sd-jwt}}
+  captures:
+    post_url:
+      jsonpath: $.post_url
+    vps:
+      jsonpath: $.vps
+  check:
+    status: 200
+    jsonpath:
+      $.post_url:
+        - isDefined: true
+        - isString: true
+      $.vps:
+        - isDefined: true
+        - isObject: true

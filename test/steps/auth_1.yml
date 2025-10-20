@@ -9,4 +9,4 @@ http:
     status: 200
     jsonpath:
       $.credential_configuration_id:
-        - eq: ${{env.credential_configuration_id}}
+        - eq: ${{captures.credential_parameters.credential_configuration_id}}
