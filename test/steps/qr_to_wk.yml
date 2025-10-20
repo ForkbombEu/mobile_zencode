@@ -1,0 +1,21 @@
+name: holder_qr_to_well-known
+http:
+  url: http://${{env.mz_host}}/holder_qr_to_well-known
+  method: POST
+  json:
+    "!external-qr-code-content":
+      credential_configuration_ids:
+        - ${{env.credential_configuration_id}}
+      credential_issuer: http://${{env.ci_host}}
+  captures:
+    credential_parameters:
+      jsonpath: $.credential_parameters
+  check:
+    status: 200
+    jsonpath:
+      $.credential_parameters:
+        - isDefined: true
+          isObject: true
+      $.credential_requested:
+        - isDefined: true
+          isObject: true

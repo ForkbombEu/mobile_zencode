@@ -1,0 +1,11 @@
+name: verifier checks transaction id
+http:
+  url: http://${{env.verifier_host}}/${{captures.transaction_id}}
+  method: GET
+  check:
+    status: 200
+    jsonpath:
+      $.[0].path[0]:
+        - eq: ${{env.check_tx_path}}
+      $.[0].value:
+        - eq: ${{env.check_tx_value}}

@@ -1,0 +1,51 @@
+name: verifier produce qr_code
+http:
+  url: http://${{env.verifier_host}}/generate_authorization_request
+  method: POST
+  json:
+    response_mode: direct_post
+    response_type: vp_token
+    url: http://${{env.verifier_host}}/
+    dcql_query:
+      credentials:
+        - id: test_presentation_ldp_vc
+          format: ldp_vc
+          meta:
+            type_values:
+              - - UniversityDegreeCredential
+          claims:
+            - path:
+              - credentialSubject
+              - given_name
+              values:
+              - Mario
+              - Maria
+            - path:
+              - credentialSubject
+              - family_name
+              values:
+              - Rossi
+              - Verdi
+            - path:
+              - credentialSubject
+              - degree
+            - path:
+              - issuer
+              values:
+              - http://${{env.ci_host}}
+  captures:
+    intent_url:
+      jsonpath: $.intent_url
+    params_json:
+      jsonpath: $.params_json
+    transaction_id:
+      jsonpath: $.transaction_id
+  check:
+    status: 200
+    jsonpath:
+      $.intent_url:
+        - isDefined: true
+          isString: true
+      $.qr_code:
+        - isDefined: true
+          isString: true
