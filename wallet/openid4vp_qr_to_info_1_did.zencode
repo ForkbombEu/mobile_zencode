@@ -1,7 +1,8 @@
 Scenario 'w3c': jwt
 
 Given I have a 'json web token' named 'result'
-When I pickup from path 'result.payload.client_id'
+When I pickup from path 'result.payload'
+When I pickup from path 'payload.client_id'
 
 When I set '1' to '1' as 'number'
 When I set '2' to '2' as 'number'
@@ -21,3 +22,4 @@ When I split rightmost '1' bytes of 'id'
 
 Then print the 'client_id_prefix'
 Then print the 'id'
+Then print the 'payload' as 'string'
