@@ -138,7 +138,6 @@ steps:
               claims:
                 - path:
                   - tested
-                  values: []
                 - path:
                   - iss
                   values:
@@ -183,9 +182,9 @@ steps:
           $.post_url:
             - isDefined: true
             - isString: true
-          $.vps[0]:
+          $.vps.test_presentation:
             - isDefined: true
-            - isObject: true
+            - isArray: true
 
   - name: send vp to rp
     http:
@@ -195,7 +194,7 @@ steps:
         body:
           vp_token:
             test_presentation:
-              - ${{captures.vps.0.presentation.vp_token.test_presentation.0}}
+              - ${{captures.vps.test_presentation.0.signed}}
         url: ${{captures.post_url}}
       check:
         status: 200

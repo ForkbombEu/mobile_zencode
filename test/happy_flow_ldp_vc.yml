@@ -232,7 +232,7 @@ steps:
           $.post_url:
             - isDefined: true
             - isString: true
-          $.vps:
+          $.vps.test_presentation_ldp_vc:
             - isDefined: true
             - isArray: true
 
@@ -245,41 +245,41 @@ steps:
           vp_token:
             test_presentation_ldp_vc:
             - "@context":
-              - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.@context.0 }}
-              - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.@context.1 }}
-              holder: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.holder }}
-              id: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.id }}
+              - ${{ captures.vps.test_presentation_ldp_vc.0.signed.@context.0 }}
+              - ${{ captures.vps.test_presentation_ldp_vc.0.signed.@context.1 }}
+              holder: ${{ captures.vps.test_presentation_ldp_vc.0.signed.holder }}
+              id: ${{ captures.vps.test_presentation_ldp_vc.0.signed.id }}
               proof:
-                challenge: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.challenge }}
-                created: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.created }}
-                cryptosuite: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.cryptosuite }}
-                domain: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.domain }}
-                proofPurpose: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.proofPurpose }}
-                proofValue: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.proofValue }}
-                type: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.type }}
-                verificationMethod: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.proof.verificationMethod }}
+                challenge: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.challenge }}
+                created: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.created }}
+                cryptosuite: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.cryptosuite }}
+                domain: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.domain }}
+                proofPurpose: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.proofPurpose }}
+                proofValue: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.proofValue }}
+                type: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.type }}
+                verificationMethod: ${{ captures.vps.test_presentation_ldp_vc.0.signed.proof.verificationMethod }}
               type:
-              - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.type.0 }}
+              - ${{ captures.vps.test_presentation_ldp_vc.0.signed.type.0 }}
               verifiableCredential:
               - "@context":
-                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.@context.0 }}
-                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.@context.1 }}
+                - ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.@context.0 }}
+                - ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.@context.1 }}
                 credentialSubject:
-                  degree: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.degree }}
-                  family_name: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.family_name }}
-                  given_name: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.credentialSubject.given_name }}
-                issuer: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.issuer }}
+                  degree: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.credentialSubject.degree }}
+                  family_name: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.credentialSubject.family_name }}
+                  given_name: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.credentialSubject.given_name }}
+                issuer: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.issuer }}
                 proof:
-                  created: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.created }}
-                  cryptosuite: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.cryptosuite }}
-                  proofPurpose: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.proofPurpose }}
-                  proofValue: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.proofValue }}
-                  type: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.type }}
-                  verificationMethod: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.proof.verificationMethod }}
+                  created: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.created }}
+                  cryptosuite: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.cryptosuite }}
+                  proofPurpose: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.proofPurpose }}
+                  proofValue: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.proofValue }}
+                  type: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.type }}
+                  verificationMethod: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.verificationMethod }}
                 type:
-                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.type.0 }}
-                - ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.type.1 }}
-                validUntil: ${{ captures.vps.0.presentation.vp_token.test_presentation_ldp_vc.0.verifiableCredential.0.validUntil }}
+                - ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.type.0 }}
+                - ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.type.1 }}
+                validUntil: ${{ captures.vps.test_presentation_ldp_vc.0.signed.verifiableCredential.0.validUntil }}
         url: ${{captures.post_url}}
       check:
         status: 200
