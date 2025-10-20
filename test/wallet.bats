@@ -129,26 +129,34 @@ load ./bats_utils
     jq ".credentials.ldp_vc = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     jq --arg cred $cred '.credentials["dc+sd-jwt"] = [$cred]' $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     jq ".request.result = \"$request\"" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
-    jq ".rdfs = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    jq ".rdfs_base64.serializations = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     jq ".obj = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
-    # scan_ver_qr_1
-    echo "{}" > $BATS_FILE_TMPDIR/openid4vp_qr_to_info_2_did.data.json
-    jq ".result = \"$request\"" $BATS_FILE_TMPDIR/openid4vp_qr_to_info_2_did.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info_2_did.data.json
-    zexe $WALLET/openid4vp_qr_to_info_2_did.zencode openid4vp_qr_to_info_2_did.data.json
-    save_tmp_output openid4vp_qr_to_info_2_did.output.json
-    id=$(jq_extract_raw "id" openid4vp_qr_to_info_2_did.output.json)
+    # scan_ver_qr_1 (did)
+    echo "{}" > $BATS_FILE_TMPDIR/openid4vp_qr_to_info_1_did.data.json
+    jq ".result = \"$request\"" $BATS_FILE_TMPDIR/openid4vp_qr_to_info_1_did.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info_1_did.data.json
+    zexe $WALLET/openid4vp_qr_to_info_1_did.zencode openid4vp_qr_to_info_1_did.data.json
+    save_tmp_output openid4vp_qr_to_info_1_did.output.json
+    id=$(jq_extract_raw "id" openid4vp_qr_to_info_1_did.output.json)
+    p=$(jq -c ".payload" $BATS_FILE_TMPDIR/openid4vp_qr_to_info_1_did.output.json)
     did=$(curl -X GET "https://did.dyne.org/dids/${id}")
     jq --arg did $did ".client_id_did = $did" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    jq --arg p $p ".payload = $p" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    # scan_ver_qr_2 (dcql)
+    zexe $WALLET/openid4vp_qr_to_info_2_dcql.zencode openid4vp_qr_to_info.data.json
+    save_tmp_output openid4vp_qr_to_info_2_dcql.output.json
+    mc=$(jq -c ".matching_credentials" $BATS_FILE_TMPDIR/openid4vp_qr_to_info_2_dcql.output.json)
+    jq --arg mc $mc ".matching_credentials_out.matching_credentials = $mc" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    # scan_ver_qr
     zexe $WALLET/openid4vp_qr_to_info.zen openid4vp_qr_to_info.data.json $WALLET/openid4vp_qr_to_info.keys.json
     save_tmp_output openid4vp_qr_to_info.output.json
-    assert_output --regexp '\{"post_url":"http://localhost:3002/verifier/response/.*","vps":\[\{"card":".*","presentation":\{"vp_token":\{"test_presentation":\[".*"\]\}\}\}\]\}'
+    assert_output --regexp '\{"post_url":"http://localhost:3002/verifier/response/.*","vps":\{"test_presentation":\[\{"card":".*","signed":".*"\}\]\}\}'
 }
 
 @test "Holder present the vp" {
     sleep 2
-    vp=$(jq -r '.vps[0].presentation' $BATS_FILE_TMPDIR/openid4vp_qr_to_info.output.json)
+    vp=$(jq -r '.vps.test_presentation[0].signed' $BATS_FILE_TMPDIR/openid4vp_qr_to_info.output.json)
     url=$(jq_extract_raw "post_url" openid4vp_qr_to_info.output.json)
-    echo "{\"body\": ${vp}, \"url\": \"${url}\"}" > $BATS_FILE_TMPDIR/openid4vp_response.data.json
+    echo "{\"body\": {\"vp_token\": {\"test_presentation\": \"${vp}\"}}, \"url\": \"${url}\"}" > $BATS_FILE_TMPDIR/openid4vp_response.data.json
     zexe $WALLET/openid4vp_response.zen $WALLET/openid4vp_response.keys.json openid4vp_response.data.json
     save_tmp_output openid4vp_response.output.json
     body=$(jq_extract_raw "http_get_parameters" openid4vp_response.output.json)
