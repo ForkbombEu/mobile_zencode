@@ -81,6 +81,7 @@ When I create the 'string dictionary' named 'vps'
 When I pickup from path 'jwt.payload'
 If I verify 'state' is found in 'payload'
     When I pickup from path 'payload.state'
+    Then print the 'state'
 EndIf
 
 When I pickup from path 'payload.dcql_query.credentials'
@@ -140,9 +141,6 @@ Foreach 'credential' in 'credentials'
             When I create jws signature of header 'jws header' and payload 'jws payload'
             When I append 'jws_signature' to 'vc'
             When I copy 'vc' to 'signed' in 'vp_tmp'
-            If I verify 'state' is found
-                When I copy 'state' in 'vp_tmp'
-            EndIf
             When I move 'vp_tmp' in 'renamed_to_id'
             # cleanup
             When I remove 'jws_header'
