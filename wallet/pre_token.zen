@@ -22,10 +22,6 @@ When I append the 'url64' of 'ramdom_jti' to 'jti'
 When I copy 'token_endpoint' to 'token_endpoint_copy'
 When I rename the 'token_endpoint_copy' to 'htu'
 
-# 	 jti: randomBytes(16).toString('base64url'),
-#		htm: 'POST',
-#		htu: 'https://server.example.com/token',
-
 When I create the timestamp
 When I rename the 'timestamp' to 'iat'
 
@@ -49,7 +45,6 @@ When I create the jws signature of header 'DPoP-header' and payload 'DPoP-payloa
 When I rename the 'jws signature' to 'DPoP'
 
 When I create the 'string dictionary' named 'data'
-and I move 'DPoP' in 'data'
 and I move 'client_id' in 'data'
 and I move 'code' in 'data'
 and I move 'redirect_uri' in 'data'
@@ -60,5 +55,6 @@ When I create http get parameters from 'data' using percent encoding
 and I remove 'data'
 and I rename the 'http_get_parameters' to 'data'
 
+Then print the 'DPoP'
 Then print the 'data'
 Then print the 'token_endpoint'
