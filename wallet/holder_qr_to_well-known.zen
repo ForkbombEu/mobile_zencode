@@ -43,6 +43,9 @@ When I move the 'format' inside 'credential_parameters'
 When I move the 'credential_configuration_id' inside 'credential_parameters'
 When I move the 'token_endpoint' inside 'credential_parameters'
 When I move the 'authorization_endpoint' inside 'credential_parameters'
+If I verify 'scope' is found in 'credential_requested'
+    When I copy 'scope' from 'credential_requested' in 'credential_parameters'
+EndIf
 
 When I move the 'pushed_authorization_request_endpoint' to 'authorization_server_endpoint_par' inside 'credential_parameters'
 
