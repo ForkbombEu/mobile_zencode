@@ -1,42 +1,18 @@
-Rule unknown ignore
+Prepare: manipulate and set where object is 'data', path is 'credential_offer_path', value is '!external-qr-code-content'
 
-## prepare data for zen_1
-Given I send object 'data_1' and send path '!external-qr-code-content_path' and send value '!external-qr-code-content' and manipulate and set and output into 'data'
-##
-
-#######
-# execute zen_1
-#######
-Given I send keys 'keys_1' and send data 'data' and send script 'zen_1' and execute zencode and output into 'zen_1_output'
-Given I manipulate and delete and output into 'data'
-
-Given I send object 'zen_1_output' and send path 'credential_issuer_path' and manipulate and get and output into 'credential_issuer'
-Given I send object 'zen_1_output' and send path 'credential_configuration_id_path' and manipulate and get and output into 'credential_configuration_id'
+# get iss url
+Prepare 'read_cred_issuer_out': execute zencode where script is 'read_cred_issuer', data is '!external-qr-code-content', keys is 'empty_keys'
+Prepare 'credential_issuer': manipulate and get where object is 'read_cred_issuer_out', path is 'credential_issuer_path'
 
 ## fetch credential_issuer well-known
-Given I connect to 'credential_issuer' and do get and output into 'credential_issuer_well-known'
+Prepare 'credential_issuer_well-known': connect to 'credential_issuer' and do get
 
-## get data from credential_issuer well-known
-Given I send object 'credential_issuer_well-known' and send path 'r.authorization_servers_path' and manipulate and get and output into 'authorization_servers_arr'
-Given I send object 'authorization_servers_arr' and send path 'authz_server_path' and manipulate and get and output into 'authorization_server'
-Given I send object 'credential_issuer_well-known' and send path 'r.credential_supported_path' and manipulate and get and output into 'credential_configurations_supported'
-
-## prepare data for zen_2
-Given I send object 'data_2' and send path 'authorization_server_path' and send value 'authorization_server' and manipulate and set and output into 'data'
-Given I send object 'data' and send path 'credential_configuration_id_path' and send value 'credential_configuration_id' and manipulate and set and output into 'data'
-Given I send object 'data' and send path 'credential_supported_path' and send value 'credential_configurations_supported' and manipulate and set and output into 'data'
-##
-
-#######
-# execute zen_2
-#######
-Given I send keys 'keys_1' and send data 'data' and send script 'zen_2' and execute zencode and output into 'zen_2_output'
-
-#get more data from credential_issuer well-known
-Given I send object 'zen_2_output' and send path 'authorization_server_path' and manipulate and get and output into 'authorization_server'
+## get authz_server url + some info on the credential requested
+Prepare 'extract_authz_server_out': execute zencode where script is 'extract_authz_server', data is 'data', keys is 'credential_issuer_well-known'
+Prepare 'authorization_server': manipulate and get where object is 'extract_authz_server_out', path is 'authorization_server_path'
 
 # fetch authorization_server well-known
-Given I connect to 'authorization_server' and do get and output into 'authorization_server_well-known'
+Prepare 'authorization_server_well-known': connect to 'authorization_server' and do get
 
 # extract parameters
 
@@ -55,9 +31,9 @@ Given I have a 'string array' in path 'authorization_server_well-known.result.re
 Given I have a 'string array' in path 'authorization_server_well-known.result.code_challenge_methods_supported'
 
 # credential-requested, fromat and vct
-Given I have a 'string dictionary' named 'credential_requested' inside 'zen_2_output'
-Given I have a 'string' named 'format' inside 'zen_2_output'
-Given I have a 'string' named 'credential_configuration_id' inside 'zen_2_output'
+Given I have a 'string dictionary' in path 'extract_authz_server_out.credential_requested'
+Given I have a 'string' in path 'extract_authz_server_out.format'
+Given I have a 'string' in path 'extract_authz_server_out.credential_configuration_id'
 
 When I create the 'string dictionary' named 'credential_parameters'
 When I move the 'credential_issuer' inside 'credential_parameters'
