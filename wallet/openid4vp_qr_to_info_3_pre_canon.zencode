@@ -1,4 +1,4 @@
-Given I have a 'string dictionary' in path 'matching_credentials.matching_credentials'
+Given I have a 'string array' in path 'matching_credentials.matching_credentials'
 Given I have a 'string dictionary' named 'payload'
 Given I have a 'string' named 'id'
 Given I have a 'string' named 'did'
@@ -30,6 +30,10 @@ When I copy '@context' in 'template_document'
 When I copy 'type' in 'template_document'
 When I copy 'did' to 'holder' in 'template_document'
 
+When I set 'one_number' to '1' as 'number'
+When I set 'index' to '1' as 'number'
+When I create the 'number dictionary' named 'serialization_map'
+
 When I create the 'string array' named 'objects'
 When I create the 'string array' named 'rdf_apis'
 When I set 'ldp_vc' to 'ldp_vc' as 'string'
@@ -37,22 +41,43 @@ When I pickup from path 'payload.dcql_query.credentials'
 Foreach 'credential' in 'credentials'
     If I verify 'ldp_vc' is equal to 'format' in 'credential'
         When I pickup from path 'credential.id'
-        When I copy 'id' from 'matching_credentials' to 'vc_array'
-        Foreach 'vc' in 'vc_array'
-            When I copy 'rdf_api' in 'rdf_apis'
-            When I create the 'string dictionary' named 'object'
-            When I copy 'proof_config' in 'object'
-            When I copy 'template_document' to 'document'
-            When I create the 'string array' named 'verifiableCredential'
-            When I copy 'vc' in 'verifiableCredential'
-            When I move 'verifiableCredential' in 'document'
-            When I create random of '6' bytes
-            When I move 'random' as 'hex' to 'random_id'
-            When I move 'random_id' to 'id' in 'document'
-            When I move 'document' in 'object'
-            When I move 'object' in 'objects'
+        When I copy 'index' to 'tmp'
+        When I rename 'tmp' to named by 'id'
+        When I move named by 'id' in 'serialization_map'
+        Foreach 'matching_credential' in 'matching_credentials'
+            When I pickup from path 'matching_credential.matching_credential_sets'
+            Foreach 'matching_credential_set' in 'matching_credential_sets'
+                If I verify 'id' is found in 'matching_credential_set'
+                    When I copy 'id' from 'matching_credential_set' to 'vc_array'
+                    Foreach 'vc' in 'vc_array'
+                        When I copy 'rdf_api' in 'rdf_apis'
+                        When I create the 'string dictionary' named 'object'
+                        When I copy 'proof_config' in 'object'
+                        When I copy 'template_document' to 'document'
+                        When I create the 'string array' named 'verifiableCredential'
+                        When I copy 'vc' in 'verifiableCredential'
+                        When I move 'verifiableCredential' in 'document'
+                        When I create random of '6' bytes
+                        When I move 'random' as 'hex' to 'random_id'
+                        When I move 'random_id' to 'id' in 'document'
+                        When I move 'document' in 'object'
+                        When I move 'object' in 'objects'
+                        # map
+                        When I create the result of 'index' + 'one_number'
+                        When I remove 'index'
+                        When I rename 'result' to 'index'
+                    EndForeach
+                    When I remove 'vc_array'
+                    When I set 'found' to 'true' as 'string'
+                    When I exit foreach
+                EndIf
+            EndForeach
+            When I remove 'matching_credential_sets'
+            If I verify 'found' is found
+                When I remove 'found'
+                When I exit foreach
+            EndIf
         EndForeach
-        When I remove 'vc_array'
         When I remove 'id'
     EndIf
 EndForeach
@@ -68,3 +93,4 @@ Endif
 
 Then print the 'objects'
 Then print the 'rdf_apis'
+Then print the 'serialization_map'

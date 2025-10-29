@@ -47,7 +47,8 @@ Given I have a 'string' in path 'request.result'
 Given I rename 'result' to 'string_jwt'
 Given I have a 'json web token' in path 'request.result'
 Given I rename 'result' to 'jwt'
-Given I have a 'string dictionary' in path 'matching_credentials_out.matching_credentials'
+Given I have a 'string array' in path 'matching_credentials_out.matching_credentials'
+Given I have a 'number dictionary' in path 'pre_canon_out.serialization_map'
 
 Given I have a 'base64 array' in path 'rdfs_base64.serializations'
 Given I have a 'string array' named 'obj'
@@ -75,7 +76,7 @@ When I pickup a 'string' from path 'jwt.payload.dcql_query'
 When I pickup from path 'jwt.payload.nonce'
 
 # select the credentials with matching claims
-When I create the 'string dictionary' named 'vps'
+When I create the 'string array' named 'vps'
 
 # state?
 When I pickup from path 'jwt.payload'
@@ -85,74 +86,89 @@ If I verify 'state' is found in 'payload'
 EndIf
 
 When I pickup from path 'payload.dcql_query.credentials'
-When I copy 'one_number' to 'index'
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
 When I set 'dc+sd-jwt_string' to 'dc+sd-jwt' as 'string'
-Foreach 'credential' in 'credentials'
-    When I pickup a 'string' from path 'credential.id'
-    When I copy 'id' from 'matching_credentials' to 'vc_array'
-    When I create the 'string array' named 'renamed_to_id'
-    If I verify 'ldp_vc_string' is equal to 'format' in 'credential'
-        Foreach 'vc' in 'vc_array'
-            # card
-            When I create the 'string dictionary' named 'vp_tmp'
-            When I copy 'vc' to 'card' in 'vp_tmp'
-            # signature
-            When I copy 'index' from 'obj' to 'current_obj'
-            When I copy 'index' from 'serializations' to 'current_rdfs'
-            When I pickup from path 'current_obj.document'
-            When I pickup from path 'current_obj.proof_config'
-            When I remove '@context' from 'proof_config'
-            When I create the es256 signature of 'current_rdfs'
-            When I move the 'es256 signature' as 'base58' to 'proofValue'
-            When I prepend string 'z' to 'proofValue'
-            When I move 'proofValue' in 'proof_config'
-            When I move 'proof_config' to 'proof' in 'document'
-            When I move 'document' to 'signed' in 'vp_tmp'
-            When I move 'vp_tmp' in 'renamed_to_id'
-            # cleanup
-            When I create the result of 'index' + 'one_number'
-            When I remove 'index'
-            When I rename 'result' to 'index'
-            When I remove 'current_obj'
-            When I remove 'current_rdfs'
+
+Foreach 'matching_credential' in 'matching_credentials'
+    When I pickup from path 'matching_credential.required'
+    When I create the 'string dictionary' named 'mc_tmp'
+    When I pickup from path 'matching_credential.matching_credential_sets'
+    When I create the 'string array' named 'mcs_array'
+    Foreach 'matching_credential_set' in 'matching_credential_sets'
+        When I create the 'string dictionary' named 'mcs_tmp'
+        Foreach 'credential' in 'credentials'
+            When I pickup a 'string' from path 'credential.id'
+            If I verify 'id' is found in 'matching_credential_set'
+                When I copy 'id' from 'matching_credential_set' to 'vc_array'
+                When I create the 'string array' named 'renamed_to_id'
+                If I verify 'ldp_vc_string' is equal to 'format' in 'credential'
+                    When I copy 'id' from 'serialization_map' to 'index'
+                    Foreach 'vc' in 'vc_array'
+                        # card
+                        When I create the 'string dictionary' named 'vp_tmp'
+                        When I copy 'vc' to 'card' in 'vp_tmp'
+                        # signature
+                        When I copy 'index' from 'obj' to 'current_obj'
+                        When I copy 'index' from 'serializations' to 'current_rdfs'
+                        When I pickup from path 'current_obj.document'
+                        When I pickup from path 'current_obj.proof_config'
+                        When I remove '@context' from 'proof_config'
+                        When I create the es256 signature of 'current_rdfs'
+                        When I move the 'es256 signature' as 'base58' to 'proofValue'
+                        When I prepend string 'z' to 'proofValue'
+                        When I move 'proofValue' in 'proof_config'
+                        When I move 'proof_config' to 'proof' in 'document'
+                        When I move 'document' to 'signed' in 'vp_tmp'
+                        When I move 'vp_tmp' in 'renamed_to_id'
+                        # cleanup
+                        When I create the result of 'index' + 'one_number'
+                        When I remove 'index'
+                        When I rename 'result' to 'index'
+                        When I remove 'current_obj'
+                        When I remove 'current_rdfs'
+                    EndForeach
+                    When I remove 'index'
+                EndIf
+                If I verify 'dc+sd-jwt_string' is equal to 'format' in 'credential'
+                    Foreach 'vc' in 'vc_array'
+                        # card
+                        When I create the 'string dictionary' named 'vp_tmp'
+                        When I copy 'vc' to 'card' in 'vp_tmp'
+                        # kb
+                        ## kb.header
+                        When I create jws header for p256 signature
+                        When I set 'typ' to 'kb+jwt' as 'string'
+                        When I move 'typ' in 'jws_header'
+                        ## kb.payload
+                        When I create the 'string dictionary' named 'jws payload'
+                        When I copy 'nonce' in 'jws payload'
+                        When I create the timestamp
+                        When I move 'timestamp' to 'iat' in 'jws payload'
+                        When I create the hash of 'vc'
+                        When I move 'hash' as 'url64' to 'sd_hash'
+                        When I move 'sd_hash' in 'jws payload'
+                        When I copy 'client_id' to 'aud' in 'jws payload'
+                        ## kb.signature
+                        When I create jws signature of header 'jws header' and payload 'jws payload'
+                        When I append 'jws_signature' to 'vc'
+                        When I copy 'vc' to 'signed' in 'vp_tmp'
+                        When I move 'vp_tmp' in 'renamed_to_id'
+                        # cleanup
+                        When I remove 'jws_header'
+                        When I remove 'jws payload'
+                        When I remove 'jws_signature'
+                    EndForeach
+                EndIf
+                When I rename 'renamed_to_id' to named by 'id'
+                When I move named by 'id' in 'mcs_tmp'
+            EndIf
         EndForeach
-    EndIf
-    If I verify 'dc+sd-jwt_string' is equal to 'format' in 'credential'
-        Foreach 'vc' in 'vc_array'
-            # card
-            When I create the 'string dictionary' named 'vp_tmp'
-            When I copy 'vc' to 'card' in 'vp_tmp'
-            # kb
-            ## kb.header
-            When I create jws header for p256 signature
-            When I set 'typ' to 'kb+jwt' as 'string'
-            When I move 'typ' in 'jws_header'
-            ## kb.payload
-            When I create the 'string dictionary' named 'jws payload'
-            When I copy 'nonce' in 'jws payload'
-            When I create the timestamp
-            When I move 'timestamp' to 'iat' in 'jws payload'
-            When I create the hash of 'vc'
-            When I move 'hash' as 'url64' to 'sd_hash'
-            When I move 'sd_hash' in 'jws payload'
-            When I copy 'client_id' to 'aud' in 'jws payload'
-            ## kb.signature
-            When I create jws signature of header 'jws header' and payload 'jws payload'
-            When I append 'jws_signature' to 'vc'
-            When I copy 'vc' to 'signed' in 'vp_tmp'
-            When I move 'vp_tmp' in 'renamed_to_id'
-            # cleanup
-            When I remove 'jws_header'
-            When I remove 'jws payload'
-            When I remove 'jws_signature'
-        EndForeach
-    EndIf
-    When I rename 'renamed_to_id' to named by 'id'
-    When I move named by 'id' in 'vps'
-    When I remove 'vc_array'
-    When I remove 'id'
+        When I move 'mcs_tmp' in 'mcs_array'
+    EndForeach
+    When I move 'mcs_array' to 'matching_credential_sets' in 'mc_tmp'
+    When I move 'required' in 'mc_tmp'
 EndForeach
+When I move 'mc_tmp' in 'vps'
 
 # prepare post
 When I pickup a 'string' from path 'jwt.payload.response_uri'
