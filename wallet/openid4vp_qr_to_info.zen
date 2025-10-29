@@ -161,7 +161,9 @@ Foreach 'matching_credential' in 'matching_credentials'
                 EndIf
                 When I rename 'renamed_to_id' to named by 'id'
                 When I move named by 'id' in 'mcs_tmp'
+                When I remove 'vc_array'
             EndIf
+            When I remove 'id'
         EndForeach
         When I move 'mcs_tmp' in 'mcs_array'
     EndForeach
