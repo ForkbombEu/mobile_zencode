@@ -6,7 +6,7 @@ http:
     body:
       vp_token:
         test_presentation:
-          - ${{captures.vps.test_presentation.0.signed}}
+          - ${{captures.vps.0.matching_credential_sets.0.test_presentation.0.signed}}
     url: ${{captures.post_url}}
   check:
     status: 200
