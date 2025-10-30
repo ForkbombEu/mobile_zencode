@@ -1,3 +1,4 @@
+Rule unknown ignore
 Prepare: manipulate and set where object is 'data', path is 'credential_offer_path', value is '!external-qr-code-content'
 
 # get iss url

@@ -6,7 +6,8 @@ load ./bats_utils
     assert_file_executable "$zenroom"
 }
 @test "Holder read cred_iss well-known from qr" {
-    zexe $WALLET/read_credential_issuer.zen $WALLET/holder_qr_to_well-known.data.json
+    jq '."!external-qr-code-content"' $WALLET/holder_qr_to_well-known.data.json > $BATS_FILE_TMPDIR/offer.json
+    zexe $WALLET/holder_qr_to_well-known_1_read_issuer.zen offer.json
     save_tmp_output read_credential_issuer.output.json
     url=$(jq_extract_raw "credential_issuer" read_credential_issuer.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
@@ -14,16 +15,13 @@ load ./bats_utils
     assert_output --partial '"credential_issuer":"http://localhost:3001/credential_issuer"'
     assert_output --partial '"test_credential":'
     assert_output --partial '"UniversityDegree_LDP_VC":'
-    authorization_server=$(jq_extract_raw "authorization_servers" credential_issuer_well-known.output.json | jq -r '.[0]')
-    jq_insert "authorization_server" $authorization_server read_credential_issuer.output.json
-    credential_configurations_supported=$(jq_extract_raw "credential_configurations_supported" credential_issuer_well-known.output.json | jq -c '.')
-    echo $credential_configurations_supported >$TMP/out
-    save_tmp_output credential_supported.json 
-    jq_insert_json "credential_configurations_supported" credential_supported.json read_credential_issuer.output.json
+    echo "{\"result\":$(cat $BATS_FILE_TMPDIR/credential_issuer_well-known.output.json)}" > $TMP/out
+    save_tmp_output cred_issuer.output.json
+    jq_insert_json "credential_offer" offer.json cred_issuer.output.json
 }
 
 @test "Holder read authz_server well-known" {
-    zexe $WALLET/read_authz_server.zen read_credential_issuer.output.json
+    zexe $WALLET/holder_qr_to_well-known_2_extract_authz_server.zen cred_issuer.output.json
     save_tmp_output read_authz_server.output.json
     url=$(jq_extract_raw "authorization_server" read_authz_server.output.json)
     curl -X GET $url | jq -c '.' 1> $TMP/out
@@ -34,7 +32,7 @@ load ./bats_utils
 @test "Holder output credential_requested and credential_parameters" {
     echo "{}" >$TMP/out
     save_tmp_output holder_qr_to_well-known.data.json 
-    jq_insert_json zen_2_output read_authz_server.output.json holder_qr_to_well-known.data.json
+    jq_insert_json extract_authz_server_out read_authz_server.output.json holder_qr_to_well-known.data.json
     tmp=$(mktemp)
     jq --arg key "authorization_server_well-known" '.[$key].result = input' $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json $BATS_FILE_TMPDIR/authz_server_well-known.output.json > $tmp && mv $tmp  $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json
     jq --arg key "credential_issuer_well-known" '.[$key].result = input' $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json $BATS_FILE_TMPDIR/credential_issuer_well-known.output.json > $tmp && mv $tmp  $BATS_FILE_TMPDIR/holder_qr_to_well-known.data.json
@@ -87,7 +85,8 @@ load ./bats_utils
     save_tmp_output pre_token.output.json
     url=$(jq_extract_raw "token_endpoint" pre_token.output.json)
     data=$(jq_extract_raw "data" pre_token.output.json)
-    curl -X POST $url -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(echo $data)"'' 1> $TMP/out
+    dpop=$(jq_extract_raw "DPoP" pre_token.output.json)
+    curl -X POST $url -H 'Content-Type: application/x-www-form-urlencoded' -H "DPoP: ${dpop}" -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_token.output.json
     # if --regexp resolve modify also here
     assert_output --partial '{"token_type":"bearer","access_token":"eyJhbGciOiJFUzI1NiIsImp3ayI6eyJrdHkiOiJFQyIsIngiO'
