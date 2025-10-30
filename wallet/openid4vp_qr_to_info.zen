@@ -81,7 +81,7 @@ When I create the 'string array' named 'vps'
 # state?
 When I pickup from path 'jwt.payload'
 If I verify 'state' is found in 'payload'
-    When I pickup from path 'payload.state'
+    When I pickup a 'string' from path 'payload.state'
     Then print the 'state'
 EndIf
 
