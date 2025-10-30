@@ -1,0 +1,64 @@
+Given I have a 'string dictionary' named 'result'
+Given I have a 'string dictionary' named 'credential_offer'
+
+When I set 'one' to '1' as 'number'
+
+# authorization_server
+
+If I verify 'grants' is found in 'credential_offer'
+    When I pickup from path 'credential_offer.grants'
+    If I verify 'urn:ietf:params:oauth:grant-type:pre-authorized_code' is found in 'grants'
+        When I pickup from path 'grants.urn:ietf:params:oauth:grant-type:pre-authorized_code'
+        If I verify 'authorization_server' is found in 'urn:ietf:params:oauth:grant-type:pre-authorized_code'
+            When I pickup from path 'urn:ietf:params:oauth:grant-type:pre-authorized_code.authorization_server'
+        EndIf
+    EndIf
+    If I verify 'authorization_code' is found in 'grants'
+        When I pickup from path 'grants.authorization_code'
+        If I verify 'authorization_server' is found in 'authorization_code'
+            When I pickup from path 'authorization_code.authorization_server'
+        EndIf
+    EndIf
+EndIf
+
+If I verify 'authorization_servers' is found in 'result'
+    When I pickup from path 'result.authorization_servers'
+    If I verify size of 'authorization_servers' is more than 'one'
+        If I verify 'authorization_server' is found
+            When I verify 'authorization_server' is found in 'authorization_servers'
+        EndIf
+        If I verify 'authorization_server' is not found
+            When I exit with error message 'authorization server must be specified when multiple authorization_servers'
+        EndIf
+    EndIf
+    If I verify size of 'authorization_servers' is less or equal than 'one'
+        If I verify 'authorization_server' is found
+            When I exit with error message 'authorization server must be specified when multiple authorization_servers'
+        EndIf
+        When I copy '1' from 'authorization_servers' to 'authorization_server'
+    EndIf
+    When I remove 'authorization_servers'
+EndIf
+If I verify 'authorization_servers' is not found in 'result'
+    If I verify 'authorization_server' is found
+        When I exit with error message 'authorization_server must be used only with authorization_servers'
+    EndIf
+    When I pickup from path 'credential_offer.credential_issuer'
+    When I copy 'credential_issuer' to 'authorization_server'
+EndIf
+
+When I append the string '/.well-known/oauth-authorization-server' to 'authorization_server'
+
+# credential_requested
+## for the moment we support only one credential request at a time
+When I pickup from path 'result.credential_configurations_supported'
+When I pickup from path 'credential_offer.credential_configuration_ids.1'
+When I rename '1' to 'credential_configuration_id'
+When I create copy of object named by 'credential_configuration_id' from dictionary 'credential_configurations_supported'
+When I rename 'copy' to 'credential_requested'
+When I pickup from path 'credential_requested.format'
+
+Then print the 'authorization_server'
+Then print the 'credential_requested'
+Then print the 'format'
+Then print the 'credential_configuration_id'
