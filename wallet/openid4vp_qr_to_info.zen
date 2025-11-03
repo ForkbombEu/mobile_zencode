@@ -19,29 +19,38 @@ Scenario 'sd_jwt': signed selective disclosure
 #   * "presentation" the presentation to submit if this credential is choosen
 # * post_url the url where to send the choosen credential under the field "vp_token"
 
+# get the request
 Prepare 'request': connect to 'request_uri' and do get
 
+# resolve the did from request.payload.client_id
 Prepare 'client_id_out': execute zencode with script 'client_id_zen', data 'request', keys 'client_id_keys'
 Prepare 'client_id_jwt': manipulate and get with object 'client_id_out', path 'client_id_path'
 Prepare 'client_id_did': resolve the did with did 'client_id_jwt'
 
-Prepare: manipulate and set with object 'request', path 'credentials_path', value 'credentials'
-Prepare: manipulate and set with object 'request', path 'did_path', value 'did'
-Prepare: manipulate and set with object 'request', path 'rdf_api_path', value 'rdf_api'
-Prepare 'pre_canon_out': execute zencode with script 'pre_canon_zen', data 'request', keys 'pre_canon_keys'
+# extract matching credentials
+Prepare: manipulate and set with object 'matching_credentials_keys', path 'credentials_path', value 'credentials'
+Prepare 'matching_credentials_out': execute zencode with script 'matching_credentials_zen', data 'matching_credentials_keys', keys 'client_id_out'
 
+# compute rdf_canon for ldp_vc credentials
+Prepare: manipulate and set with object 'client_id_out', path 'matching_credentials_path', value 'matching_credentials_out'
+Prepare: manipulate and set with object 'client_id_out', path 'did_path', value 'did'
+Prepare: manipulate and set with object 'client_id_out', path 'rdf_api_path', value 'rdf_api'
+Prepare 'pre_canon_out': execute zencode with script 'pre_canon_zen', data 'client_id_out', keys 'pre_canon_keys'
 Prepare 'obj': manipulate and get with object 'pre_canon_out', path 'objects_path'
 Prepare 'rdf_apis': manipulate and get with object 'pre_canon_out', path 'rdf_apis_path'
-
 Prepare 'rdfs': connect to 'rdf_apis' and do parallel post with object 'obj'
+Prepare: manipulate and set with object 'post_canon_keys', path 'rdfs_path', value 'rdfs'
+Prepare 'rdfs_base64': execute zencode with script 'post_canon_zen', data 'post_canon_data', keys 'post_canon_keys'
 
 # from slangroom
 Given I have a 'string' in path 'request.result'
 Given I rename 'result' to 'string_jwt'
 Given I have a 'json web token' in path 'request.result'
 Given I rename 'result' to 'jwt'
+Given I have a 'string array' in path 'matching_credentials_out.matching_credentials'
+Given I have a 'number dictionary' in path 'pre_canon_out.serialization_map'
 
-Given I have a 'base64 array' named 'rdfs'
+Given I have a 'base64 array' in path 'rdfs_base64.serializations'
 Given I have a 'string array' named 'obj'
 Given I have a 'did document' in path 'client_id_did.didDocument'
 Given I rename 'didDocument' to 'client_id_did'
@@ -49,14 +58,8 @@ Given I rename 'didDocument' to 'client_id_did'
 # data
 Given I have a 'string' named 'client_id'
 Given I rename 'client_id' to 'data_client_id'
-Given I have a 'string array' in path 'credentials.ldp_vc'
-Given I have a 'string array' in path 'credentials.dc+sd-jwt'
-Given I rename 'dc+sd-jwt' to 'dc+sd-jwt_as_string'
-Given I have a 'signed selective disclosure array' in path 'credentials.dc+sd-jwt'
 
 # keys
-Given I have a 'string array' named 'loop_arrays'
-Given I have a 'string array' named 'loop_arrays_dc+sd-jwt'
 Given I have a 'keyring'
 
 # verify request
@@ -66,235 +69,112 @@ When I verify the jws signature in 'string_jwt'
 When I pickup a 'string' from path 'jwt.payload.client_id'
 When I verify 'data_client_id' is equal to 'client_id'
 
-# choose format
-When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.format'
-When I rename object named by 'format' to 'matching_credentials'
-When I create size of 'matching_credentials'
 When I set 'one_number' to '1' as 'float'
+
+# dcql query and nonce
+When I pickup a 'string' from path 'jwt.payload.dcql_query'
+When I pickup from path 'jwt.payload.nonce'
 
 # select the credentials with matching claims
 When I create the 'string array' named 'vps'
-When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.claims'
 
 # state?
 When I pickup from path 'jwt.payload'
 If I verify 'state' is found in 'payload'
-    When I pickup from path 'payload.state'
+    When I pickup a 'string' from path 'payload.state'
+    Then print the 'state'
 EndIf
-When I remove 'payload'
 
-## ldp_vc
+When I pickup from path 'payload.dcql_query.credentials'
 When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
-If I verify 'format' is equal to 'ldp_vc_string'
-    When I set 'VerifiableCredential' to 'VerifiableCredential' as 'string'
-    When I pickup a 'string array' from path 'jwt.payload.dcql_query.credentials.1.meta.type_values'
-    Foreach value prefix 'loop_' at same position in arrays 'loop_arrays'
-        # match type
-        When I set 'no_matched_type' to 'no_matched_type' as 'string'
-        When I pickup from path 'loop_matching_credentials.type'
-        When I remove 'VerifiableCredential' from 'type'
-        Foreach 'type_array' in 'type_values'
-            If I verify 'type' is equal to 'type_array'
-                When I remove 'no_matched_type'
-                When I exit the foreach
-            EndIf
-        EndForeach
-        When I remove 'type'
-        If I verify 'no_matched_type' is found
-            When I remove 'no_matched_type'
-            When I set 'skip_credential' to 'skip_credential' as 'string'
-        EndIf
-        # not expired
-        If I verify 'skip_credential' is not found
-            When I pickup from path 'loop_matching_credentials.validUntil'
-            When I create timestamp of UTC timestamp 'validUntil'
-            When I rename 'timestamp' to 'validUntil_unix'
-            When I create the timestamp
-            If I verify number 'timestamp' is more than 'validUntil_unix'
-                When I set 'skip_credential' to 'skip_credential' as 'string'
-            EndIf
-            When I remove 'validUntil'
-            When I remove 'validUntil_unix'
-            When I remove 'timestamp'
-        EndIf
-        Foreach 'c' in 'claims'
-            If I verify 'skip_credential' is found
-                When I exit the foreach
-            EndIf
-            When I copy 'path' from 'c' to 'path_array'
-            When I copy 'loop_matching_credentials' to 'root'
-            Foreach 'p' in 'path_array'
-                If I verify 'p' is not found in 'root'
-                    When I set 'skip_credential' to 'skip_credential' as 'string'
-                    When I exit the foreach
-                EndIf
-                If I verify 'p' is found in 'root'
-                    When I copy 'p' from 'root' to 'tmp'
-                    When I remove 'root'
-                    When I rename 'tmp' to 'root'
-                EndIf
-            EndForeach
-            If I verify 'skip_credential' is not found
-                If I verify 'values' is found in 'c'
-                    When I copy 'values' from 'c' to 'values_array'
-                    If I verify size of 'values_array' is more or equal than 'one_number'
-                        If I verify 'root' is not found in 'values_array'
-                            When I set 'skip_credential' to 'skip_credential' as 'string'
-                        EndIf
-                    EndIf
-                    When I remove 'values_array'
-                EndIf
-            EndIf
-            When I remove 'root'
-            When I remove 'path_array'
-        EndForeach
-        If I verify 'skip_credential' is not found
-            When I create the 'string dictionary' named 'loop_vps_card'
-            When I copy 'loop_matching_credentials' to 'card' in 'loop_vps_card'
-            When I pickup from path 'loop_obj.document'
-            When I pickup from path 'loop_obj.proof_config'
-            When I remove '@context' from 'proof_config'
-            When I pickup from path 'loop_rdfs.result.serialization'
-            When I create the es256 signature of 'serialization'
-            When I remove 'serialization'
-            When I move the 'es256 signature' as 'base58' to 'proofValue'
-            When I prepend string 'z' to 'proofValue'
-            When I move 'proofValue' in 'proof_config'
-            When I move 'proof_config' to 'proof' in 'document'
-            When I create the 'string dictionary' named 'vp_token'
-            When I create the 'string array' named 'array_of_documents'
-            When I move 'document' in 'array_of_documents'
-            When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.id'
-            When I rename 'array_of_documents' to named by 'id'
-            When I move named by 'id' in 'vp_token'
-            When I create the 'string dictionary' named 'presentation'
-            When I move 'vp_token' in 'presentation'
-            When I move 'presentation' in 'loop_vps_card'
-            When I move 'loop_vps_card' in 'vps'
-            When I remove 'id'
-        EndIf
-        If I verify 'skip_credential' is found
-            When I remove 'skip_credential'
-        EndIf
-    EndForeach
-EndIf
-
-## dc+sd-jwt
-When I pickup from path 'jwt.payload.nonce'
 When I set 'dc+sd-jwt_string' to 'dc+sd-jwt' as 'string'
-If I verify 'format' is equal to 'dc+sd-jwt_string'
-    When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.meta.vct_values.1'
-    When I rename '1' to 'vct_value'
-    Foreach value prefix 'loop_' at same position in arrays 'loop_arrays_dc+sd-jwt'
-        When I pickup from path 'loop_matching_credentials.jwt.payload'
-        When I pickup from path 'payload.type'
-        If I verify 'type' is not equal to 'vct_value'
-            When I set 'skip_credential' to 'skip_credential' as 'string'
-        EndIf
-        Foreach 'c' in 'claims'
-            If I verify 'skip_credential' is found
-                When I exit the foreach
-            EndIf
-            When I copy 'path' from 'c' to 'path_array'
-            When I copy '1' from 'path_array' to 'first_element_in_path'
-            When I remove 'first_element_in_path' from 'path_array'
-            When I pickup from path 'loop_matching_credentials.disclosures'
-            Foreach 'd' in 'disclosures'
-                If I verify 'skip_credential' is found
-                    When I remove 'skip_credential'
-                EndIf
-                When I copy '2' from 'd' to 'd_name'
-                If I verify 'first_element_in_path' is equal to 'd_name'
-                    When I copy '3' from 'd' to 'root'
-                    Foreach 'p' in 'path_array'
-                        If I verify 'p' is not found in 'root'
-                            When I set 'skip_credential' to 'skip_credential' as 'string'
-                            When I remove 'd_name'
-                            When I exit the foreach
-                        EndIf
-                        If I verify 'p' is found in 'root'
-                            When I copy 'p' from 'root' to 'tmp'
-                            When I remove 'root'
-                            When I rename 'tmp' to 'root'
-                        EndIf
+
+Foreach 'matching_credential' in 'matching_credentials'
+    When I pickup from path 'matching_credential.required'
+    When I create the 'string dictionary' named 'mc_tmp'
+    When I pickup from path 'matching_credential.matching_credential_sets'
+    When I create the 'string array' named 'mcs_array'
+    Foreach 'matching_credential_set' in 'matching_credential_sets'
+        When I create the 'string dictionary' named 'mcs_tmp'
+        Foreach 'credential' in 'credentials'
+            When I pickup a 'string' from path 'credential.id'
+            If I verify 'id' is found in 'matching_credential_set'
+                When I copy 'id' from 'matching_credential_set' to 'vc_array'
+                When I create the 'string array' named 'renamed_to_id'
+                If I verify 'ldp_vc_string' is equal to 'format' in 'credential'
+                    When I copy 'id' from 'serialization_map' to 'index'
+                    Foreach 'vc' in 'vc_array'
+                        # card
+                        When I create the 'string dictionary' named 'vp_tmp'
+                        When I copy 'vc' to 'card' in 'vp_tmp'
+                        # signature
+                        When I copy 'index' from 'obj' to 'current_obj'
+                        When I copy 'index' from 'serializations' to 'current_rdfs'
+                        When I pickup from path 'current_obj.document'
+                        When I pickup from path 'current_obj.proof_config'
+                        When I remove '@context' from 'proof_config'
+                        When I create the es256 signature of 'current_rdfs'
+                        When I move the 'es256 signature' as 'base58' to 'proofValue'
+                        When I prepend string 'z' to 'proofValue'
+                        When I move 'proofValue' in 'proof_config'
+                        When I move 'proof_config' to 'proof' in 'document'
+                        When I move 'document' to 'signed' in 'vp_tmp'
+                        When I move 'vp_tmp' in 'renamed_to_id'
+                        # cleanup
+                        When I create the result of 'index' + 'one_number'
+                        When I remove 'index'
+                        When I rename 'result' to 'index'
+                        When I remove 'current_obj'
+                        When I remove 'current_rdfs'
                     EndForeach
-                    If I verify 'skip_credential' is not found
-                        If I verify 'values' is found in 'c'
-                            When I copy 'values' from 'c' to 'values_array'
-                            If I verify size of 'values_array' is more or equal than 'one_number'
-                                If I verify 'root' is not found in 'values_array'
-                                    When I set 'skip_credential' to 'skip_credential' as 'string'
-                                EndIf
-                            EndIf
-                            When I remove 'values_array'
-                        EndIf
-                        When I remove 'd_name'
-                        When I remove 'root'
-                        When I exit the foreach
-                    EndIf
-                    When I remove 'root'
+                    When I remove 'index'
                 EndIf
-                When I remove 'd_name'
-            EndForeach
-            If I verify 'skip_credential' is found
-                If I verify 'first_element_in_path' is found in 'payload'
-                    When I remove 'skip_credential'
+                If I verify 'dc+sd-jwt_string' is equal to 'format' in 'credential'
+                    Foreach 'vc' in 'vc_array'
+                        # card
+                        When I create the 'string dictionary' named 'vp_tmp'
+                        When I copy 'vc' to 'card' in 'vp_tmp'
+                        # kb
+                        ## kb.header
+                        When I create jws header for p256 signature
+                        When I set 'typ' to 'kb+jwt' as 'string'
+                        When I move 'typ' in 'jws_header'
+                        ## kb.payload
+                        When I create the 'string dictionary' named 'jws payload'
+                        When I copy 'nonce' in 'jws payload'
+                        When I create the timestamp
+                        When I move 'timestamp' to 'iat' in 'jws payload'
+                        When I create the hash of 'vc'
+                        When I move 'hash' as 'url64' to 'sd_hash'
+                        When I move 'sd_hash' in 'jws payload'
+                        When I copy 'client_id' to 'aud' in 'jws payload'
+                        ## kb.signature
+                        When I create jws signature of header 'jws header' and payload 'jws payload'
+                        When I append 'jws_signature' to 'vc'
+                        When I copy 'vc' to 'signed' in 'vp_tmp'
+                        When I move 'vp_tmp' in 'renamed_to_id'
+                        # cleanup
+                        When I remove 'jws_header'
+                        When I remove 'jws payload'
+                        When I remove 'jws_signature'
+                    EndForeach
                 EndIf
+                When I rename 'renamed_to_id' to named by 'id'
+                When I move named by 'id' in 'mcs_tmp'
+                When I remove 'vc_array'
             EndIf
-            When I remove 'disclosures'
-            When I remove 'first_element_in_path'
-            When I remove 'path_array'
-        Endforeach
-        When I remove 'type'
-        If I verify 'skip_credential' is not found
-            When I create the 'string dictionary' named 'loop_vps_card'
-            When I copy 'loop_dc+sd-jwt_as_string' to 'card' in 'loop_vps_card'
-            When I create jws header for p256 signature
-            When I set 'typ' to 'kb+jwt' as 'string'
-            When I move 'typ' in 'jws_header'
-
-            When I create the 'string dictionary' named 'jws payload'
-            When I copy 'nonce' in 'jws payload'
-            When I create the timestamp
-            When I move 'timestamp' to 'iat' in 'jws payload'
-            When I create the hash of 'loop_dc+sd-jwt_as_string'
-            When I move 'hash' as 'url64' to 'sd_hash'
-            When I move 'sd_hash' in 'jws payload'
-            When I copy 'client_id' to 'aud' in 'jws payload'
-
-            When I create jws signature of header 'jws header' and payload 'jws payload'
-            When I remove 'jws_header'
-            When I remove 'jws payload'
-            When I append 'jws_signature' to 'loop_dc+sd-jwt_as_string'
-            When I remove 'jws_signature'
-
-            When I create the 'string dictionary' named 'vp_token'
-            When I create the 'string array' named 'array_sd-jwt-kb'
-            When I copy 'loop_dc+sd-jwt_as_string' in 'array_sd-jwt-kb'
-            When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.1.id'
-            When I rename 'array_sd-jwt-kb' to named by 'id'
-            When I move named by 'id' in 'vp_token'
-            When I create the 'string dictionary' named 'presentation'
-            When I move 'vp_token' in 'presentation'
-            If I verify 'state' is found
-                When I copy 'state' in 'presentation'
-            EndIf
-            When I move 'presentation' in 'loop_vps_card'
-            When I move 'loop_vps_card' in 'vps'
             When I remove 'id'
-        EndIf
-        If I verify 'skip_credential' is found
-            When I remove 'skip_credential'
-        EndIf
-        When I remove 'payload'
+        EndForeach
+        When I move 'mcs_tmp' in 'mcs_array'
     EndForeach
-EndIf
+    When I move 'mcs_array' to 'matching_credential_sets' in 'mc_tmp'
+    When I move 'required' in 'mc_tmp'
+EndForeach
+When I move 'mc_tmp' in 'vps'
 
 # prepare post
 When I pickup a 'string' from path 'jwt.payload.response_uri'
 When I rename 'response_uri' to 'post_url'
-
-# When I pickup a 'string' from path 'jwt.payload.dcql_query.credentials.0.id'
 
 Then print the 'post_url'
 Then print the 'vps'

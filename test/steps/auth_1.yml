@@ -1,0 +1,12 @@
+name: Simulate authhorize endpoint pt1 (call /ru_to_toc)
+http:
+  url: http://${{env.as_host}}/ru_to_toc
+  method: POST
+  json:
+    request_uri: ${{captures.request_uri}}
+    client_id: ${{captures.client_id}}
+  check:
+    status: 200
+    jsonpath:
+      $.credential_configuration_id:
+        - eq: ${{captures.credential_parameters.credential_configuration_id}}

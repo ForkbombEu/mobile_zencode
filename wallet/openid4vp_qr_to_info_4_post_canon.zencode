@@ -1,0 +1,10 @@
+Given I have a 'string array' named 'rdfs'
+
+When I create the 'string array' named 'serializations'
+
+Foreach 'rdf' in 'rdfs'
+    When I pickup from path 'rdf.result.serialization'
+    When I move 'serialization' in 'serializations'
+EndForeach
+
+Then print the 'serializations'

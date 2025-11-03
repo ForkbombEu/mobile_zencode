@@ -13,6 +13,8 @@ tests:
     $ref: test/happy_flow_dc+sd-jwt.yml
   happy_flow_ldp_vc:
     $ref: test/happy_flow_ldp_vc.yml
+  happy_flow_dc+sd-jwt_and_ldp_vc:
+    $ref: test/happy_flow_dc+sd-jwt_and_ldp_vc.yml
   failing_presentation:
     $ref: test/failing_presentation.yml
   failing_authorize:

@@ -1,0 +1,10 @@
+Scenario 'dcql_query': dcql
+
+Given I have a 'string dictionary' named 'credentials'
+Given I rename 'credentials' to 'list_of_credentials'
+Given I have a 'dcql query' in path 'payload.dcql_query'
+
+When I create credentials from 'list_of_credentials' matching dcql_query 'dcql query'
+When I rename 'credentials' to 'matching_credentials'
+
+Then print the 'matching_credentials'

@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := up
 .PHONY: help
 
-NCR_VERSION := 1.45.0
+NCR_VERSION := 1.46.6
 NCR_URL := https://github.com/ForkbombEu/ncr/releases/download/v$(NCR_VERSION)/ncr
 
 hn=$(shell hostname)
@@ -33,7 +33,7 @@ ncr: ## 📦 Install and setup the server
 		wget -q --show-progress $(NCR_URL) -O ncr; \
 		chmod +x ./ncr; \
 	fi
-	@echo "📦 Setup is done! Ncr version ${NCR_VERSION} installed"
+	@echo "📦 Setup of mobile_zencode is done! Ncr version ${NCR_VERSION} installed"
 
 up: ncr ## 🚀 Up & run the project
 	./ncr -p 3000 --hostname $(hn) -z wallet
