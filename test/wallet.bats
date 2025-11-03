@@ -157,7 +157,7 @@ load ./bats_utils
     sleep 2
     vp=$(jq -r '.vps[0].matching_credential_sets[0].test_presentation[0].signed' $BATS_FILE_TMPDIR/openid4vp_qr_to_info.output.json)
     url=$(jq_extract_raw "post_url" openid4vp_qr_to_info.output.json)
-    echo "{\"body\": {\"vp_token\": {\"test_presentation\": \"${vp}\"}}, \"url\": \"${url}\"}" > $BATS_FILE_TMPDIR/openid4vp_response.data.json
+    echo "{\"body\": {\"vp_token\": {\"test_presentation\": [\"${vp}\"]}}, \"url\": \"${url}\"}" > $BATS_FILE_TMPDIR/openid4vp_response.data.json
     zexe $WALLET/openid4vp_response.zen $WALLET/openid4vp_response.keys.json openid4vp_response.data.json
     save_tmp_output openid4vp_response.output.json
     body=$(jq_extract_raw "http_get_parameters" openid4vp_response.output.json)
