@@ -45,6 +45,7 @@ test/didroom_microservices: tmp := $(shell mktemp)
 test/didroom_microservices:
 	$(info ⬇️  Cloning test/didroom_microservices)
 	@git clone https://github.com/forkbombeu/didroom_microservices test/didroom_microservices --quiet
+	@cd test/didroom_microservices && git checkout debug && cd -
 # custom code
 	$(MAKE) -C test/didroom_microservices test_custom_code --no-print-directory
 	@cp .env.test .env
