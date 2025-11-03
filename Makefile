@@ -33,7 +33,7 @@ ncr: ## 📦 Install and setup the server
 		wget -q --show-progress $(NCR_URL) -O ncr; \
 		chmod +x ./ncr; \
 	fi
-	@echo "📦 Setup is done! Ncr version ${NCR_VERSION} installed"
+	@echo "📦 Setup of mobile_zencode is done! Ncr version ${NCR_VERSION} installed"
 
 up: ncr ## 🚀 Up & run the project
 	./ncr -p 3000 --hostname $(hn) -z wallet
@@ -45,7 +45,6 @@ test/didroom_microservices: tmp := $(shell mktemp)
 test/didroom_microservices:
 	$(info ⬇️  Cloning test/didroom_microservices)
 	@git clone https://github.com/forkbombeu/didroom_microservices test/didroom_microservices --quiet
-	@cd test/didroom_microservices && git checkout debug && cd -
 # custom code
 	$(MAKE) -C test/didroom_microservices test_custom_code --no-print-directory
 	@cp .env.test .env
