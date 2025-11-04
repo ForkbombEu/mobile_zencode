@@ -90,8 +90,8 @@ When I set 'ldp_vc_string' to 'ldp_vc' as 'string'
 When I set 'dc+sd-jwt_string' to 'dc+sd-jwt' as 'string'
 
 Foreach 'matching_credential' in 'matching_credentials'
-    When I pickup from path 'matching_credential.required'
     When I create the 'string dictionary' named 'mc_tmp'
+    When I pickup from path 'matching_credential.required'
     When I pickup from path 'matching_credential.matching_credential_sets'
     When I create the 'string array' named 'mcs_array'
     Foreach 'matching_credential_set' in 'matching_credential_sets'
@@ -169,8 +169,9 @@ Foreach 'matching_credential' in 'matching_credentials'
     EndForeach
     When I move 'mcs_array' to 'matching_credential_sets' in 'mc_tmp'
     When I move 'required' in 'mc_tmp'
+    When I move 'mc_tmp' in 'vps'
+    When I remove 'matching_credential_sets'
 EndForeach
-When I move 'mc_tmp' in 'vps'
 
 # prepare post
 When I pickup a 'string' from path 'jwt.payload.response_uri'
