@@ -150,7 +150,7 @@ load ./bats_utils
     jq ".pre_canon_out.serialization_map = {}" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     zexe $WALLET/openid4vp_qr_to_info.zen openid4vp_qr_to_info.data.json $WALLET/openid4vp_qr_to_info.keys.json
     save_tmp_output openid4vp_qr_to_info.output.json
-    assert_output --regexp '\{"post_url":"http://localhost:3002/verifier/response/.*","vps":\[\{"matching_credential_sets":\[\{"test_presentation":\[\{"card":".*","signed":".*"\}\]\}\],"required":true\}\]\}'
+    assert_output --regexp '\{"dcql_query":\{"credentials":\[\{"claims":\[\{"path":\["tested"]\}\],"format":"dc+sd-jwt","id":"test_presentation","meta":\{"vct_values":\["test_credential"\]\}\}\]\},"post_url":"http://localhost:3002/verifier/response/.*","vps":\[\{"matching_credential_sets":\[\{"test_presentation":\[\{"card":".*","signed":".*"\}\]\}\],"required":true\}\]\}'
 }
 
 @test "Holder present the vp" {
