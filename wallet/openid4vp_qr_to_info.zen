@@ -179,3 +179,4 @@ When I rename 'response_uri' to 'post_url'
 
 Then print the 'post_url'
 Then print the 'vps'
+Then print the 'dcql_query'
