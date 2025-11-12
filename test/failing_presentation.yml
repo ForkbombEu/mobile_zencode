@@ -66,4 +66,4 @@ steps:
       method: GET
       check:
         status: 200
-        body: Cryptographic verification of ldp_vc failed
+        body: Cryptographic verification failed
