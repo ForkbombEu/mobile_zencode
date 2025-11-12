@@ -1,0 +1,15 @@
+name: verifier checks transaction id
+http:
+  url: http://${{env.verifier_host}}/${{captures.transaction_id}}
+  method: GET
+  check:
+    status: 200
+    jsonpath:
+      $.test_presentation_ldp_vc.[0].credentialSubject.degree:
+        - eq: Math
+      $.test_presentation_ldp_vc.[0].credentialSubject.family_name:
+        - eq: Rossi
+      $.test_presentation_ldp_vc.[0].credentialSubject.given_name:
+        - eq: Mario
+      $.test_presentation_ldp_vc.[0].issuer:
+        - eq: http://localhost:3001/credential_issuer

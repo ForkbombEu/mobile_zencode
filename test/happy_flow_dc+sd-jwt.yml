@@ -11,4 +11,4 @@ steps:
   - $ref: steps/ver_qr_dc+sd-jwt.yml
   - $ref: steps/scan_qr.yml
   - $ref: steps/send_vp_dc+sd-jwt.yml
-  - $ref: steps/tx_id.yml
+  - $ref: steps/tx_id_dc+sd-jwt.yml

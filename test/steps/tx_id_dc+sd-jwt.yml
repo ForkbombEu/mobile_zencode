@@ -5,7 +5,7 @@ http:
   check:
     status: 200
     jsonpath:
-      $.[0].path[0]:
-        - eq: ${{env.check_tx_path}}
-      $.[0].value:
-        - eq: ${{env.check_tx_value}}
+      $.test_presentation.[0].iss:
+        - eq: http://localhost:3001/credential_issuer
+      $.test_presentation.[0].tested:
+        - eq: true
