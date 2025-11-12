@@ -32,7 +32,7 @@ steps:
                 type: ${{ captures.vps.0.matching_credential_sets.0.test_presentation_ldp_vc.0.signed.proof.type }}
                 verificationMethod: ${{ captures.vps.0.matching_credential_sets.0.test_presentation_ldp_vc.0.signed.proof.verificationMethod }}
               type:
-              - wrongType
+              - ${{ captures.vps.0.matching_credential_sets.0.test_presentation_ldp_vc.0.signed.type.0 }}
               verifiableCredential:
               - "@context":
                 - ${{ captures.vps.0.matching_credential_sets.0.test_presentation_ldp_vc.0.signed.verifiableCredential.0.@context.0 }}
@@ -51,7 +51,7 @@ steps:
                   verificationMethod: ${{ captures.vps.0.matching_credential_sets.0.test_presentation_ldp_vc.0.signed.verifiableCredential.0.proof.verificationMethod }}
                 type:
                 - ${{ captures.vps.0.matching_credential_sets.0.test_presentation_ldp_vc.0.signed.verifiableCredential.0.type.0 }}
-                - ${{ captures.vps.0.matching_credential_sets.0.test_presentation_ldp_vc.0.signed.verifiableCredential.0.type.1 }}
+                - WrongType
                 validUntil: ${{ captures.vps.0.matching_credential_sets.0.test_presentation_ldp_vc.0.signed.verifiableCredential.0.validUntil }}
         url: ${{captures.post_url}}
       check:
