@@ -11,4 +11,4 @@ steps:
   - $ref: steps/ver_qr_ldp_vc.yml
   - $ref: steps/scan_qr.yml
   - $ref: steps/send_vp_ldp_vc.yml
-  - $ref: steps/tx_id.yml
+  - $ref: steps/tx_id_ldp_vc.yml
