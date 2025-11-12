@@ -163,12 +163,12 @@ load ./bats_utils
     body=$(jq_extract_raw "http_get_parameters" openid4vp_response.output.json)
     curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST $url -d "${body}" 1> $TMP/out
     save_tmp_output verifier_response.output.json
-    assert_output '{"redirect_uri":"https://redirect.example.org/path","transaction_result":{"test_presentation":[{"tested":true}]}}}'
+    assert_output '{"redirect_uri":"https://redirect.example.org/path","transaction_result":{"test_presentation":[{"tested":true}]}}'
 }
 
 @test "checks transaction id" {
     id=$(jq_extract_raw "transaction_id" qr.output.json)
     curl -X GET "http://localhost:3002/verifier/$id" 1> $TMP/out
     save_tmp_output card_to_qr.output.json
-    assert_output '{"test_presentation":[{"tested":true}]}}'
+    assert_output '{"test_presentation":[{"tested":true}]}'
 }
