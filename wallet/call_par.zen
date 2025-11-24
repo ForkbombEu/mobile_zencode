@@ -77,6 +77,9 @@ and I move 'authorization_details' in 'data'
 If I verify 'scope' is found in 'credential_parameters'
     When I copy 'scope' from 'credential_parameters' in 'data'
 EndIf
+If I verify 'issuer_state' is found in 'credential_parameters'
+    When I copy 'issuer_state' from 'credential_parameters' in 'data'
+EndIf
 
 When I create http get parameters from 'data' using percent encoding
 and I rename the 'http_get_parameters' to 'url_encoded_data'

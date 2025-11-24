@@ -32,6 +32,7 @@ Given I have a 'string array' in path 'authorization_server_well-known.result.re
 Given I have a 'string array' in path 'authorization_server_well-known.result.code_challenge_methods_supported'
 
 # credential-requested, fromat and vct
+Given I have a 'string dictionary' named 'extract_authz_server_out'
 Given I have a 'string dictionary' in path 'extract_authz_server_out.credential_requested'
 Given I have a 'string' in path 'extract_authz_server_out.format'
 Given I have a 'string' in path 'extract_authz_server_out.credential_configuration_id'
@@ -46,6 +47,9 @@ When I move the 'token_endpoint' inside 'credential_parameters'
 When I move the 'authorization_endpoint' inside 'credential_parameters'
 If I verify 'scope' is found in 'credential_requested'
     When I copy 'scope' from 'credential_requested' in 'credential_parameters'
+EndIf
+If I verify 'issuer_state' is found in 'extract_authz_server_out'
+    When I copy 'issuer_state' from 'extract_authz_server_out' in 'credential_parameters'
 EndIf
 
 When I move the 'pushed_authorization_request_endpoint' to 'authorization_server_endpoint_par' inside 'credential_parameters'

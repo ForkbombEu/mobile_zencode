@@ -18,6 +18,10 @@ If I verify 'grants' is found in 'credential_offer'
         If I verify 'authorization_server' is found in 'authorization_code'
             When I pickup from path 'authorization_code.authorization_server'
         EndIf
+        If I verify 'issuer_state' is found in 'authorization_code'
+            When I pickup from path 'authorization_code.issuer_state'
+            Then print the 'issuer_state'
+        EndIf
     EndIf
 EndIf
 
