@@ -95,7 +95,7 @@ load ./bats_utils
 
 @test "Holder get to credantial_issuer/nonce" {
     nonce_endpoint=$(jq_extract_raw "nonce_endpoint" credential_issuer_well-known.output.json)
-    curl -X GET $nonce_endpoint | jq -c '.' 1> $TMP/out
+    curl -X POST -H "Content-Length: 0" $nonce_endpoint | jq -c '.' 1> $TMP/out
     save_tmp_output post_nonce.output.json
     assert_output --partial '{"c_nonce":"'
 }
