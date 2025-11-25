@@ -93,13 +93,13 @@ and print the 'client_id'
 # code verifier will be sent authz server in a later stage
 Then print the 'code_verifier'
 
-Then I connect to 'authorization_server_endpoint_par' and send object 'url_encoded_data' and send headers 'headers' and do post and output into 'par_response' 
-Then I send object 'par_response' and send path 'r.request_uri_path' and manipulate and get and output into 'request_uri'
-Then I send object 'par_response' and send path 'r.expires_in_path' and manipulate and get and output into 'expires_in'
+Compute 'par_response': connect to 'authorization_server_endpoint_par' and do post with object 'url_encoded_data', headers 'headers'
+Compute 'request_uri': manipulate and get where object is 'par_response', path is 'r.request_uri_path'
+Compute 'expires_in': manipulate and get where object is 'par_response', path is 'r.expires_in_path'
 
-Then I manipulate and delete and output into 'par_response'
-Then I manipulate and delete and output into 'url_encoded_data'
-Then I manipulate and delete and output into 'authorization_server_endpoint_par'
+Compute 'par_response': manipulate and delete
+Compute 'url_encoded_data': manipulate and delete
+Compute 'authorization_server_endpoint_par': manipulate and delete
 
 # at this point visit : ${authorization_endpoint}?request_uri=${request_uri}&client_id=${client_id}
 # and save 'code_verifier' to be used later on
