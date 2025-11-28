@@ -34,13 +34,9 @@ Prepare 'matching_credentials_out': execute zencode with script 'matching_creden
 # compute rdf_canon for ldp_vc credentials
 Prepare: manipulate and set with object 'client_id_out', path 'matching_credentials_path', value 'matching_credentials_out'
 Prepare: manipulate and set with object 'client_id_out', path 'did_path', value 'did'
-Prepare: manipulate and set with object 'client_id_out', path 'rdf_api_path', value 'rdf_api'
 Prepare 'pre_canon_out': execute zencode with script 'pre_canon_zen', data 'client_id_out', keys 'pre_canon_keys'
 Prepare 'obj': manipulate and get with object 'pre_canon_out', path 'objects_path'
-Prepare 'rdf_apis': manipulate and get with object 'pre_canon_out', path 'rdf_apis_path'
-Prepare 'rdfs': connect to 'rdf_apis' and do parallel post with object 'obj'
-Prepare: manipulate and set with object 'post_canon_keys', path 'rdfs_path', value 'rdfs'
-Prepare 'rdfs_base64': execute zencode with script 'post_canon_zen', data 'post_canon_data', keys 'post_canon_keys'
+Prepare 'rdfs_base64': generate concatenated hash of serialized canonical rdf with array 'obj'
 
 # from slangroom
 Given I have a 'string' in path 'request.result'
@@ -50,7 +46,7 @@ Given I rename 'result' to 'jwt'
 Given I have a 'string array' in path 'matching_credentials_out.matching_credentials'
 Given I have a 'number dictionary' in path 'pre_canon_out.serialization_map'
 
-Given I have a 'base64 array' in path 'rdfs_base64.serializations'
+Given I have a 'base64 array' in path 'rdfs_base64'
 Given I have a 'string array' named 'obj'
 Given I have a 'did document' in path 'client_id_did.didDocument'
 Given I rename 'didDocument' to 'client_id_did'

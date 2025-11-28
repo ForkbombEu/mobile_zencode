@@ -2,7 +2,6 @@ Given I have a 'string array' in path 'matching_credentials.matching_credentials
 Given I have a 'string dictionary' named 'payload'
 Given I have a 'string' named 'id'
 Given I have a 'string' named 'did'
-Given I have a 'string' named 'rdf_api'
 
 Given I have a 'string dictionary' named 'proof_config'
 Given I have a 'string array' named '@context'
@@ -35,7 +34,6 @@ When I set 'index' to '1' as 'number'
 When I create the 'number dictionary' named 'serialization_map'
 
 When I create the 'string array' named 'objects'
-When I create the 'string array' named 'rdf_apis'
 When I set 'ldp_vc' to 'ldp_vc' as 'string'
 When I pickup from path 'payload.dcql_query.credentials'
 Foreach 'credential' in 'credentials'
@@ -50,7 +48,6 @@ Foreach 'credential' in 'credentials'
                 If I verify 'id' is found in 'matching_credential_set'
                     When I copy 'id' from 'matching_credential_set' to 'vc_array'
                     Foreach 'vc' in 'vc_array'
-                        When I copy 'rdf_api' in 'rdf_apis'
                         When I create the 'string dictionary' named 'object'
                         When I copy 'proof_config' in 'object'
                         When I copy 'template_document' to 'document'
@@ -82,15 +79,5 @@ Foreach 'credential' in 'credentials'
     EndIf
 EndForeach
 
-When I set '1' to '1' as 'float'
-If I verify size of 'rdf_apis' is less than '1'
-When I copy 'rdf_api' in 'rdf_apis'
-When I create the 'string dictionary' named 'object'
-When I move 'proof_config' in 'object'
-When I move 'template_document' to 'document' in 'object'
-When I move 'object' in 'objects'
-Endif
-
 Then print the 'objects'
-Then print the 'rdf_apis'
 Then print the 'serialization_map'
