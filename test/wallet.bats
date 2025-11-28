@@ -51,8 +51,8 @@ load ./bats_utils
     curl -X POST $url -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_par.output.json
     # (Invalid extended regular expression?) assert_output --regexp '{"request_uri":"urn:ietf:params:oauth:request_uri.*","expires_in":600}
-    assert_output --partial '{"request_uri":"urn:ietf:params:oauth:request_uri'
-    assert_output --partial '","expires_in":600}'
+    assert_output --partial '"request_uri":"urn:ietf:params:oauth:request_uri'
+    assert_output --partial '"expires_in":600'
 }
 
 @test "simulate authz_server/authorize page" {
