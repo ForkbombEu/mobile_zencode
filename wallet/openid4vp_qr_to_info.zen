@@ -105,7 +105,7 @@ Foreach 'matching_credential' in 'matching_credentials'
                         When I copy 'vc' to 'card' in 'vp_tmp'
                         # signature
                         When I copy 'index' from 'obj' to 'current_obj'
-                        When I copy 'index' from 'serializations' to 'current_rdfs'
+                        When I copy 'index' from 'rdfs_base64' to 'current_rdfs'
                         When I pickup from path 'current_obj.document'
                         When I pickup from path 'current_obj.proof_config'
                         When I remove '@context' from 'proof_config'
