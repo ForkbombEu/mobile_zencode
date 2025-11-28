@@ -51,8 +51,8 @@ load ./bats_utils
     curl -X POST $url -H 'Content-Type: application/x-www-form-urlencoded' -d ''"$(echo $data)"'' 1> $TMP/out
     save_tmp_output post_par.output.json
     # (Invalid extended regular expression?) assert_output --regexp '{"request_uri":"urn:ietf:params:oauth:request_uri.*","expires_in":600}
-    assert_output --partial '{"request_uri":"urn:ietf:params:oauth:request_uri'
-    assert_output --partial '","expires_in":600}'
+    assert_output --partial '"request_uri":"urn:ietf:params:oauth:request_uri'
+    assert_output --partial '"expires_in":600'
 }
 
 @test "simulate authz_server/authorize page" {
@@ -129,7 +129,7 @@ load ./bats_utils
     jq ".credentials.ldp_vc = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     jq --arg cred $cred '.credentials["dc+sd-jwt"] = [$cred]' $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     jq ".request.result = \"$request\"" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
-    jq ".rdfs_base64.serializations = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
+    jq ".rdfs_base64 = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     jq ".obj = []" $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json > $tmp && mv $tmp $BATS_FILE_TMPDIR/openid4vp_qr_to_info.data.json
     # scan_ver_qr_1 (did)
     echo "{}" > $BATS_FILE_TMPDIR/openid4vp_qr_to_info_1_did.data.json
